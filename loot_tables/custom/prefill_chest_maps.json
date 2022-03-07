@@ -1,0 +1,23 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:chest",
+          "functions": [
+            {
+              "function": "fill_container",
+              "loot_table": "loot_tables/custom/exploration_maps.json"
+            },
+            {
+              "function": "set_name",
+              "name": "Pre-Filled Chest"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
