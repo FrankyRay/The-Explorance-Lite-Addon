@@ -9,3 +9,6 @@
 - Added `player.json`
   - Disable team damage by the tags
   - Adding "ting" sound when hit player with projectile (Probably works)
+
+## 1.3
+- Adding more script from my another BP

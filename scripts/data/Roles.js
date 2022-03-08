@@ -1,57 +1,33 @@
-import { world } from 'mojang-minecraft'
-
-function dataPrint(text, target='@a') {
-  let data = JSON.stringify(text).replace(/"/g, "").replace(/:/g, ': §c').replace(/,/g, '\n§8: §a').replace('}', '§r').replace('{', '\n§8: §a')
-  world.getDimension("overworld").runCommand(`tellraw ${target} {"rawtext":[{"text": "Data: {${data}\n}"}]}`);
-}
+import * as Minecraft from 'mojang-minecraft';
 
 
-function messageInfo(message, target='@a') {
-  world.getDimension('overworld').runCommand(`tellraw ${target} {"rawtext":[{"text": "§e[INFO]§r ${message}"}]}`);
-}
-
-function rolesMuted() {
-  world.events.beforeChat.subscribe(msgData => {
-    if (msgData.sender.hasTag('Muted')) {
-      let playerName = msgData.sender.name;
-      msgData.cancel = true;
-      messageInfo('You are muted. Your message not send to public', playerName);
-    }
-  });
-}
-
-
-function noLink() {
-  world.events.beforeChat.subscribe(msgData => {
-    let message = msgData.message
-    let admin = msgData.sender.hasTag('Admin')
-    let trustedPlayer = msgData.sender.hasTag('Trusted')
-    if (message.includes('discord.gg') && (!trustedPlayer || !admin)) {
-      let playerName = msgData.sender.name
-      msgData.cancel = true
-      messageInfo('No discord link invitation [Exit Code: Discord Link]', playerName)
-    } else if ((message.includes('youtu.be/dQw4w9WgXcQ') || message.includes('www.youtube.com/watch?v=dQw4w9WgXcQ')) && (!trustedPlayer || !admin)) {
-      let playerName = msgData.sender.name
-      msgData.cancel = true
-      messageInfo('No YT link [Exit Code: Rickroll]', playerName)
+// Roles message
+function roles() {
+  World.events.beforeChat.subscribe(eventData => {
+    const Player = eventData.sender
+    const PlayerName = Player.name
+    const Message = eventData.message
+    if (Player.hasTag('Admin') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§g[ADMIN]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('Mod') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§g[MODERATOR]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('RedTeam') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§c[RED TEAM]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('YellowTeam') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§e[YELLOW TEAM]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('GreenTeam') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§a[GREEN TEAM]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('BlueTeam') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw @a {"rawtext": [{"text": "§c[BLUE TEAM]§r ${PlayerName}: ${Message}"}]}`)
+    } else if (Player.hasTag('Mute') && !Message.startwith(Prefix)) {
+      eventData.cancel = true
+      Overworld.runCommand(`tellraw "${PlayerName}" {"rawtext": [{"text": "§6[INFO]§r You has been muted"}]}`)
     }
   })
 }
-
-
-function playerComponent() {
-  world.events.beforeChat.subscribe(msgData => {
-    if (msgData.message === '!player') {
-      let player = msgData.sender.getComponents()
-      let data = JSON.stringify(player).replace(/"/g, "").replace(/:/g, ': §c').replace(/,/g, '\n§8: §a').replace('}', '§r').replace('{', '\n§8: §a')
-      world.getDimension("overworld").runCommand(`tellraw @a {"rawtext":[{"text": "Data: {${data}\n}"}]}`);
-      // let data = JSON.stringify(player)
-      // world.getDimension('overworld').runCommand(`say ${data}`)
-    }
-  })
-}
-
-
-playerComponent()
-rolesMuted()
-noLink()

@@ -1,10 +1,22 @@
-import * as Gametest from 'mojang-gametest'
-import { world, Location, BlockLocation, Dimension } from 'mojang-minecraft'
+import { world } from 'mojang-minecraft'
 
 var Pos1 = ''
 var Pos2 = ''
 
 
+function print(text, target='@a') {
+  world.getDimension("overworld").runCommand(`tellraw ${target} {"rawtext":[{"text": "${text}"}]}`);
+}
+
+
+/*
+  Finding the lowest XYZ Coordinate from 2 points
+  For example:
+  1st Point: 64 64 64
+  2nd Point: 32 60 120
+  The lowest XYZ for 3rd point is 32 60 64 
+  Used for '!undo' cmd
+*/
 function MinCoord() {
   var ListPos1 = Pos1.split(' ').map(Number)
   var ListPos2 = Pos2.split(' ').map(Number)
@@ -20,7 +32,13 @@ function MinCoord() {
   return `${x} ${y} ${z}`
 }
 
-
+/*
+  World Edit Commands
+  - '!set1' -> Setting 1st point
+  - '!set2' -> Setting 2nd point
+  - '!fill <block> [dataValue]' -> Filling area from 2 points
+  - '!undo' -> Undo the previous fill
+*/
 function WorldEdit(command) {
   world.events.beforeChat.subscribe((eventData) => {
     if (eventData.message === '!set1') {
@@ -53,37 +71,3 @@ function WorldEdit(command) {
 }
 
 
-function SetHome(command) {
-  world.events.beforeChat.subscribe((eventData) => {
-    if (eventData.message === '!sethome') {
-      var player = eventData.sender
-      var x = Math.floor(player.location.x)
-      var y = Math.floor(player.location.y)
-      var z = Math.floor(player.location.z)
-      var coord = `${x} ${y} ${z}`
-      player.getTags().forEach(tag => {
-        if (tag.includes('Home: ')) {
-          player.removeTag(tag)
-        }
-      })
-      player.addTag(`Home: ${coord}`)
-      print(`Your home was set on ${coord}. Type '!tphome' to teleport to your home point`)
-      eventData.cancel = true
-    } else if (eventData.message === '!tphome') {
-      var player = eventData.sender
-      var coord = false
-      player.getTags().forEach(tag => {
-        if (tag.includes('Home: ')) {
-          coord = tag.replace('Home: ', '')
-        }
-        
-        if (!coord) {
-          print("Oh no! You didn't have home point. Type '!tphome' to set your home")
-        } else {
-          world.getDimension('overworld').runCommand(`tp ${player.name} ${coord}`)
-        }
-      })
-      eventData.cancel = true
-    }
-  })
-}
