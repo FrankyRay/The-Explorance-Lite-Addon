@@ -14,11 +14,10 @@ function customEnchantment() {
       for (let player of world.getPlayers()) {
         let item = player.getComponent('minecraft:inventory').container.getItem(player.selectedSlot)
 
-        if (item.id === 'netherite_pickaxe') {
-          let loreList = item.getLore()
+        if (item?.id === 'minecraft:netherite_pickaxe') {
+          let loreList = item.getLore
 
-          if (loreList.includes('Bigger'))
-          player.addTag('Pickaxe:Bigger')
+          if (loreList.has('Bigger')) player.addTag('Pickaxe:Bigger')
         } else {
           player.removeTag('Pickaxe:Bigger')
         }
