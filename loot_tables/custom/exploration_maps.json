@@ -9,7 +9,7 @@
           "functions": [
             {
               "function": "exploration_map",
-              "destination": "burriedtreasure"
+              "destination": "buriedtreasure"
             },
             {
               "function": "set_name",
