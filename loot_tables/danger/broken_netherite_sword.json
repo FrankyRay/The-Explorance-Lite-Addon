@@ -1,0 +1,57 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:netherite_sword",
+          "functions": [
+            {
+              "function": "set_lore",
+              "lore": [
+                "§rCustom Description",
+                "§r§eDamage: 8 (12 Crit Damage)",
+                "§r§eMax Durability: 2032",
+                "When Remy notices the restaurant's garbage boy, Alfredo Linguini, attempting to fix a soup he ruined, he jumps in and fixes Linguini's mistakes\nLinguini catches Remy in the act, but does not reveal him to Skinner, Gusteau's former sous-chef and the new owner of the restaurant\nSkinner confronts Linguini for tampering with the soup, but when the soup is accidentally served and proves to be a success, Colette Tatou, the restaurant's only female chef, convinces Skinner to retain Linguini so as to uphold Gusteau's motto"
+              ]
+            },
+            {
+              "function": "specific_enchants",
+              "enchants": [
+                {
+                  "id": "sharpness",
+                  "level": 5
+                },
+                {
+                  "id": "fire_aspect",
+                  "level": 2
+                },
+                {
+                  "id": "looting",
+                  "level": 3
+                },
+                {
+                  "id": "knockback",
+                  "level": 2
+                },
+                {
+                  "id": "mending",
+                  "level": 1
+                },
+                {
+                  "id": "unbreaking",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "function": "set_name",
+              "name": "§rRatatouille\nRemy, a young rat with a perfect sense of taste and smell, dreams of becoming a chef like his idol, the late Auguste Gusteau\nHowever, the rest of his colony, including his brother Émile and his father the clan leader Django, are interested in food only for sustenance\nThe rats live in the attic of an elderly woman's house\nOne day, while scavenging the house for ingredients, Remy and Émile accidentally reveal the colony to the woman\nThe rats are forced to flee, and Remy is separated from the others\nHe goes down the sewer and encouraged by an imaginary Gusteau, eventually finds himself above the kitchen of Gusteau's Restaurant in Paris."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

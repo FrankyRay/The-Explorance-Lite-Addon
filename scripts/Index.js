@@ -1,40 +1,22 @@
-import * as Gametest from 'mojang-gametest';
-import { world } from 'mojang-minecraft';
-// import * as MinecraftUI from 'mojang-minecraft-ui';
+// Modules
+import * as Gametest from 'mojang-gametest'; // UUID: 6f4b6893-1bb6-42fd-b458-7fa3d0c89616
+import { world } from 'mojang-minecraft'; // UUID: b26a4d4c-afdf-4690-88f8-931846312678
+// import * as MinecraftUI from 'mojang-minecraft-ui';  // UUID: 2BD50A27-AB5F-4F40-A596-3641627C635E
+// API
+import { CustomCommands } from './api/CCommands'
 
-const CmdPrefix = '!'
+const Prefix = '\\'
 const Overworld = world.getDimension('overworld')
 
-
-function customEnchantment() {
-  world.events.tick.subscribe(ticks => {
-    const second = ticks.currentTick % 20
-
-    if (second === 0) {
-      for (let player of world.getPlayers()) {
-        let item = player.getComponent('minecraft:inventory').container.getItem(player.selectedSlot)
-
-        if (item?.id === 'minecraft:netherite_pickaxe') {
-          let loreList = item.getLore
-
-          if (loreList.has('Bigger')) player.addTag('Pickaxe:Bigger')
-        } else {
-          player.removeTag('Pickaxe:Bigger')
-        }
-      }
-    }
+function CommandsChat() {
+  world.events.beforeChat.subscribe(chatEvent => {
+    let Message = chatEvent.message
+    let Player = chatEvent.player
+    if (chatEvent.message.startsWith(Prefix)) {
+      chatEvent.cancel = true
+      let Command = Message.split(' ')[0]
+      let Arguments = Message.substring(Message.indexOf(' ') + 1)
+      CustomCommands(Prefix, Command, Arguments, Player)
+    } else {}
   })
 }
-
-function eventBlockBreak() {
-  world.events.blockBreak.subscribe(breakEvent => {
-    let {x, y, z} = breakEvent.block.location
-    let player = breakEvent.player
-
-    if (player.hasTag('Pickaxe:Bigger')) Overworld.runCommand(`fill ${x-1} ${y-1} ${z-1} ${x+1} ${y+1} ${z+1} air 0 destroy`)
-  })
-}
-
-
-customEnchantment()
-eventBlockBreak()

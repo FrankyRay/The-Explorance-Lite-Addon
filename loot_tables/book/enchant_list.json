@@ -10,10 +10,10 @@
             {
               "function": "set_book_contents",
               "author": "FrankyRayMS",
-              "title": "Loot Tables",
+              "title": "Enchantments",
               "pages": [
-                "With loot tables, you can set any text in written books",
-                "Another message",
+                "List Of\nENCHANTMENTS",
+                "Aqua Affinity\n\nSummary:\nIncreases underwater mining speed\n\nMax Level: 1\nUsed on:\n- Helmet",
                 "Testing the break line\nNew line possibly",
                 "Is it works?"
               ]

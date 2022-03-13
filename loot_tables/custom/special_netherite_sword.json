@@ -10,10 +10,9 @@
             {
               "function": "set_lore",
               "lore": [
-                "Damage: 8 (12 Crit Damage)",
-                "Durability: 2032",
-                "§eYellow Line",
-                "§rReset Formatting"
+                "§rCustom Description",
+                "§r§eDamage: 8 (12 Crit Damage)",
+                "§r§eMax Durability: 2032"
               ]
             },
             {
@@ -21,7 +20,23 @@
               "enchants": [
                 {
                   "id": "sharpness",
-                  "level": 4
+                  "level": 5
+                },
+                {
+                  "id": "fire_aspect",
+                  "level": 2
+                },
+                {
+                  "id": "looting",
+                  "level": 3
+                },
+                {
+                  "id": "knockback",
+                  "level": 2
+                },
+                {
+                  "id": "mending",
+                  "level": 1
                 },
                 {
                   "id": "unbreaking",
@@ -31,7 +46,7 @@
             },
             {
               "function": "set_name",
-              "name": "§rCustom Netherite Sword"
+              "name": "§r§gCustom Netherite Sword"
             }
           ]
         }

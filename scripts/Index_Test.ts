@@ -1,9 +1,4 @@
-function tickToTimeFormat(ticks) {
-  let time = ticks / 20
-  let minute = Math.floor(time / 60)
-  let second = time % 60
+let string = 'lol'
+// let combine = 'p'.concat(string)
 
-  return `${minute}:${second}`
-}
-
-console.log(tickToTimeFormat(4200))
+console.log(string)
