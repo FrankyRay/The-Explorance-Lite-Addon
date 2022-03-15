@@ -1,4 +1,6 @@
 import { world } from 'mojang-minecraft'
 
-export function Links(message) {
-}
+let enFilter = ["fuck", "shit"]
+let idFilter = ["anjing", "babi", "monyet", "goblok", "tolol"]
+
+export function WordFilter(message) {}

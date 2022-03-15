@@ -1,22 +1,31 @@
+//@ts-check
 // Modules
 import * as Gametest from 'mojang-gametest'; // UUID: 6f4b6893-1bb6-42fd-b458-7fa3d0c89616
 import { world } from 'mojang-minecraft'; // UUID: b26a4d4c-afdf-4690-88f8-931846312678
 // import * as MinecraftUI from 'mojang-minecraft-ui';  // UUID: 2BD50A27-AB5F-4F40-A596-3641627C635E
 // API
-import { CustomCommands } from './api/CCommands'
+import { CustomCommands } from './api/CCommands.js'
+import { Chats } from './api/ChatRoles.js'
+import * as Test from './Test.js'
 
-const Prefix = '\\'
+const Prefix = '!'
 const Overworld = world.getDimension('overworld')
 
 function CommandsChat() {
   world.events.beforeChat.subscribe(chatEvent => {
     let Message = chatEvent.message
-    let Player = chatEvent.player
+    let Player = chatEvent.sender
     if (chatEvent.message.startsWith(Prefix)) {
       chatEvent.cancel = true
-      let Command = Message.split(' ')[0]
+      let RemovePrefix = Message.replace(Prefix, '')
+      let Command = RemovePrefix.split(' ')[0]
       let Arguments = Message.substring(Message.indexOf(' ') + 1)
       CustomCommands(Prefix, Command, Arguments, Player)
-    } else {}
+    } else {
+      chatEvent.cancel = true
+      Chats(Message, Player)
+    }
   })
 }
+
+CommandsChat()

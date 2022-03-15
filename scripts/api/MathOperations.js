@@ -21,6 +21,5 @@ export function HowMuchBlocks(pos1, pos2) {
   let Y = Math.abs(ListPos2[1] - ListPos1[1]) + 1
   let Z = Math.abs(ListPos2[2] - ListPos1[2]) + 1
 
-  let sum = X * Y * Z
-  return sum
+  return X * Y * Z
 }
