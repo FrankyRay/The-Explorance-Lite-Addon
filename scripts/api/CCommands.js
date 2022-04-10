@@ -55,7 +55,8 @@ export function CustomCommands(prefix, commands, args, player) {
     case 'ui':
       if (args.split(' ')[0] == 'afd') {
         UIActionFormData(player)
-      }
+      };
+      break;
     default:
       Print(`Command "${commands}" is not found. Run ${prefix}help to check custom commands`, 'info', player.name)
   }
