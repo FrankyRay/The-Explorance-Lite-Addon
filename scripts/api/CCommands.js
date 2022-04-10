@@ -2,7 +2,6 @@
 import { world } from 'mojang-minecraft';
 import * as MinecraftMath from './MathOperations.js';
 import { Print, PrintAction } from './PrintMessage.js';
-import { UIActionFormData } from './beta/UI.js';
 
 const Overworld = world.getDimension('overworld')
 // Saved Variable
@@ -50,11 +49,6 @@ export function CustomCommands(prefix, commands, args, player) {
         let newPos = MinecraftMath.MinCoord(pos1, pos2)
         Overworld.runCommand(`structure load we:beforefill ${newPos}`)
         PrintAction(`Successfully undo the fill commands`, player.name)
-      };
-      break;
-    case 'ui':
-      if (args.split(' ')[0] == 'afd') {
-        UIActionFormData(player)
       };
       break;
     default:

@@ -5,6 +5,8 @@ import { world as World } from 'mojang-minecraft'; // UUID: b26a4d4c-afdf-4690-8
 import { CustomCommands } from './api/CCommands.js'
 import { Chats } from './api/ChatRoles.js'
 import * as Test from './Test.js'
+import { UIActionFormData } from './api/beta/UI.js';
+
 
 const Prefix = '!'
 const Overworld = World.getDimension('overworld')

@@ -15,8 +15,8 @@ export function UIActionFormData(player) {
   actionForm.button('Button 4')
   actionForm.button('Button 5')
 
-  actionForm.show(player).then(actionformrespond => {
-    const { isCanceled, selection } = actionformrespond
+  actionForm.show(player).then(afRespond => {
+    const { isCanceled, selection } = afRespond
 
     if (isCanceled) {
       player.runCommand("say You've canceled the form [Exit Code: 0]")
