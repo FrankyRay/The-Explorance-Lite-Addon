@@ -9,7 +9,7 @@ function tickToTimeFormat(ticks) {
 }
 
 // Testing Events
-function eventChat() {
+export function eventChat() {
   world.events.beforeChat.subscribe(chatEvent => {
     let message = chatEvent.message
     let player = chatEvent.sender.nameTag
@@ -19,7 +19,7 @@ function eventChat() {
   })
 }
 
-function eventExplosion() {
+export function eventExplosion() {
   world.events.beforeExplosion.subscribe(explodeEvent => {
     let dimension = explodeEvent.dimension.id
     let entity = explodeEvent.source.id
@@ -27,7 +27,7 @@ function eventExplosion() {
   })
 }
 
-function eventItemUse() {
+export function eventItemUse() {
   world.events.beforeItemUse.subscribe(itemEvent => {
     let item = itemEvent.item.id
     let entity = itemEvent.source.id
@@ -35,7 +35,7 @@ function eventItemUse() {
   })
 }
 
-function eventItemUseOn() {
+export function eventItemUseOn() {
   world.events.beforeItemUseOn.subscribe(itemOnEvent => {
     let blockFace = itemOnEvent.blockFace
     let { x, y, z } = itemOnEvent.blockLocation
@@ -47,7 +47,7 @@ function eventItemUseOn() {
   })
 }
 
-function eventPistonActivate() {
+export function eventPistonActivate() {
   world.events.beforePistonActivate.subscribe(pistonEvent => {
     let block = pistonEvent.block.id
     let dimension = pistonEvent.dimension.id
@@ -56,7 +56,7 @@ function eventPistonActivate() {
   })
 }
 
-function eventBlockBreak() {
+export function eventBlockBreak() {
   world.events.blockBreak.subscribe(breakEvent => {
     let block = breakEvent.brokenBlockPermutation.type.id
     let blockAfter = breakEvent.block.id
@@ -66,7 +66,7 @@ function eventBlockBreak() {
   })
 }
 
-function eventBlockPlace() {
+export function eventBlockPlace() {
   world.events.blockPlace.subscribe(placeEvent => {
     let block = placeEvent.block.id
     let dimension = placeEvent.dimension.id
@@ -75,7 +75,7 @@ function eventBlockPlace() {
   })
 }
 
-function eventEffectAdd() {
+export function eventEffectAdd() {
   world.events.effectAdd.subscribe(effectEvent => {
     let effect = effectEvent.effect.displayName
     let effectAmp = effectEvent.effect.amplifier
@@ -86,14 +86,14 @@ function eventEffectAdd() {
   })
 }
 
-function eventEntityCreate() {
+export function eventEntityCreate() {
   world.events.entityCreate.subscribe(createEvent => {
     let entity = createEvent.entity.id
     console.warn(`Entity Create Event Detected\nEntity: ${entity}`)
   })
 }
 
-function eventEntityHit() {
+export function eventEntityHit() {
   world.events.entityHit.subscribe(hitEvent => {
     let entity = hitEvent.entity.id
     let hitBlock = hitEvent.hitBlock.id
@@ -102,7 +102,7 @@ function eventEntityHit() {
   })
 }
 
-function eventWeatherChange() {
+export function eventWeatherChange() {
   world.events.weatherChange.subscribe(weatherEvent => {
     let dimension = weatherEvent.dimension
     let lightning = weatherEvent.lightning
@@ -114,16 +114,16 @@ function eventWeatherChange() {
 
 // Events Run //
 // Work
-eventChat()
-eventExplosion()
-eventItemUse()
-eventItemUseOn()
-eventPistonActivate()
-eventBlockBreak()
-eventBlockPlace()
-eventEffectAdd()
-eventEntityCreate()
-eventWeatherChange()
+// eventChat()
+// eventExplosion()
+// eventItemUse()
+// eventItemUseOn()
+// eventPistonActivate()
+// eventBlockBreak()
+// eventBlockPlace()
+// eventEffectAdd()
+// eventEntityCreate()
+// eventWeatherChange()
 // Test
 // Fail
-eventEntityHit() // Probably on Beta
+// eventEntityHit() // Probably on Beta

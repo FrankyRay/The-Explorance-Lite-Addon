@@ -9,6 +9,7 @@ var pos1 = ''
 var pos2 = ''
 
 /**
+ * Custom Command with Gametest
  * @param {string} prefix
  * @param {string} commands
  * @param {string} args
