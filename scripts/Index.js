@@ -4,8 +4,8 @@ import { world as World } from 'mojang-minecraft'; // UUID: b26a4d4c-afdf-4690-8
 // import * as MinecraftUI from 'mojang-minecraft-ui';  // UUID: 2BD50A27-AB5F-4F40-A596-3641627C635E
 import { CustomCommands } from './api/CCommands.js';
 import { Chats } from './api/ChatRoles.js';
-import { BookForms } from './api/beta/ConsoleCommands.js'
-import * as EventT from './lib/Event_Test.js'
+import { ConsoleCommands } from './api/beta/IndexConsoleC.js'
+import * as EventT from './api/Event_Test.js'
 import * as Test from './Test.js';
 import { UIActionFormData } from './api/beta/UI.js';
 
@@ -37,7 +37,7 @@ function BooksCommand() {
     let item = itemEvent.item
     let entity = itemEvent.source
     if (item.getLore().includes('§r[Fast Command Form]')) {
-      BookForms(entity)
+      ConsoleCommands(entity)
     }
   })
 }

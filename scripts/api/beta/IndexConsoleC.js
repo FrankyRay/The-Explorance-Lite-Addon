@@ -1,41 +1,104 @@
-import { ActionFormData, MessageFormData, ModalFormData } from 'mojang-minecraft-ui';
+import { world as World } from 'mojang-minecraft'
+import { ActionFormData } from 'mojang-minecraft-ui';
+import * as ConsC from './MainConsoleC.js'
 
 /**
  * Book Form to open fast command
  * @param {import("mojang-minecraft").Entity} player 
  */
-export function BookForms(player) {
+export function ConsoleCommands(player) {
   let indexForm = new ActionFormData()
   indexForm.title('Console Commands')
-  indexForm.body('Select the commands')
+  indexForm.body('Command List:')
+
+  indexForm.button('Ability')
+  indexForm.button('Camerashake')
+  indexForm.button('Clear')
+  indexForm.button('Clearspawnpoint')
+  indexForm.button('Clone')
+  indexForm.button('Damage')
+  indexForm.button('Daylock')
+  indexForm.button('Dialogue')
+  indexForm.button('Difficulty')
   indexForm.button('Effect')
+  indexForm.button('Enchant')
+  indexForm.button('Event')
+  indexForm.button('Execute')
+  indexForm.button('Fill')
+  indexForm.button('Fog')
+  indexForm.button('Function')
   indexForm.button('Gamemode')
   indexForm.button('Gamerule')
+  indexForm.button('Gametest')
   indexForm.button('Give')
+  indexForm.button('Help')
+  indexForm.button('Kick')
+  indexForm.button('Kill')
+  indexForm.button('List')
+  indexForm.button('Locate')
   indexForm.button('Loot')
+  indexForm.button('Mobevent')
+  indexForm.button('Music')
+  indexForm.button('Particle')
+  indexForm.button('Playanimation')
+  indexForm.button('Playsound')
+  indexForm.button('Replaceitem')
+  indexForm.button('Ride')
+  indexForm.button('Schedules')
+  indexForm.button('Scoreboard')
+  indexForm.button('Setblock')
+  indexForm.button('Setmaxplayers')
+  indexForm.button('Setworldspawn')
+  indexForm.button('Spawnpoint')
+  indexForm.button('Spreadplayers')
+  indexForm.button('Stopsound')
+  indexForm.button('Structure')
+  indexForm.button('Summon')
+  indexForm.button('Tag')
+  indexForm.button('Teleport')
+  indexForm.button('Tellraw')
+  indexForm.button('Testfor')
+  indexForm.button('Testforblocks')
+  indexForm.button('Tickingarea')
   indexForm.button('Time')
+  indexForm.button('Titleraw')
+  indexForm.button('Toggledownfall')
+  indexForm.button('Weather')
+  indexForm.button('XP')
 
   indexForm.show(player).then(respondForm => {
     let button = respondForm.selection
+    if (respondForm.isCanceled) return
     switch (button) {
       case 0:
-        CommandEffect(player);
+        ConsC.Ability(player);
         break;
       case 1:
-        CommandGamemode(player);
+        ConsC.CameraShake(player);
         break;
       case 2:
-        CommandGamerule(player);
+        ConsC.Clear(player);
         break;
-      case 3:
-        CommandGive(player);
+      case 9:
+        CommandEffect(player); 
         break;
-      case 4:
-        CommandLoot(player);
+      case 16:
+        CommandGamemode(player); 
         break;
-      case 5:
-        CommandTime(player);
+      case 17:
+        CommandGamerule(player); 
         break;
+      case 19:
+        CommandGive(player); 
+        break;
+      case 25:
+        CommandLoot(player); 
+        break;
+      case 49:
+        CommandTime(player); 
+        break;
+      default:
+        player.runCommand(`tellraw @a {"rawtext": [{"text": "The command was not available yet. Coming Soon!\n"}, {"text": "[EC/Index/${button}]"}]}`)
     }
   })
 }
@@ -98,10 +161,9 @@ function CommandTime(player) {
 function CommandGive(player) {
   let giveForm = new ModalFormData()
   giveForm.title('Give (/give)')
-  // giveForm.body('Give the item to player')
-  giveForm.icon('items/apple.png')
+  giveForm.icon('textures/items/apple')
   giveForm.textField('Item', 'Item Type')
-  giveForm.textField('Amount', 'How Many?')
+  giveForm.slider('Amount', 1, 64, 1, 64)
 
   giveForm.show(player).then(respondForm => {
     let [ item, amount ] = respondForm.formValues
@@ -113,7 +175,7 @@ function CommandGive(player) {
 function CommandEffect(player) {
   let effectForm = new ModalFormData()
   effectForm.title('Effect (/effect)')
-  effectForm.icon('items/water_bottle.png')
+  effectForm.icon('textures/items/water_bottle')
   effectForm.textField('Effect', 'Effect Type (eg. fire_resistance)')
   // effectForm.slider('Level', 1, 3, 3, 1)
   effectForm.textField('Duration', 'Duration (in Seconds)')
