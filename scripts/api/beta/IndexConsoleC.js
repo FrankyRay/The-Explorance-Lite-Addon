@@ -1,6 +1,7 @@
 import { world as World } from 'mojang-minecraft'
 import { ActionFormData } from 'mojang-minecraft-ui';
 import * as ConsC from './MainConsoleC.js'
+import { ScoreboardIndex } from './ScoreboardConsoleC.js'
 
 /**
  * Book Form to open fast command
@@ -96,6 +97,9 @@ export function ConsoleCommands(player) {
         break;
       case 25:
         ConsC.Loot(player); 
+        break;
+      case 34:
+        ScoreboardIndex(player); 
         break;
       case 43:
         ConsC.Tag(player); 
