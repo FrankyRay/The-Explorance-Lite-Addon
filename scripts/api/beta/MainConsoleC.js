@@ -376,6 +376,26 @@ export function Time(player) {
   })
 }
 
+export function XP(player) {
+  let formXP = new ModalFormData()
+
+  formXP.title('XP [/xp]')
+  formXP.textField('XP Amount', 'Amount')
+  formXP.textField('Target §8[Player]', 'Target Selector', '@s')
+  formXP.toggle('Per Level', true)
+
+  formXP.show(player).then(respond => {
+    if (respond.isCanceled) return
+
+    let [ amount, target, level ] = respond.formValues
+    if (level) {
+      player.runCommand(`xp ${amount}L ${target}`)
+    } else {
+      player.runCommand(`xp ${amount} ${target}`)
+    }
+  })
+}
+
 function gameruleWarnHighRTS(player, ticks) {
   let warnForm = new MessageFormData()
 

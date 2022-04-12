@@ -103,6 +103,9 @@ export function ConsoleCommands(player) {
       case 49:
         ConsC.Time(player); 
         break;
+      case 53:
+        ConsC.XP(player); 
+        break;
       default:
         player.runCommand(`tellraw @a {"rawtext": [{"text": "The command was not available yet. Coming Soon!\n"}, {"text": "[EC/Index/${button}]"}]}`)
     }
