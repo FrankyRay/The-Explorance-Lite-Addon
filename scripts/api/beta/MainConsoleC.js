@@ -121,6 +121,61 @@ export function Effect(player) {
   })
 }
 
+export function Enchant(player) {
+  let formEnchant = new ModalFormData()
+  let typeEnchant = [
+    'Aqua Affinity',
+    'Bane of Arthropoth',
+    'Blast Protection',
+    'Channeling',
+    'Curse of Binding',
+    'Curse of Vanishing',
+    'Depth Strider',
+    'Efficiency',
+    'Feather Falling',
+    'Fire Aspect',
+    'Flame',
+    'Fortune',
+    'Frost Walker',
+    'Impaling',
+    'Infinity',
+    'Knockback',
+    'Looting',
+    'Loyalty',
+    'Luck of the Sea',
+    'Lure',
+    'Mending',
+    'Multishot',
+    'Piercing',
+    'Power',
+    'Projectile Protection',
+    'Protection',
+    'Punch',
+    'Quick Charge',
+    'Respiration',
+    'Riptide',
+    'Sharpness',
+    'Silk Touch',
+    'Smite',
+    'Soul Speed',
+    'Swift Sneak',
+    'Thorns',
+    'Unbreaking'
+  ]
+
+  formEnchant.title('Enchant [/enchant]')
+  formEnchant.textField('Target §8[Player]', 'Target Selection', '@s')
+  formEnchant.dropdown('Enchantment Type', typeEnchant)
+  formEnchant.slider('Enchantment Level', 1, 5, 1, 1)
+
+  formEnchant.show(player).then(respond => {
+    if (respond.isCanceled) return
+
+    let [ target, type, level ] = respond.formValues
+    player.runCommand(`enchant ${target} ${typeEnchant[type].replace(' ', '_')} ${level}`)
+  })
+}
+
 export function Gamemode(player) {
   let formGamemode = new ActionFormData()
 
@@ -333,7 +388,6 @@ function gameruleWarnHighRTS(player, ticks) {
     if (respond.isCanceled) return
 
     let select = respond.selection
-    Print(`Selection: ${select}`)
     if (select == 0) {
       Print("You canceled the changes", "normal", player.name)
       return

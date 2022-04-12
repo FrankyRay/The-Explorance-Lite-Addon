@@ -82,6 +82,9 @@ export function ConsoleCommands(player) {
       case 9:
         ConsC.Effect(player); 
         break;
+      case 10:
+        ConsC.Enchant(player); 
+        break;
       case 16:
         ConsC.Gamemode(player); 
         break;
