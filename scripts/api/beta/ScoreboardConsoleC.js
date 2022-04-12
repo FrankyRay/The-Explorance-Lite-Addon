@@ -8,16 +8,16 @@ export function ScoreboardIndex(player) {
   formScoreboard.title("Scoreboard [/scoreboard]")
   formScoreboard.body("Choose one of these option, scoreboard objective or players")
   formScoreboard.button1("Objectives")
-  formScoreboard.button1("Players")
+  formScoreboard.button2("Players")
 
   formScoreboard.show(player).then(respond => {
     if (respond.isCanceled) return
 
     let select = respond.selection
     if (select == 1) {
-      ScoreboardObjectives(player)
-    } else if (select == 0) {
-      ScoreboardPlayer(player)
+      ScoreboardObjectivesIndex(player)
+    } else {
+      ScoreboardPlayersIndex(player)
     }
   })
 }
@@ -97,7 +97,7 @@ function SbObjDisplay(player) {
 function ScoreboardPlayersIndex(player) {
   let formSbPlayers = new ActionFormData()
 
-  formSbPlayers.titel("SB Players [/scoreboard players]")
+  formSbPlayers.title("SB Players [/scoreboard players]")
   formSbPlayers.body("Select an option")
   formSbPlayers.button("Add/Remove/Set/Reset")
   formSbPlayers.button("List")
