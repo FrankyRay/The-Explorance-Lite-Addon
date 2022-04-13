@@ -65,6 +65,60 @@ export function Clear(player) {
   })
 }
 
+export function Damage(player) {
+  let formDamage = new ModalFormData()
+  let typeDamage = [
+    "all",
+    "anvil",
+    "attack",
+    "block_explosion",
+    "charging",
+    "contact",
+    "drowning",
+    "durability",
+    "entity_attack",
+    "entity_explosion",
+    "fall",
+    "falling_block",
+    "fatal",
+    "fire",
+    "fire_tick",
+    "fireworks",
+    "fly_into_wall",
+    "freezing",
+    "lava",
+    "lightning",
+    "magic",
+    "magma",
+    "none",
+    "override",
+    "piston",
+    "projectile",
+    "stalactite",
+    "stalagmite",
+    "starve",
+    "suffocation",
+    "suicide",
+    "temperature",
+    "thorns",
+    "void",
+    "wither"
+  ]
+
+  formDamage.title('Damage [/damage]')
+  formDamage.textField('Target §8[Entity]', 'Target Selector', '@s')
+  formDamage.textField('Damage Amount', 'Damage Value', '1')
+  formDamage.dropdown('Damage Type', typeDamage)
+  formDamage.textField('Damager §8[Entity][Optional]\nMust be single entity\nUse [c=1]', 'Target Selector')
+
+  formDamage.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ target, amount, type, damager ] = respond.formValues
+    player.runCommand(`damage ${target} ${amount} ${typeDamage[type]} ${damager}`)
+  })
+}
+
 export function Effect(player) {
   let formEffect = new ModalFormData()
   let typeEffect = [
@@ -292,6 +346,38 @@ export function Give(player) {
 
     let [ target, item, amount, data, component ] = respond.formValues
     player.runCommand(`give ${target} ${item} ${amount} ${data} ${component}`)
+  })
+}
+
+export function Locate(player) {
+  let formLocate = new ModalFormData()
+  let typeLocate = [
+    'ancientcity',
+    'bastionremnant',
+    'buriedtreasure',
+    'endcity',
+    'fortress',
+    'mansion',
+    'mineshaft',
+    'monument',
+    'ruins',
+    'pillageroutpost',
+    'ruinedportal',
+    'shipwreck',
+    'stronghold',
+    'temple',
+    'village'
+  ]
+
+  formLocate.title('Locate [/locate]')
+  formLocate.dropdown('Structure', typeLocate)
+  formLocate.toggle('Search on New Chunk', false)
+
+  formLocate.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ structure, chunk ] = respond.formValues
+    player.runCommand(`locate ${typeLocate[structure]} ${chunk}`)
   })
 }
 

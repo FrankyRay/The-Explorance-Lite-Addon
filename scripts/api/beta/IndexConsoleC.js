@@ -80,6 +80,9 @@ export function ConsoleCommands(player) {
       case 2:
         ConsC.Clear(player);
         break;
+      case 5:
+        ConsC.Damage(player);
+        break;
       case 9:
         ConsC.Effect(player); 
         break;
@@ -94,6 +97,9 @@ export function ConsoleCommands(player) {
         break;
       case 19:
         ConsC.Give(player); 
+        break;
+      case 24:
+        ConsC.Locate(player); 
         break;
       case 25:
         ConsC.Loot(player); 

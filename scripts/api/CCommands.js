@@ -21,6 +21,9 @@ export function CustomCommands(prefix, commands, args, player) {
     case 'help':
       Print(HelpCommand, 'normal', player.name);
       break;
+    case 'consc':
+      Overworld.runCommand(`loot give ${player.name} loot "custom/console_command"`);
+      break;
     case 'gmc':
       Overworld.runCommand(`gamemode creative "${player.name}"`);
       break;
