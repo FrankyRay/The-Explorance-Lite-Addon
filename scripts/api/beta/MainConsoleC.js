@@ -119,6 +119,33 @@ export function Damage(player) {
   })
 }
 
+export function Difficulty(player) {
+  let formDifficulty = new ActionFormData()
+
+  formDifficulty.title("Difficulty [/difficulty]")
+  formDifficulty.body("Select your difficulty")
+  formDifficulty.button("Peacefull")
+  formDifficulty.button("Easy")
+  formDifficulty.button("Normal")
+  formDifficulty.button("Hard")
+
+  formDifficulty.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let button = respond.selection
+    switch (button) {
+      case 0:
+        player.runCommand("difficulty peacefull")
+      case 1:
+        player.runCommand("difficulty easy")
+      case 2:
+        player.runCommand("difficulty normal")
+      case 3:
+        player.runCommand("difficulty hard")
+    }
+  })
+}
+
 export function Effect(player) {
   let formEffect = new ModalFormData()
   let typeEffect = [
@@ -230,6 +257,67 @@ export function Enchant(player) {
   })
 }
 
+export function Fill(player) {
+  let formFill = new ModalFormData()
+  let typeFillMode = [ "replace", "destroy", "keep", "hollow", "outline" ]
+
+  formFill.title("Setblock [/setblock]")
+  formFill.textField("Position 1 §8[XYZ]", "3-Int Coordinate")
+  formFill.textField("Position 2 §8[XYZ]", "3-Int Coordinate")
+  formFill.textField("Block Name", "Block")
+  formFill.textField("Data Value", "Aux or BlockState", "0")
+  formFill.dropdown("Setblock Mode", typeFillMode, 0)
+  formFill.textField("Block Name §8[ReplaceMode]", "Block")
+  formFill.textField("Data Value §8[ReplaceMode]", "Aux or BlockState")
+
+  formFill.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ pos1, pos2, block, data, mode, rblock, rdata ] = respond.formValues
+    if (mode == 0) {
+      player.runCommand(`setblock ${pos1} ${pos2} ${block} ${data} replace ${rblock} ${rdata}`)
+      return
+    }
+    player.runCommand(`setblock ${pos1} ${pos2} ${block} ${data} ${typeFillMode[mode]}`)
+  })
+}
+
+export function Fog(player) {
+  let formFog = new ModalFormData()
+  let typeFogMode = [ "push", "pop", "remove" ]
+
+  formFog.title("Fog [/fog]")
+  formFog.textField("Target §8[Player]", "Target Selector")
+  formFog.dropdown("Fog Mode\n§8push - Add new fog\npop/remove - Remove fog")
+  formFog.textField("Fog ID\n§8For 'push' mode", "Fog ID (minecraft:<fog>)")
+  formFog.textField("Fog Name", "User Provided ID")
+
+  formFog.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ target, mode, type, name ] = respond.formValues
+    if (mode == 0) {
+      player.runCommand(`fog ${target} push ${type} ${name}`)
+      return
+    }
+    player.runCommand(`fog ${target} ${typeFogMode[mode]} ${name}`)
+  })
+}
+
+export function Function(player) {
+  let formFunction = new ModalFormData()
+
+  formFunction.title("Function [/function]")
+  formFunction.textField("Function File Path", "File Path")
+
+  formFunction.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ path ] = respond.formValues
+    player.runCommand(`function ${path}`)
+  })
+}
+
 export function Gamemode(player) {
   let formGamemode = new ActionFormData()
 
@@ -333,15 +421,15 @@ export function Gamerule(player) {
 }
 
 export function Give(player) {
-  let giveForm = new ModalFormData()
-  giveForm.title('Give [/give]')
-  giveForm.textField('Target §8[Player]', 'Target Selector', '@s')
-  giveForm.textField('Item', 'Item Type')
-  giveForm.textField('Amount §8[Optional]', 'Item Amount', '1')
-  giveForm.textField("Data Values §8[Optional]\n'-1' Match All Item Data Value", "Data Value [Int]", '0')
-  giveForm.textField("Item Component/Tag §8[Optional][Manual]", "JSON Component")
+  let formGive = new ModalFormData()
+  formGive.title('Give [/give]')
+  formGive.textField('Target §8[Player]', 'Target Selector', '@s')
+  formGive.textField('Item', 'Item Type')
+  formGive.textField('Amount §8[Optional]', 'Item Amount', '1')
+  formGive.textField("Data Values §8[Optional]\n'-1' Match All Item Data Value", "Data Value [Int]", '0')
+  formGive.textField("Item Component/Tag §8[Optional][Manual]", "JSON Component")
 
-  giveForm.show(player).then(respond => {
+  formGive.show(player).then(respond => {
     if (respond.isCanceled) return
 
     let [ target, item, amount, data, component ] = respond.formValues
@@ -410,6 +498,92 @@ export function Loot(player) {
   })
 }
 
+export function Replaceitem(player) {
+  let formReplaceitem = new ModalFormData()
+  let typeReplaceitem = [
+    "slot.weapon.mainhand",
+    "slot.weapon.offhand",
+    "slot.armor.head",
+    "slot.armor.chest",
+    "slot.armor.legs",
+    "slot.armor.feet",
+    "slot.hotbar",
+    "slot.inventory",
+    "slot.enderchest",
+    "slot.saddle",
+    "slot.armor",
+    "slot.chest",
+    "slot.equippable"
+  ]
+
+  formReplaceitem.title("Replaceitem [/replaceitem]")
+  formReplaceitem.toggle("Block/Entity\n§8true - Entity\nfalse - Block", true)
+  formReplaceitem.textField("Position §8[Block]§r/Target §8[Entity]", "Coodinate/Target Selector")
+  formReplaceitem.dropdown("Inv. Slot Container", typeReplaceitem)
+  formReplaceitem.textField("Inv. Slot ID", "Slot ID")
+  formReplaceitem.toggle("Replace Mode\n§8true - Destroy\nfalse - Keep", true)
+  formReplaceitem.textField('Item', 'Item Type')
+  formReplaceitem.slider('Amount §8[Optional]', 1, 64, 1, 1)
+  formReplaceitem.textField("Data Values §8[Optional]", "Data Value [Int]")
+  formReplaceitem.textField("Item Component/Tag §8[Optional][Manual]", "JSON Component")
+
+  formReplaceitem.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ be, postgt, container, id, mode, item, amount, data, tag ] = respond.formValues
+    let target = 'block'
+    if (be) {
+      target = 'entity'
+    }
+
+    let replaceMode = 'keep'
+    if (mode) {
+      replaceMode = 'destroy'
+    }
+
+    player.runCommand(`replaceitem ${target} ${postgt} ${typeReplaceitem[container]} ${id} ${replaceMode} ${item} ${amount} ${data} ${tag}`)
+  })
+}
+
+export function Setblock(player) {
+  let formSetblock = new ModalFormData()
+  let typeSetblockMode = [ "replace", "destroy", "keep" ]
+
+  formSetblock.title("Setblock [/setblock]")
+  formSetblock.textField("Position §8[XYZ]", "3-Int Coordinate")
+  formSetblock.textField("Block Name", "Block")
+  formSetblock.textField("Data Value", "Aux or BlockState", "0")
+  formSetblock.dropdown("Setblock Mode", typeSetblockMode, 0)
+
+  formSetblock.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ pos, block, data, mode ] = respond.formValues
+    player.runCommand(`setblock ${pos} ${block} ${data} ${typeSetblockMode[mode]}`)
+  })
+}
+
+export function Summon(player) {
+  let formSummon = new ModalFormData()
+
+  formSummon.title("Summon [/summon]")
+  formSummon.textField("Entity Type", "Entity (W/O Namespace)")
+  formSummon.textField("Position §8[Optional]", "Coordinate")
+  formSummon.textField("Entity Pre-Name §8[Optional]\nCan be empty even 'Event' specify", "Name")
+  formSummon.textField("Entity Event §8[Optional]", "Event")
+
+  formSummon.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ type, pos, name, event ] = respond.formValues
+    if (event == '' && name != '') {
+      player.runCommand(`summon ${type} ${name} ${pos}`)
+      return
+    }
+    player.runCommand(`summon ${type} ${pos} ${event} ${name}`)
+  })
+}
+
 export function Tag(player) {
   let formTag = new ModalFormData()
   let typeTag = [ 'Add', 'Remove', 'List' ]
@@ -462,6 +636,22 @@ export function Time(player) {
   })
 }
 
+export function Weather(player) {
+  let formWeather = new ModalFormData()
+  let typeWeather = [ "Clear", "Rain", "Thunder" ]
+
+  formWeather.title("Weather [/weather]")
+  formWeather.dropdown("Weather Type", typeWeather)
+  formWeather.textField("Duration §8[Tick][Optional]", "Duration")
+
+  formWeather.show(player).then(respond => {
+    if (respond.isCanceled) return
+  
+    let [ type, duration ] = respond.formValues
+    player.runCommand(`weather ${typeWeather[type]} ${duration}`)
+  })
+}
+
 export function XP(player) {
   let formXP = new ModalFormData()
 
@@ -498,6 +688,6 @@ function gameruleWarnHighRTS(player, ticks) {
       Print("You canceled the changes", "normal", player.name)
       return
     }
-    Overworld.runCommand(`gamerule randomtickspeed ${ticks}`)
+    player.runCommand(`gamerule randomtickspeed ${ticks}`)
   })
 }

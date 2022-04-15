@@ -12,41 +12,40 @@ export function ConsoleCommands(player) {
   indexForm.title('Console Commands')
   indexForm.body('Command List:')
 
-  indexForm.button('Ability')
-  indexForm.button('Camerashake')
-  indexForm.button('Clear')
-  indexForm.button('Clearspawnpoint')
+  indexForm.button('Ability') // Done
+  indexForm.button('Camerashake') // Done
+  indexForm.button('Clear') // Done
+  indexForm.button('Clearspawnpoint') // (Prob Delete)
   indexForm.button('Clone')
-  indexForm.button('Damage')
-  indexForm.button('Daylock')
+  indexForm.button('Damage') // Done
   indexForm.button('Dialogue')
-  indexForm.button('Difficulty')
-  indexForm.button('Effect')
-  indexForm.button('Enchant')
+  indexForm.button('Difficulty') // Done
+  indexForm.button('Effect') // Done
+  indexForm.button('Enchant') // Done
   indexForm.button('Event')
   indexForm.button('Execute')
-  indexForm.button('Fill')
-  indexForm.button('Fog')
-  indexForm.button('Function')
-  indexForm.button('Gamemode')
-  indexForm.button('Gamerule')
+  indexForm.button('Fill') // Done
+  indexForm.button('Fog') // Done
+  indexForm.button('Function') // Done
+  indexForm.button('Gamemode') // Done
+  indexForm.button('Gamerule') // Done
   indexForm.button('Gametest')
-  indexForm.button('Give')
+  indexForm.button('Give') // Done
   indexForm.button('Help')
   indexForm.button('Kick')
   indexForm.button('Kill')
   indexForm.button('List')
-  indexForm.button('Locate')
-  indexForm.button('Loot')
+  indexForm.button('Locate') // Done
+  indexForm.button('Loot') // Done
   indexForm.button('Mobevent')
   indexForm.button('Music')
   indexForm.button('Particle')
   indexForm.button('Playanimation')
   indexForm.button('Playsound')
-  indexForm.button('Replaceitem')
+  indexForm.button('Replaceitem') // Done
   indexForm.button('Ride')
   indexForm.button('Schedules')
-  indexForm.button('Scoreboard')
+  indexForm.button('Scoreboard') // Done
   indexForm.button('Setblock')
   indexForm.button('Setmaxplayers')
   indexForm.button('Setworldspawn')
@@ -54,18 +53,16 @@ export function ConsoleCommands(player) {
   indexForm.button('Spreadplayers')
   indexForm.button('Stopsound')
   indexForm.button('Structure')
-  indexForm.button('Summon')
-  indexForm.button('Tag')
+  indexForm.button('Summon') // Done
+  indexForm.button('Tag') // Done
   indexForm.button('Teleport')
   indexForm.button('Tellraw')
   indexForm.button('Testfor')
-  indexForm.button('Testforblocks')
   indexForm.button('Tickingarea')
-  indexForm.button('Time')
+  indexForm.button('Time') // Done
   indexForm.button('Titleraw')
-  indexForm.button('Toggledownfall')
-  indexForm.button('Weather')
-  indexForm.button('XP')
+  indexForm.button('Weather') // Done
+  indexForm.button('XP') // Done
 
   indexForm.show(player).then(respondForm => {
     let button = respondForm.selection
@@ -83,37 +80,61 @@ export function ConsoleCommands(player) {
       case 5:
         ConsC.Damage(player);
         break;
-      case 9:
+      case 7:
+        ConsC.Difficulty(player); 
+        break;
+      case 8:
         ConsC.Effect(player); 
         break;
-      case 10:
+      case 9:
         ConsC.Enchant(player); 
         break;
-      case 16:
+      case 12:
+        ConsC.Fill(player); 
+        break;
+      case 13:
+        ConsC.Fog(player); 
+        break;
+      case 14:
+        ConsC.Function(player); 
+        break;
+      case 15:
         ConsC.Gamemode(player); 
         break;
-      case 17:
+      case 16:
         ConsC.Gamerule(player); 
         break;
-      case 19:
+      case 18:
         ConsC.Give(player); 
         break;
-      case 24:
+      case 23:
         ConsC.Locate(player); 
         break;
-      case 25:
+      case 24:
         ConsC.Loot(player); 
         break;
-      case 34:
+      case 30:
+        ConsC.Replaceitem(player); 
+        break;
+      case 33:
         ScoreboardIndex(player); 
         break;
-      case 43:
+      case 34:
+        ConsC.Setblock(player); 
+        break;
+      case 41:
+        ConsC.Summon(player); 
+        break;
+      case 42:
         ConsC.Tag(player); 
         break;
-      case 49:
+      case 47:
         ConsC.Time(player); 
         break;
-      case 53:
+      case 49:
+        ConsC.Weather(player); 
+        break;
+      case 50:
         ConsC.XP(player); 
         break;
       default:
