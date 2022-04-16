@@ -1,114 +1,126 @@
-import { world } from 'mojang-minecraft'
-import { ActionFormData, MessageFormData, ModalFormData } from 'mojang-minecraft-ui';
-import { Print } from '../PrintMessage.js'
+import { world } from "mojang-minecraft";
+import {
+  ActionFormData,
+  MessageFormData,
+  ModalFormData,
+} from "mojang-minecraft-ui";
+import { Print } from "../PrintMessage.js";
 
 export function ScoreboardIndex(player) {
-  let formScoreboard = new MessageFormData()
+  let formScoreboard = new MessageFormData();
 
-  formScoreboard.title("Scoreboard [/scoreboard]")
-  formScoreboard.body("Choose one of these option, scoreboard objective or players")
-  formScoreboard.button1("Objectives")
-  formScoreboard.button2("Players")
+  formScoreboard.title("Scoreboard [/scoreboard]");
+  formScoreboard.body(
+    "Choose one of these option, scoreboard objective or players"
+  );
+  formScoreboard.button1("Objectives");
+  formScoreboard.button2("Players");
 
-  formScoreboard.show(player).then(respond => {
-    if (respond.isCanceled) return
+  formScoreboard.show(player).then((respond) => {
+    if (respond.isCanceled) return;
 
-    let select = respond.selection
+    let select = respond.selection;
     if (select == 1) {
-      ScoreboardObjectivesIndex(player)
+      ScoreboardObjectivesIndex(player);
     } else {
-      ScoreboardPlayersIndex(player)
+      ScoreboardPlayersIndex(player);
     }
-  })
+  });
 }
-
 
 // Scoreboard Objectives Functions
 function ScoreboardObjectivesIndex(player) {
-  let formSbObjectives = new ActionFormData()
+  let formSbObjectives = new ActionFormData();
 
-  formSbObjectives.title("SB Objectives [/scoreboard objectives]")
-  formSbObjectives.body("Select an option")
-  formSbObjectives.button("Add/Remove")
-  formSbObjectives.button("List")
-  formSbObjectives.button("Set Display")
+  formSbObjectives.title("SB Objectives [/scoreboard objectives]");
+  formSbObjectives.body("Select an option");
+  formSbObjectives.button("Add/Remove");
+  formSbObjectives.button("List");
+  formSbObjectives.button("Set Display");
 
-  formSbObjectives.show(player).then(respond => {
-    if (respond.isCanceled) return
+  formSbObjectives.show(player).then((respond) => {
+    if (respond.isCanceled) return;
 
-    let button = respond.selection
+    let button = respond.selection;
     switch (button) {
       case 0:
         SbObjAdd(player);
         break;
       case 1:
-          player.runCommand('scoreboard objectives list');
-          break;
+        player.runCommand("scoreboard objectives list");
+        break;
       case 2:
         SbObjDisplay(player);
         break;
     }
-  })
+  });
 }
 
 function SbObjAdd(player) {
-  let formSbObjAdd = new ModalFormData()
+  let formSbObjAdd = new ModalFormData();
 
-  formSbObjAdd.title("SB Objectives Add/Remove")
-  formSbObjAdd.toggle("Add/Remove\n§8true - Add\nfalse - Remove", true)
-  formSbObjAdd.textField("Objective Name", "Name")
-  formSbObjAdd.textField("Objective Display Name\n§8For 'add' argument", "Display Name")
+  formSbObjAdd.title("SB Objectives Add/Remove");
+  formSbObjAdd.toggle("Add/Remove\n§8true - Add\nfalse - Remove", true);
+  formSbObjAdd.textField("Objective Name", "Name");
+  formSbObjAdd.textField(
+    "Objective Display Name\n§8For 'add' argument",
+    "Display Name"
+  );
 
-  formSbObjAdd.show(player).then(respond => {
-    if (respond.isCanceled) return
+  formSbObjAdd.show(player).then((respond) => {
+    if (respond.isCanceled) return;
 
-    let [ type, name, display ] = respond.formValues
+    let [type, name, display] = respond.formValues;
     if (!type) {
-      player.runCommand(`scoreboard objectives remove ${name}`)
-      return
+      player.runCommand(`scoreboard objectives remove ${name}`);
+      return;
     }
-    player.runCommand(`scoreboard objectives add ${name} dummy "${display}"`)
-  })
+    player.runCommand(`scoreboard objectives add ${name} dummy "${display}"`);
+  });
 }
 
 function SbObjDisplay(player) {
-  let formSbObjDisplay = new ModalFormData()
-  let typeSbObjDisplay = [ "list", "sidebar", "belowname" ]
+  let formSbObjDisplay = new ModalFormData();
+  let typeSbObjDisplay = ["list", "sidebar", "belowname"];
 
-  formSbObjDisplay.title("SB Objectives SetDisplay")
-  formSbObjDisplay.dropdown("Set Display Type", typeSbObjDisplay, 1)
-  formSbObjDisplay.textField("Objective Name", "Name")
-  formSbObjDisplay.toggle("Score Sort Order\n§8true - Ascending\nfalse - Descending", true)
+  formSbObjDisplay.title("SB Objectives SetDisplay");
+  formSbObjDisplay.dropdown("Set Display Type", typeSbObjDisplay, 1);
+  formSbObjDisplay.textField("Objective Name", "Name");
+  formSbObjDisplay.toggle(
+    "Score Sort Order\n§8true - Ascending\nfalse - Descending",
+    true
+  );
 
-  formSbObjDisplay.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let [ type, name, sort ] = respond.formValues
-    let order = "descending"
+  formSbObjDisplay.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [type, name, sort] = respond.formValues;
+    let order = "descending";
     if (sort) {
-      order = "ascending"
+      order = "ascending";
     }
-    player.runCommand(`scoreboard objectives setdisplay ${typeSbObjDisplay[type]} ${name} ${order}`)
-  })
+    player.runCommand(
+      `scoreboard objectives setdisplay ${typeSbObjDisplay[type]} ${name} ${order}`
+    );
+  });
 }
-
 
 // Scoreboard Players Functions
 function ScoreboardPlayersIndex(player) {
-  let formSbPlayers = new ActionFormData()
+  let formSbPlayers = new ActionFormData();
 
-  formSbPlayers.title("SB Players [/scoreboard players]")
-  formSbPlayers.body("Select an option")
-  formSbPlayers.button("Add/Remove/Set/Reset")
-  formSbPlayers.button("List")
-  formSbPlayers.button("Operation")
-  formSbPlayers.button("Random")
-  formSbPlayers.button("Test")
+  formSbPlayers.title("SB Players [/scoreboard players]");
+  formSbPlayers.body("Select an option");
+  formSbPlayers.button("Add/Remove/Set/Reset");
+  formSbPlayers.button("List");
+  formSbPlayers.button("Operation");
+  formSbPlayers.button("Random");
+  formSbPlayers.button("Test");
 
-  formSbPlayers.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let button = respond.selection
+  formSbPlayers.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let button = respond.selection;
     switch (button) {
       case 0:
         SbPlrARSR(player);
@@ -126,109 +138,118 @@ function ScoreboardPlayersIndex(player) {
         SbPlrTest(player);
         break;
     }
-  })
+  });
 }
 
 function SbPlrARSR(player) {
-  let formSbPlrARSR = new ModalFormData()
-  let typeSbPlrARSR = [ "add", "remove", "set", "reset" ]
+  let formSbPlrARSR = new ModalFormData();
+  let typeSbPlrARSR = ["add", "remove", "set", "reset"];
 
-  formSbPlrARSR.title("SB Player ARSR (Add/Remove/Set/Reset)")
-  formSbPlrARSR.dropdown("Score Changer Type", typeSbPlrARSR)
-  formSbPlrARSR.textField("Target §8[Entity]", "Target Selector", "@s")
-  formSbPlrARSR.textField("Objective Name", "Name")
-  formSbPlrARSR.textField("Score Value", "Value")
+  formSbPlrARSR.title("SB Player ARSR (Add/Remove/Set/Reset)");
+  formSbPlrARSR.dropdown("Score Changer Type", typeSbPlrARSR);
+  formSbPlrARSR.textField("Target §8[Entity]", "Target Selector", "@s");
+  formSbPlrARSR.textField("Objective Name", "Name");
+  formSbPlrARSR.textField("Score Value", "Value");
 
-  formSbPlrARSR.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let [ type, target, objective, value ] = respond.formValues
+  formSbPlrARSR.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [type, target, objective, value] = respond.formValues;
     if (type == 3) {
-      player.runCommand(`scoreboard players reset ${target} ${objective}`)
-      return
+      player.runCommand(`scoreboard players reset ${target} ${objective}`);
+      return;
     }
-    player.runCommand(`scoreboard players ${typeSbPlrARSR[type]} ${target} ${objective} ${value}`)
-  })
+    player.runCommand(
+      `scoreboard players ${typeSbPlrARSR[type]} ${target} ${objective} ${value}`
+    );
+  });
 }
 
 function SbPlrList(player) {
-  let formSbPlrList = new ModalFormData()
+  let formSbPlrList = new ModalFormData();
 
-  formSbPlrList.title("SB Players List")
-  formSbPlrList.textField("Target §8[Entity]", "Target Selector")
+  formSbPlrList.title("SB Players List");
+  formSbPlrList.textField("Target §8[Entity]", "Target Selector");
 
-  formSbPlrList.show(player).then(respond => {
-    if (respond.isCanceled) return
+  formSbPlrList.show(player).then((respond) => {
+    if (respond.isCanceled) return;
 
-    let [ target ] = respond.formValues
-    player.runCommand(`scoreboard players list ${target}`)
-  })
+    let [target] = respond.formValues;
+    player.runCommand(`scoreboard players list ${target}`);
+  });
 }
 
 function SbPlrOperation(player) {
-  let formSbPlrOperation = new ModalFormData()
-  let typeSbPlrOperation = [ "=", "+=", "-=", "*=", "/=", "%=", "<", ">", "><" ]
+  let formSbPlrOperation = new ModalFormData();
+  let typeSbPlrOperation = ["=", "+=", "-=", "*=", "/=", "%=", "<", ">", "><"];
 
-  formSbPlrOperation.title("SB Players Operation")
-  formSbPlrOperation.textField("Target §8[Destination]", "Target Selector")
-  formSbPlrOperation.textField("Objectives Name §8[Destination]", "Name")
-  formSbPlrOperation.dropdown("Score Operation", typeSbPlrOperation)
-  formSbPlrOperation.textField("Target §8[Source]", "Target Selector")
-  formSbPlrOperation.textField("Objectives Name §8[Source]", "Name")
+  formSbPlrOperation.title("SB Players Operation");
+  formSbPlrOperation.textField("Target §8[Destination]", "Target Selector");
+  formSbPlrOperation.textField("Objectives Name §8[Destination]", "Name");
+  formSbPlrOperation.dropdown("Score Operation", typeSbPlrOperation);
+  formSbPlrOperation.textField("Target §8[Source]", "Target Selector");
+  formSbPlrOperation.textField("Objectives Name §8[Source]", "Name");
 
-  formSbPlrOperation.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let [ tgtDest, objDest, operation, tgtSource, objSource ] = respond.formValues
-    player.runCommand(`scoreboard players operation ${tgtDest} ${objDest} ${typeSbPlrOperation[operation]} ${tgtSource} ${objSource}`)
-  })
+  formSbPlrOperation.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [tgtDest, objDest, operation, tgtSource, objSource] =
+      respond.formValues;
+    player.runCommand(
+      `scoreboard players operation ${tgtDest} ${objDest} ${typeSbPlrOperation[operation]} ${tgtSource} ${objSource}`
+    );
+  });
 }
 
 function SbPlrRandom(player) {
-  let formSbPlrRandom = new ModalFormData()
+  let formSbPlrRandom = new ModalFormData();
 
-  formSbPlrRandom.title("SB Players Random")
-  formSbPlrRandom.textField("Target §8[Entity]", "Target Selector")
-  formSbPlrRandom.textField("Objective Name", "Name")
-  formSbPlrRandom.textField("Min Score Value", "Min Value")
-  formSbPlrRandom.textField("Max Score Value", "Max Value")
+  formSbPlrRandom.title("SB Players Random");
+  formSbPlrRandom.textField("Target §8[Entity]", "Target Selector");
+  formSbPlrRandom.textField("Objective Name", "Name");
+  formSbPlrRandom.textField("Min Score Value", "Min Value");
+  formSbPlrRandom.textField("Max Score Value", "Max Value");
 
-  formSbPlrRandom.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let [ target, objective, min, max ] = respond.formValues
-    player.runCommand(`scoreboard players random ${target} ${objective} ${min} ${max}`)
-  })
+  formSbPlrRandom.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [target, objective, min, max] = respond.formValues;
+    player.runCommand(
+      `scoreboard players random ${target} ${objective} ${min} ${max}`
+    );
+  });
 }
 
 function SbPlrReset(player) {
-  let formSbPlrReset = new ModalFormData()
+  let formSbPlrReset = new ModalFormData();
 
-  formSbPlrReset.title("SB Players List")
-  formSbPlrReset.textField("Target §8[Entity]", "Target Selector")
-  formSbPlrReset.textField("Objectives Name §8[Optional]", "Name")
+  formSbPlrReset.title("SB Players List");
+  formSbPlrReset.textField("Target §8[Entity]", "Target Selector");
+  formSbPlrReset.textField("Objectives Name §8[Optional]", "Name");
 
-  formSbPlrReset.show(player).then(respond => {
-    if (respond.isCanceled) return
+  formSbPlrReset.show(player).then((respond) => {
+    if (respond.isCanceled) return;
 
-    let [ target, objective ] = respond.formValues
-    player.runCommand(`scoreboard players reset ${target} ${objective}`)
-  })
+    let [target, objective] = respond.formValues;
+    player.runCommand(`scoreboard players reset ${target} ${objective}`);
+  });
 }
 
 function SbPlrTest(player) {
-  let formSbPlrTest = new ModalFormData()
+  let formSbPlrTest = new ModalFormData();
 
-  formSbPlrTest.title("SB Players Random")
-  formSbPlrTest.textField("Target §8[Entity]", "Target Selector")
-  formSbPlrTest.textField("Objective Name", "Name")
-  formSbPlrTest.textField("Min Score Value", "Min Value")
-  formSbPlrTest.textField("Max Score Value §8[Optional]", "Max Value")
+  formSbPlrTest.title("SB Players Random");
+  formSbPlrTest.textField("Target §8[Entity]", "Target Selector");
+  formSbPlrTest.textField("Objective Name", "Name");
+  formSbPlrTest.textField("Min Score Value", "Min Value");
+  formSbPlrTest.textField("Max Score Value §8[Optional]", "Max Value");
 
-  formSbPlrTest.show(player).then(respond => {
-    if (respond.isCanceled) return
-  
-    let [ target, objective, min, max ] = respond.formValues
-    player.runCommand(`scoreboard players random ${target} ${objective} ${min} ${max}`)
-  })
+  formSbPlrTest.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [target, objective, min, max] = respond.formValues;
+    player.runCommand(
+      `scoreboard players random ${target} ${objective} ${min} ${max}`
+    );
+  });
 }

@@ -12,7 +12,9 @@ function location(pos) {
 }
 
 function print(text) {
-  world.getDimension("overworld").runCommand(`tellraw @a {"rawtext":[{"text": "${text}"}]}`);
+  world
+    .getDimension("overworld")
+    .runCommand(`tellraw @a {"rawtext":[{"text": "${text}"}]}`);
 }
 
 function Pos1(command) {
@@ -47,7 +49,7 @@ const chatCallback = world.events.beforeChat.subscribe((eventData) => {
     let block = eventData.message.replace("!fill ", "");
     world.getDimension("overworld").runCommand(`fill ${pos1} ${pos2} ${block}`);
     eventData.cancel = true;
-    }
+  }
 });
 
 function SetHome(command) {
