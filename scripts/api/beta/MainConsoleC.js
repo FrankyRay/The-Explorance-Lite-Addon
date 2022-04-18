@@ -13,8 +13,8 @@ export function Ability(player) {
   let formAbility = new ModalFormData();
 
   formAbility.title("Ability [/ability]");
-  formAbility.dropdown("Ability", typeAbility, 0);
-  formAbility.toggle("Value §8[Bool]", true);
+  formAbility.dropdown("Ability Type", typeAbility, 0);
+  formAbility.toggle("Value", true);
 
   formAbility.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -29,13 +29,13 @@ export function CameraShake(player) {
 
   formCameraShake.title("Camera Shake [/camerashake]");
   formCameraShake.toggle(
-    "CS Mode§8\ntrue - Add\nfalse - Stop {Use Target Only}",
+    "CS Mode [§aRemove§r/§cAdd§r]§8\n{Remove - Use Target Only}",
     true
   );
-  formCameraShake.textField("Target §8[Player]", "Target Selector");
+  formCameraShake.textField("Target §g[Player]", "Target Selector");
   formCameraShake.slider("Intensity Shake", 0, 4, 1, 1);
-  formCameraShake.textField("Duration §8[Seconds]", "Duration");
-  formCameraShake.toggle("Shake Type§8\ntrue - Rotational\nfalse - Positional");
+  formCameraShake.textField("Duration §g[Seconds]", "Duration");
+  formCameraShake.toggle("Shake Type §8[§cPositional§8/§aRotational§8]");
 
   formCameraShake.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -61,13 +61,10 @@ export function Clear(player) {
   let formClear = new ModalFormData();
 
   formClear.title("Clear [/clear]");
-  formClear.textField("Target \n§8[Player][Optional]", "Target Selector");
-  formClear.textField("Item ID \n§8[Optional]", "Item ID");
-  formClear.textField(
-    "Item Data \n§8[Optional]\n'-1' Match All Item Data Value",
-    "Data Value [Int]"
-  );
-  formClear.textField("Amount §8(Max)\n[Optional]", "Amount");
+  formClear.textField("Target §g[Player]§8[Optional]", "Target Selector");
+  formClear.textField("Item ID §8[Optional]", "Item ID");
+  formClear.textField("Item Data §8[Optional]", "Data Value [Int]");
+  formClear.textField("Amount §9(Max)§8[Optional]", "Amount");
 
   formClear.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -118,10 +115,13 @@ export function Damage(player) {
   ];
 
   formDamage.title("Damage [/damage]");
-  formDamage.textField("Target§8\n[Entity]", "Target Selector", "@s");
+  formDamage.textField("Target §g[Entity]", "Target Selector", "@s");
   formDamage.textField("Damage Amount", "Damage Value", "1");
-  formDamage.dropdown("Damage Type", typeDamage);
-  formDamage.textField("Damager§8\n[Entity][Optional][c=1]", "Target Selector");
+  formDamage.dropdown("Damage Type §8[Optional]", typeDamage);
+  formDamage.textField(
+    "Damager §g[1 Entity]§8[Optional][c=1]",
+    "Target Selector"
+  );
 
   formDamage.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -198,14 +198,11 @@ export function Effect(player) {
   ];
 
   formEffect.title("Effect [/effect]");
-  formEffect.textField(
-    'Target §8[Entity]\nSuround the player name with ""',
-    "Target Selector"
-  );
+  formEffect.textField("Target §g[Entity]", "Target Selector");
   formEffect.dropdown("Effect Type", typeEffect);
-  formEffect.textField("Duration §8[Second]", "Duration", "30");
-  formEffect.slider("Amplifier", 0, 255, 1, 0);
-  formEffect.toggle("Hide Particle", false);
+  formEffect.textField("Duration §g[Second]§8[Optional]", "Duration", "30");
+  formEffect.slider("Amplifier §8[Optional]", 0, 255, 1, 0);
+  formEffect.toggle("Hide Particle §8[Optional]", false);
 
   formEffect.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -267,9 +264,9 @@ export function Enchant(player) {
   ];
 
   formEnchant.title("Enchant [/enchant]");
-  formEnchant.textField("Target §8[Player]", "Target Selection", "@s");
+  formEnchant.textField("Target §g[Player]", "Target Selection", "@s");
   formEnchant.dropdown("Enchantment Type", typeEnchant);
-  formEnchant.slider("Enchantment Level", 1, 5, 1, 1);
+  formEnchant.slider("Enchantment Level §8[Optional]§r", 1, 5, 1, 1);
 
   formEnchant.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -286,13 +283,13 @@ export function Fill(player) {
   let typeFillMode = ["replace", "destroy", "keep", "hollow", "outline"];
 
   formFill.title("Setblock [/setblock]");
-  formFill.textField("Position 1 §8[XYZ]", "3-Int Coordinate");
-  formFill.textField("Position 2 §8[XYZ]", "3-Int Coordinate");
+  formFill.textField("Position 1 §g[XYZ]", "3 Points Position");
+  formFill.textField("Position 2 §g[XYZ]", "3 Points Position");
   formFill.textField("Block Name", "Block");
   formFill.textField("Data Value", "Aux or BlockState", "0");
   formFill.dropdown("Setblock Mode", typeFillMode, 0);
-  formFill.textField("Block Name §8[ReplaceMode]", "Block");
-  formFill.textField("Data Value §8[ReplaceMode]", "Aux or BlockState");
+  formFill.textField("Block Name §9[Replace Mode]", "Block");
+  formFill.textField("Data Value §9[Replace Mode]", "Aux or BlockState");
 
   formFill.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -316,8 +313,11 @@ export function Fog(player) {
 
   formFog.title("Fog [/fog]");
   formFog.textField("Target §8[Player]", "Target Selector");
-  formFog.dropdown("Fog Mode\n§8push - Add new fog\npop/remove - Remove fog");
-  formFog.textField("Fog ID\n§8For 'push' mode", "Fog ID (minecraft:<fog>)");
+  formFog.dropdown(
+    "Fog Mode\n§8[§c'Pop/Remove' (Remove)§8/§aPush (Add)§8]",
+    typeFogMode
+  );
+  formFog.textField("Fog ID §9(For 'push' mode)", "Fog ID (minecraft:<fog>)");
   formFog.textField("Fog Name", "User Provided ID");
 
   formFog.show(player).then((respond) => {
@@ -355,7 +355,7 @@ export function Gamemode(player) {
   formGamemode.button("Creative [1]");
   formGamemode.button("Adventure [2]");
   formGamemode.button("Default [5]");
-  formGamemode.button("Spectator (Leak)[6]");
+  formGamemode.button("Spectator (Leaked)[6]");
 
   formGamemode.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -417,11 +417,11 @@ export function Gamerule(player) {
 
   formGamerule.title("Gamerule [/gamerule]");
   formGamerule.dropdown(
-    "Gamerule Type\n§8Yellow text using textfield",
+    "Gamerule Type §9(§eYellow§9 - Int Gamemode)",
     typeGamerule
   );
   formGamerule.textField("Integer", "For some gamerule only");
-  formGamerule.toggle("Boolean", false);
+  formGamerule.toggle("True/False", false);
 
   formGamerule.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -455,15 +455,10 @@ export function Give(player) {
   let formGive = new ModalFormData();
 
   formGive.title("Give [/give]");
-  formGive.icon("absorbtion_heart.png");
-  formGive.textField("Target §8[Player]", "Target Selector", "@s");
-  formGive.textField("Item", "Item Type");
+  formGive.textField("Target §g[Player]", "Target Selector", "@s");
+  formGive.textField("Item ID", "Item Type");
   formGive.textField("Amount §8[Optional]", "Item Amount", "1");
-  formGive.textField(
-    "Data Values §8[Optional]\n'-1' Match All Item Data Value",
-    "Data Value [Int]",
-    "0"
-  );
+  formGive.textField("Data Values §8[Optional]", "Data Value [Int]", "0");
   formGive.textField(
     "Item Component/Tag §8[Optional][Manual]",
     "JSON Component"
@@ -480,32 +475,35 @@ export function Give(player) {
 export function Locate(player) {
   let formLocate = new ModalFormData();
   let typeLocate = [
-    "ancientcity",
-    "bastionremnant",
-    "buriedtreasure",
-    "endcity",
-    "fortress",
-    "mansion",
-    "mineshaft",
-    "monument",
-    "ruins",
-    "pillageroutpost",
-    "ruinedportal",
-    "shipwreck",
-    "stronghold",
-    "temple",
-    "village",
+    "Ancient City",
+    "Bastion Remnant",
+    "Buried Treasure",
+    "Endcity",
+    "Fortress",
+    "Mansion",
+    "Mineshaft",
+    "Monument",
+    "Ruins",
+    "Pillager Outpost",
+    "Ruined Portal",
+    "Shipwreck",
+    "Stronghold",
+    "Temple",
+    "Village",
   ];
 
   formLocate.title("Locate [/locate]");
-  formLocate.dropdown("Structure", typeLocate);
-  formLocate.toggle("Search on New Chunk", false);
+  formLocate.dropdown("Structure Type", typeLocate);
+  formLocate.toggle("New Chunk Search", false);
 
   formLocate.show(player).then((respond) => {
     if (respond.isCanceled) return;
 
     let [structure, chunk] = respond.formValues;
-    player.runCommand(`locate ${typeLocate[structure]} ${chunk}`);
+    let message = player.runCommand(
+      `locate ${typeLocate[structure].replace(" ", "")} ${chunk}`
+    );
+    Print(message.statusMessage, "normal", player.name);
   });
 }
 
@@ -515,13 +513,13 @@ export function Loot(player) {
 
   formLoot.title("Loot [/loot]");
   formLoot.dropdown("Loot Type", typeLoot, 0);
-  formLoot.textField("Position/Target", "Position (1, 2, 3) or Target (@a)");
+  formLoot.textField("Position §g[XYZ]§r/Target §g[Entity]", "Position/Target");
   formLoot.textField(
     'Loot Tables\n§8Start from inside "loot_tables" folder',
     "Path"
   );
-  formLoot.toggle("Loot/Kill", false);
-  formLoot.toggle("Tool §8[Optional]\nfalse - Offhand\ntrue - Mainhand", true);
+  formLoot.toggle("Loot Mode\n§8[§cLoot§8/§aKill§8]", false);
+  formLoot.toggle("Tool §8[Optional]\n[§cOffhand§8/§aMainhand§8]", true);
 
   formLoot.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -562,16 +560,16 @@ export function Replaceitem(player) {
   ];
 
   formReplaceitem.title("Replaceitem [/replaceitem]");
-  formReplaceitem.toggle("Block/Entity\n§8true - Entity\nfalse - Block", true);
+  formReplaceitem.toggle("Block/Entity\n§8[§cBlock§8/§aEntity§8]", true);
   formReplaceitem.textField(
     "Position §8[Block]§r/Target §8[Entity]",
     "Coodinate/Target Selector"
   );
   formReplaceitem.dropdown("Inv. Slot Container", typeReplaceitem);
   formReplaceitem.textField("Inv. Slot ID", "Slot ID");
-  formReplaceitem.toggle("Replace Mode\n§8true - Destroy\nfalse - Keep", true);
+  formReplaceitem.toggle("Replace Mode\n§8[§cKeep§8/§aDestroy§8]", true);
   formReplaceitem.textField("Item", "Item Type");
-  formReplaceitem.slider("Amount §8[Optional]", 1, 64, 1, 1);
+  formReplaceitem.slider("Amount §8[Optional]§r", 1, 64, 1, 1);
   formReplaceitem.textField("Data Values §8[Optional]", "Data Value [Int]");
   formReplaceitem.textField(
     "Item Component/Tag §8[Optional][Manual]",
@@ -604,7 +602,7 @@ export function Setblock(player) {
   let typeSetblockMode = ["replace", "destroy", "keep"];
 
   formSetblock.title("Setblock [/setblock]");
-  formSetblock.textField("Position §8[XYZ]", "3-Int Coordinate");
+  formSetblock.textField("Position §g[XYZ]", "3 Points Position");
   formSetblock.textField("Block Name", "Block");
   formSetblock.textField("Data Value", "Aux or BlockState", "0");
   formSetblock.dropdown("Setblock Mode", typeSetblockMode, 0);
@@ -648,7 +646,7 @@ export function Tag(player) {
   let typeTag = ["Add", "Remove", "List"];
 
   formTag.title("Tag [/tag]");
-  formTag.textField("Target §8[Entity]", "Target Selector");
+  formTag.textField("Target §g[Entity]", "Target Selector");
   formTag.dropdown("Tag Type", typeTag);
   formTag.textField("Tag Name", "Name of the tag");
 
@@ -701,7 +699,7 @@ export function Weather(player) {
 
   formWeather.title("Weather [/weather]");
   formWeather.dropdown("Weather Type", typeWeather);
-  formWeather.textField("Duration §8[Tick][Optional]", "Duration");
+  formWeather.textField("Duration §g[Second]§8[Optional]", "Duration");
 
   formWeather.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -716,7 +714,7 @@ export function XP(player) {
 
   formXP.title("XP [/xp]");
   formXP.textField("XP Amount", "Amount");
-  formXP.textField("Target §8[Player]", "Target Selector", "@s");
+  formXP.textField("Target §g[Player]", "Target Selector", "@s");
   formXP.toggle("Per Level", true);
 
   formXP.show(player).then((respond) => {

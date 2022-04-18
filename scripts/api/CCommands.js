@@ -21,6 +21,9 @@ export function CustomCommands(prefix, commands, args, player) {
     case "help":
       Print(HelpCommand, "normal", player.name);
       break;
+    case "consolewarn":
+      console.warn("You call the console warning");
+      break;
     case "consc":
       Overworld.runCommand(
         `loot give ${player.name} loot "custom/console_command"`
