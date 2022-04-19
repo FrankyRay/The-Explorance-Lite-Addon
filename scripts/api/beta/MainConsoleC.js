@@ -7,8 +7,6 @@ import {
 import { Print } from "../PrintMessage.js";
 import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
 
-// Test command
-
 const Overworld = world.getDimension("overworld");
 
 export function Ability(player) {
