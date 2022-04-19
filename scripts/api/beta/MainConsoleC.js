@@ -29,7 +29,7 @@ export function CameraShake(player) {
 
   formCameraShake.title("Camera Shake [/camerashake]");
   formCameraShake.toggle(
-    "CS Mode [§aRemove§r/§cAdd§r]§8\n{Remove - Use Target Only}",
+    "CS Mode [§cRemove§r/§aAdd§r]§8\n{Remove - Use Target Only}",
     true
   );
   formCameraShake.textField("Target §g[Player]", "Target Selector");
@@ -64,7 +64,7 @@ export function Clear(player) {
   formClear.textField("Target §g[Player]§8[Optional]", "Target Selector");
   formClear.textField("Item ID §8[Optional]", "Item ID");
   formClear.textField("Item Data §8[Optional]", "Data Value [Int]");
-  formClear.textField("Amount §9(Max)§8[Optional]", "Amount");
+  formClear.textField("Amount §9[Max]§8[Optional]", "Amount");
 
   formClear.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -119,7 +119,7 @@ export function Damage(player) {
   formDamage.textField("Damage Amount", "Damage Value", "1");
   formDamage.dropdown("Damage Type §8[Optional]", typeDamage);
   formDamage.textField(
-    "Damager §g[1 Entity]§8[Optional][c=1]",
+    "Damager §g[1 Entity]§9[c=1]§8[Optional]",
     "Target Selector"
   );
 
@@ -138,25 +138,16 @@ export function Difficulty(player) {
 
   formDifficulty.title("Difficulty [/difficulty]");
   formDifficulty.body("Select your difficulty");
-  formDifficulty.button("Peacefull");
-  formDifficulty.button("Easy");
-  formDifficulty.button("Normal");
-  formDifficulty.button("Hard");
+  formDifficulty.button("Peaceful §9[0]");
+  formDifficulty.button("Easy §9[1]");
+  formDifficulty.button("Normal §9[2]");
+  formDifficulty.button("Hard §9[3]");
 
   formDifficulty.show(player).then((respond) => {
     if (respond.isCanceled) return;
 
     let button = respond.selection;
-    switch (button) {
-      case 0:
-        player.runCommand("difficulty peacefull");
-      case 1:
-        player.runCommand("difficulty easy");
-      case 2:
-        player.runCommand("difficulty normal");
-      case 3:
-        player.runCommand("difficulty hard");
-    }
+    player.runCommand(`difficulty ${button}`);
   });
 }
 
@@ -201,7 +192,7 @@ export function Effect(player) {
   formEffect.textField("Target §g[Entity]", "Target Selector");
   formEffect.dropdown("Effect Type", typeEffect);
   formEffect.textField("Duration §g[Second]§8[Optional]", "Duration", "30");
-  formEffect.slider("Amplifier §8[Optional]", 0, 255, 1, 0);
+  formEffect.slider("Amplifier §8[Optional]§r", 0, 255, 1, 0);
   formEffect.toggle("Hide Particle §8[Optional]", false);
 
   formEffect.show(player).then((respond) => {
@@ -283,19 +274,31 @@ export function Fill(player) {
   let typeFillMode = ["replace", "destroy", "keep", "hollow", "outline"];
 
   formFill.title("Setblock [/setblock]");
-  formFill.textField("Position 1 §g[XYZ]", "3 Points Position");
-  formFill.textField("Position 2 §g[XYZ]", "3 Points Position");
+  formFill.textField(
+    "Position 1 §g[XYZ]§9[Relative/Local]",
+    "3 Points Position"
+  );
+  formFill.textField(
+    "Position 2 §g[XYZ]§9[Relative/Local]",
+    "3 Points Position"
+  );
   formFill.textField("Block Name", "Block");
-  formFill.textField("Data Value", "Aux or BlockState", "0");
+  formFill.textField("Data Value", "Aux or BlockState");
   formFill.dropdown("Setblock Mode", typeFillMode, 0);
-  formFill.textField("Block Name §9[Replace Mode]", "Block");
-  formFill.textField("Data Value §9[Replace Mode]", "Aux or BlockState");
+  formFill.textField("Block Name §9[Replace Mode]§8[Optional]", "Block");
+  formFill.textField(
+    "Data Value §9[Replace Mode]§8[Optional]",
+    "Aux or BlockState"
+  );
 
   formFill.show(player).then((respond) => {
     if (respond.isCanceled) return;
 
     let [pos1, pos2, block, data, mode, rblock, rdata] = respond.formValues;
-    if (mode == 0) {
+    if (mode == 0 && rblock == "") {
+      player.runCommand(`setblock ${pos1} ${pos2} ${block} ${data}`);
+      return;
+    } else if (mode == 0 && rblock != "") {
       player.runCommand(
         `setblock ${pos1} ${pos2} ${block} ${data} replace ${rblock} ${rdata}`
       );
@@ -317,7 +320,7 @@ export function Fog(player) {
     "Fog Mode\n§8[§c'Pop/Remove' (Remove)§8/§aPush (Add)§8]",
     typeFogMode
   );
-  formFog.textField("Fog ID §9(For 'push' mode)", "Fog ID (minecraft:<fog>)");
+  formFog.textField("Fog ID §9[For 'push' mode]", "Fog ID (minecraft:<fog>)");
   formFog.textField("Fog Name", "User Provided ID");
 
   formFog.show(player).then((respond) => {
@@ -336,7 +339,10 @@ export function Function(player) {
   let formFunction = new ModalFormData();
 
   formFunction.title("Function [/function]");
-  formFunction.textField("Function File Path", "File Path");
+  formFunction.textField(
+    'Function File Path §9[Addon]\n§8Start from inside "functions" folder',
+    "File Path"
+  );
 
   formFunction.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -351,31 +357,25 @@ export function Gamemode(player) {
 
   formGamemode.title("Gamemode [/gamemode]");
   formGamemode.body("Set the gamemode of player");
-  formGamemode.button("Survival [0]");
-  formGamemode.button("Creative [1]");
-  formGamemode.button("Adventure [2]");
-  formGamemode.button("Default [5]");
-  formGamemode.button("Spectator (Leaked)[6]");
+  formGamemode.button("Survival §9[0]");
+  formGamemode.button("Creative §9[1]");
+  formGamemode.button("Adventure §9[2]");
+  formGamemode.button("Default §9[5]");
+  formGamemode.button("Spectator §9[6][Leaked]");
 
   formGamemode.show(player).then((respond) => {
     if (respond.isCanceled) return;
 
     let button = respond.selection;
     switch (button) {
-      case 0:
-        player.runCommand(`gamemode survival "${player.name}"`);
-        break;
-      case 1:
-        player.runCommand(`gamemode creative "${player.name}"`);
-        break;
-      case 2:
-        player.runCommand(`gamemode adventure "${player.name}"`);
-        break;
       case 3:
-        player.runCommand(`gamemode 5 "${player.name}"`);
+        player.runCommand(`gamemode 5`);
         break;
       case 4:
-        player.runCommand(`gamemode 6 "${player.name}"`);
+        player.runCommand(`gamemode 6`);
+        break;
+      default:
+        player.runCommand(`gamemode ${button}`);
         break;
     }
   });
@@ -416,12 +416,12 @@ export function Gamerule(player) {
   ];
 
   formGamerule.title("Gamerule [/gamerule]");
-  formGamerule.dropdown(
-    "Gamerule Type §9(§eYellow§9 - Int Gamemode)",
-    typeGamerule
+  formGamerule.dropdown("Gamerule Type", typeGamerule);
+  formGamerule.textField(
+    "Value §g[Integer]§9[Yellow Gamemode Only]",
+    "For some gamerule only"
   );
-  formGamerule.textField("Integer", "For some gamerule only");
-  formGamerule.toggle("True/False", false);
+  formGamerule.toggle("Value §g[Boolean]", false);
 
   formGamerule.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -455,10 +455,10 @@ export function Give(player) {
   let formGive = new ModalFormData();
 
   formGive.title("Give [/give]");
-  formGive.textField("Target §g[Player]", "Target Selector", "@s");
+  formGive.textField("Target §g[Player]", "Target Selector");
   formGive.textField("Item ID", "Item Type");
-  formGive.textField("Amount §8[Optional]", "Item Amount", "1");
-  formGive.textField("Data Values §8[Optional]", "Data Value [Int]", "0");
+  formGive.textField("Amount §8[Optional]", "Item Amount");
+  formGive.textField("Data Values §8[Optional]", "Data Value [Int]");
   formGive.textField(
     "Item Component/Tag §8[Optional][Manual]",
     "JSON Component"
@@ -515,7 +515,7 @@ export function Loot(player) {
   formLoot.dropdown("Loot Type", typeLoot, 0);
   formLoot.textField("Position §g[XYZ]§r/Target §g[Entity]", "Position/Target");
   formLoot.textField(
-    'Loot Tables\n§8Start from inside "loot_tables" folder',
+    'Loot Tables §9[Addon]\n§8Start from inside "loot_tables" folder',
     "Path"
   );
   formLoot.toggle("Loot Mode\n§8[§cLoot§8/§aKill§8]", false);
@@ -560,9 +560,9 @@ export function Replaceitem(player) {
   ];
 
   formReplaceitem.title("Replaceitem [/replaceitem]");
-  formReplaceitem.toggle("Block/Entity\n§8[§cBlock§8/§aEntity§8]", true);
+  formReplaceitem.toggle("Target Type\n§8[§cBlock§8/§aEntity§8]", true);
   formReplaceitem.textField(
-    "Position §8[Block]§r/Target §8[Entity]",
+    "Position §g[XYZ]§r/Target §g[Entity]",
     "Coodinate/Target Selector"
   );
   formReplaceitem.dropdown("Inv. Slot Container", typeReplaceitem);
@@ -602,7 +602,10 @@ export function Setblock(player) {
   let typeSetblockMode = ["replace", "destroy", "keep"];
 
   formSetblock.title("Setblock [/setblock]");
-  formSetblock.textField("Position §g[XYZ]", "3 Points Position");
+  formSetblock.textField(
+    "Position §g[XYZ]§9[Relative/Local]",
+    "3 Points Position"
+  );
   formSetblock.textField("Block Name", "Block");
   formSetblock.textField("Data Value", "Aux or BlockState", "0");
   formSetblock.dropdown("Setblock Mode", typeSetblockMode, 0);
@@ -621,8 +624,11 @@ export function Summon(player) {
   let formSummon = new ModalFormData();
 
   formSummon.title("Summon [/summon]");
-  formSummon.textField("Entity Type", "Entity (W/O Namespace)");
-  formSummon.textField("Position §8[Optional]", "Coordinate");
+  formSummon.textField("Entity Type", "Entity");
+  formSummon.textField(
+    "Position §g[XYZ]§9[Relative/Local]§8[Optional]",
+    "Coordinate"
+  );
   formSummon.textField(
     "Entity Pre-Name §8[Optional]\nCan be empty even 'Event' specify",
     "Name"
@@ -714,13 +720,13 @@ export function XP(player) {
 
   formXP.title("XP [/xp]");
   formXP.textField("XP Amount", "Amount");
-  formXP.textField("Target §g[Player]", "Target Selector", "@s");
-  formXP.toggle("Per Level", true);
+  formXP.toggle("Amount Type\n§8[§cPoints§8/§aLevels§8]", false);
+  formXP.textField("Target §g[Player]§8[Optional]", "Target Selector");
 
   formXP.show(player).then((respond) => {
     if (respond.isCanceled) return;
 
-    let [amount, target, level] = respond.formValues;
+    let [amount, level, target] = respond.formValues;
     if (level) {
       player.runCommand(`xp ${amount}L ${target}`);
     } else {
