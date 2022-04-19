@@ -6,30 +6,8 @@ import {
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
 
-export function ScoreboardIndex(player) {
-  let formScoreboard = new MessageFormData();
-
-  formScoreboard.title("Scoreboard [/scoreboard]");
-  formScoreboard.body(
-    "Choose one of these option, scoreboard objective or players"
-  );
-  formScoreboard.button1("Objectives");
-  formScoreboard.button2("Players");
-
-  formScoreboard.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-
-    let select = respond.selection;
-    if (select == 1) {
-      ScoreboardObjectivesIndex(player);
-    } else {
-      ScoreboardPlayersIndex(player);
-    }
-  });
-}
-
 // Scoreboard Objectives Functions
-function ScoreboardObjectivesIndex(player) {
+export function ScoreboardObjectivesIndex(player) {
   let formSbObjectives = new ActionFormData();
 
   formSbObjectives.title("SB Objectives [/scoreboard objectives]");
@@ -106,7 +84,7 @@ function SbObjDisplay(player) {
 }
 
 // Scoreboard Players Functions
-function ScoreboardPlayersIndex(player) {
+export function ScoreboardPlayersIndex(player) {
   let formSbPlayers = new ActionFormData();
 
   formSbPlayers.title("SB Players [/scoreboard players]");

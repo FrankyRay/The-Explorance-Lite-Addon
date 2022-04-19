@@ -5,6 +5,7 @@ import {
   ModalFormData,
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
+import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
 
 const Overworld = world.getDimension("overworld");
 
@@ -71,6 +72,36 @@ export function Clear(player) {
 
     let [target, item, data, amount] = respond.formValues;
     player.runCommand(`clear ${target} ${item} ${data} ${amount}`);
+  });
+}
+
+export function Clone(player) {
+  let formClone = new ModalFormData();
+  let modeCloneMask = ["replace", "masked", "filtered"];
+  let modeCloneType = ["normal", "force", "move"];
+
+  formClone.title("Clone [/clone]");
+  formClone.textField("1st Position §g[XYZ][~^]", "XYZ Position");
+  formClone.textField("2nd Position §g[XYZ][~^]", "XYZ Position");
+  formClone.textField("Destination Position §g[XYZ][~^]", "XYZ Position");
+  formClone.dropdown("Mask Mode", modeCloneMask);
+  formClone.dropdown("Clone Mode §9[Replace/Masked Mode]", modeCloneType);
+  formClone.textField("Block Name §9[Filtered Mode]", "Block");
+  formClone.textField("Data Value §9[Filtered Mode]", "Aux or BlockState");
+
+  formClone.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [pos1, pos2, pos3, mode, type, block, data] = respond.formValues;
+    if (mode == 2) {
+      player.runCommand(
+        `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${block} ${data}`
+      );
+      return;
+    }
+    player.runCommand(
+      `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${modeCloneType[type]}`
+    );
   });
 }
 
@@ -274,14 +305,8 @@ export function Fill(player) {
   let typeFillMode = ["replace", "destroy", "keep", "hollow", "outline"];
 
   formFill.title("Setblock [/setblock]");
-  formFill.textField(
-    "Position 1 §g[XYZ]§9[Relative/Local]",
-    "3 Points Position"
-  );
-  formFill.textField(
-    "Position 2 §g[XYZ]§9[Relative/Local]",
-    "3 Points Position"
-  );
+  formFill.textField("1st Position §g[XYZ][~^]", "XYZ Position");
+  formFill.textField("2nd Position §g[XYZ][~^]", "XYZ Position");
   formFill.textField("Block Name", "Block");
   formFill.textField("Data Value", "Aux or BlockState");
   formFill.dropdown("Setblock Mode", typeFillMode, 0);
@@ -472,6 +497,35 @@ export function Give(player) {
   });
 }
 
+export function Kick(player) {
+  let formKick = new ModalFormData();
+
+  formKick.title("Kick [/kick]");
+  formKick.textField("Target §g[Entity]", "Target Selector");
+  formKick.textField("Kick Reason §8[Optional]", "Reason");
+
+  formKick.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [target, reason] = respond.formValues;
+    player.runCommand(`kick ${target} ${reason}`);
+  });
+}
+
+export function Kill(player) {
+  let formKill = new ModalFormData();
+
+  formKill.title("Kill [/kill]");
+  formKill.textField("Target §g[Entity]§8[Optional]", "Target Selector");
+
+  formKill.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [target] = respond.formValues;
+    player.runCommand(`kill ${target}`);
+  });
+}
+
 export function Locate(player) {
   let formLocate = new ModalFormData();
   let typeLocate = [
@@ -541,6 +595,102 @@ export function Loot(player) {
   });
 }
 
+export function Mobevent(player) {
+  let formMobevent = new ModalFormData();
+  let typeMobevent = [
+    "minecraft:pillager_patrols_event",
+    "minecraft:wandering_trader_event",
+    "events_enabled",
+  ];
+
+  formMobevent.title("Mobevent [/mobevent]");
+  formMobevent.dropdown("Mob Event Type", typeMobevent);
+  formMobevent.toggle("Value §g[Boolean]", true);
+
+  formMobevent.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [type, value] = respond.formValues;
+    player.runCommand(`mobevent ${typeMobevent[type]} ${value}`);
+  });
+}
+
+export function Music(player) {
+  let formMusic = new ModalFormData();
+  let typeMusic = ["play", "queue", "stop", "volume"];
+
+  formMusic.title("Music [/music]");
+  formMusic.dropdown(
+    "Music Mode\n§9'Stop' Mode use fade stop\n'Volume' Mode use volume only",
+    typeMusic
+  );
+  formMusic.textField("Track Name", "Music Name");
+  formMusic.textField("Volume §9[Float]§8[Optional]", "Volume", "1.0");
+  formMusic.slider("Fade In/Out §9[Second]§8[Optional]§r", 1, 10, 1, 1);
+  formMusic.toggle("Repeat Mode\n§8[§cPlay Once§8/§aLoop§8]", false);
+
+  formMusic.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [mode, name, volume, fade, repeat] = respond.formValues;
+    if (mode == 2) {
+      player.runCommand(`music stop ${fade}`);
+      return;
+    } else if (mode == 3) {
+      player.runCommand(`music volume ${volume}`);
+      return;
+    }
+
+    let repeatMode = "play_once";
+    if (repeat) {
+      repeatMode = "loop";
+    }
+    player.runCommand(
+      `music ${typeMusic[mode]} ${name} ${volume} ${fade} ${repeatMode}`
+    );
+  });
+}
+
+export function Particle(player) {
+  let formParticle = new ModalFormData();
+
+  formParticle.title("Particle [/particle]");
+  formParticle.textField("Particle ID", "Particle");
+  formParticle.textField("1st Position §g[XYZ][~^]", "XYZ Position");
+
+  formParticle.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [particle, pos] = respond.formValues;
+    player.runCommand(`particle ${particle} ${pos}`);
+  });
+}
+
+export function Playanimation(player) {
+  let formPlayanimation = new ModalFormData();
+
+  formPlayanimation.title("Playanimation [/playanimation]");
+  formPlayanimation.textField("Target §g[Player]", "Target Selector");
+  formPlayanimation.textField("Animation ID", "Animation");
+  formPlayanimation.textField("Next State §8[Optional]", "Animation");
+  formPlayanimation.textField(
+    "Blend Out Time §g[Float]§8[Optional]",
+    "Animation"
+  );
+  formPlayanimation.textField("Stop Expression §8[Optional]", "Animation");
+  formPlayanimation.textField("Controller §8[Optional]", "Animation");
+
+  formPlayanimation.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [target, animation, state, blend, stop, controller] =
+      respond.formValues;
+    player.runCommand(
+      `playanimation ${target} ${animation} ${state} ${blend} ${stop} ${controller}`
+    );
+  });
+}
+
 export function Replaceitem(player) {
   let formReplaceitem = new ModalFormData();
   let typeReplaceitem = [
@@ -597,15 +747,34 @@ export function Replaceitem(player) {
   });
 }
 
+export function Scoreboard(player) {
+  let formScoreboard = new MessageFormData();
+
+  formScoreboard.title("Scoreboard [/scoreboard]");
+  formScoreboard.body(
+    "Choose one of these option, scoreboard objective or players"
+  );
+  formScoreboard.button1("Objectives");
+  formScoreboard.button2("Players");
+
+  formScoreboard.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let select = respond.selection;
+    if (select == 1) {
+      ScoreboardConsC.ScoreboardObjectivesIndex(player);
+    } else {
+      ScoreboardConsC.ScoreboardPlayersIndex(player);
+    }
+  });
+}
+
 export function Setblock(player) {
   let formSetblock = new ModalFormData();
   let typeSetblockMode = ["replace", "destroy", "keep"];
 
   formSetblock.title("Setblock [/setblock]");
-  formSetblock.textField(
-    "Position §g[XYZ]§9[Relative/Local]",
-    "3 Points Position"
-  );
+  formSetblock.textField("Position §g[XYZ][~^]", "XYZ Position");
   formSetblock.textField("Block Name", "Block");
   formSetblock.textField("Data Value", "Aux or BlockState", "0");
   formSetblock.dropdown("Setblock Mode", typeSetblockMode, 0);
@@ -620,15 +789,67 @@ export function Setblock(player) {
   });
 }
 
+export function Setmaxplayers(player) {
+  let formSetmaxplayers = new ModalFormData();
+
+  formSetmaxplayers.title("Set Max Players [/setmaxplayers]");
+  formSetmaxplayers.textField("Max Player Amount", "Amount");
+
+  formSetmaxplayers.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [amount] = respond.formValues;
+    let cmd = player.runCommand(`setmaxplayers ${amount}`);
+    Print(cmd.statusMessage, "normal", player.name);
+  });
+}
+
+export function Setworldspawn(player) {
+  let formSetworldspawn = new ModalFormData();
+
+  formSetworldspawn.title("Set World Spawn [/setworldspawn]");
+  formSetworldspawn.textField(
+    "Spawn Position §g[XYZ][~^]§8[Optional]",
+    "XYZ Position"
+  );
+
+  formSetworldspawn.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [pos] = respond.formValues;
+    player.runCommand(`setworldspawn ${pos}`);
+  });
+}
+
+export function Spawnpoint(player) {
+  let formSpawnpoint = new ModalFormData();
+
+  formSpawnpoint.title("Spawnpoint [/spawnpoint]");
+  formSpawnpoint.toggle("Spawnpoint Mode\n§8[§cRemove§8/§aAdd§8]", true);
+  formSpawnpoint.textField("Target §g[Player]§8[Optional]", "Target Selector");
+  formSpawnpoint.textField(
+    "Spawn Position §g[XYZ][~^]\n§9[Add Mode]§8[Optional]",
+    "XYZ Position"
+  );
+
+  formSpawnpoint.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [mode, target, pos] = respond.formValues;
+    if (mode) {
+      player.runCommand(`spawnpoint ${target} ${pos}`);
+      return;
+    }
+    player.runCommand(`clearspawnpoint ${target}`);
+  });
+}
+
 export function Summon(player) {
   let formSummon = new ModalFormData();
 
   formSummon.title("Summon [/summon]");
   formSummon.textField("Entity Type", "Entity");
-  formSummon.textField(
-    "Position §g[XYZ]§9[Relative/Local]§8[Optional]",
-    "Coordinate"
-  );
+  formSummon.textField("Position §g[XYZ][~^]§8[Optional]", "Coordinate");
   formSummon.textField(
     "Entity Pre-Name §8[Optional]\nCan be empty even 'Event' specify",
     "Name"

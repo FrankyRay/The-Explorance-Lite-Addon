@@ -1,7 +1,6 @@
 import { world as World } from "mojang-minecraft";
 import { ActionFormData } from "mojang-minecraft-ui";
 import * as ConsC from "./MainConsoleC.js";
-import { ScoreboardIndex } from "./ScoreboardConsoleC.js";
 
 /**
  * Book Form to open fast command
@@ -15,8 +14,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Ability"); // Done
   indexForm.button("Camerashake"); // Done
   indexForm.button("Clear"); // Done
-  indexForm.button("Clearspawnpoint"); // (Prob Delete)
-  indexForm.button("Clone");
+  indexForm.button("Clone"); // Done
   indexForm.button("Damage"); // Done
   indexForm.button("Dialogue");
   indexForm.button("Difficulty"); // Done
@@ -32,24 +30,23 @@ export function ConsoleCommands(player) {
   indexForm.button("Gametest");
   indexForm.button("Give"); // Done
   indexForm.button("Help");
-  indexForm.button("Kick");
-  indexForm.button("Kill");
+  indexForm.button("Kick"); // Done
+  indexForm.button("Kill"); // Done
   indexForm.button("List");
   indexForm.button("Locate"); // Done
   indexForm.button("Loot"); // Done
-  indexForm.button("Mobevent");
-  indexForm.button("Music");
-  indexForm.button("Particle");
-  indexForm.button("Playanimation");
+  indexForm.button("Mobevent"); // Done
+  indexForm.button("Music"); // Done
+  indexForm.button("Particle"); // Done
+  indexForm.button("Playanimation"); // Done
   indexForm.button("Playsound");
   indexForm.button("Replaceitem"); // Done
   indexForm.button("Ride");
   indexForm.button("Schedules");
   indexForm.button("Scoreboard"); // Done
   indexForm.button("Setblock"); // Done
-  indexForm.button("Setmaxplayers");
-  indexForm.button("Setworldspawn");
-  indexForm.button("Spawnpoint");
+  indexForm.button("Setworldspawn"); // Done
+  indexForm.button("Spawnpoint"); // Done
   indexForm.button("Spreadplayers");
   indexForm.button("Stopsound");
   indexForm.button("Structure");
@@ -77,64 +74,91 @@ export function ConsoleCommands(player) {
       case 2:
         ConsC.Clear(player);
         break;
-      case 5:
+      case 3:
+        ConsC.Clone(player);
+        break;
+      case 4:
         ConsC.Damage(player);
         break;
-      case 7:
+      case 6:
         ConsC.Difficulty(player);
         break;
-      case 8:
+      case 7:
         ConsC.Effect(player);
         break;
-      case 9:
+      case 8:
         ConsC.Enchant(player);
         break;
-      case 12:
+      case 11:
         ConsC.Fill(player);
         break;
-      case 13:
+      case 12:
         ConsC.Fog(player);
         break;
-      case 14:
+      case 13:
         ConsC.Function(player);
         break;
-      case 15:
+      case 14:
         ConsC.Gamemode(player);
         break;
-      case 16:
+      case 15:
         ConsC.Gamerule(player);
         break;
-      case 18:
+      case 17:
         ConsC.Give(player);
         break;
-      case 23:
+      case 19:
+        ConsC.Kick(player);
+        break;
+      case 20:
+        ConsC.Kill(player);
+        break;
+      case 22:
         ConsC.Locate(player);
         break;
-      case 24:
+      case 23:
         ConsC.Loot(player);
         break;
-      case 30:
+      case 24:
+        ConsC.Mobevent(player);
+        break;
+      case 25:
+        ConsC.Music(player);
+        break;
+      case 26:
+        ConsC.Particle(player);
+        break;
+      case 27:
+        ConsC.Playanimation(player);
+        break;
+      case 29:
         ConsC.Replaceitem(player);
         break;
-      case 33:
-        ScoreboardIndex(player);
+      case 32:
+        ConsC.Scoreboard(player);
         break;
-      case 34:
+      case 33:
         ConsC.Setblock(player);
         break;
-      case 41:
+      case 34:
+        ConsC.Setworldspawn(player);
+        break;
+      case 35:
+        ConsC.Spawnpoint(player);
+        break;
+      case 39:
         ConsC.Summon(player);
         break;
-      case 42:
+      case 40:
         ConsC.Tag(player);
         break;
-      case 47:
+      case 45:
         ConsC.Time(player);
         break;
-      case 49:
+      case 47:
         ConsC.Weather(player);
         break;
-      case 50:
+      case 48:
         ConsC.XP(player);
         break;
       default:

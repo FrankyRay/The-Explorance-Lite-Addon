@@ -23,5 +23,15 @@
 		"prefix": "true/false",
 		"body": "§8[§c${1:false}§8/§a${2:true}§8]",
 		"description": "True/False Options"
+	},
+	"Modal Form Data": {
+		"scope": "javascript, typescript",
+		"prefix": "modalfd",
+		"body": [
+			"let form${1:command} = new ModalFormData()",
+			"",
+			"form${2:command}.title(\"$3\")"
+		],
+		"description": "Modal Form Data"
 	}
 }
