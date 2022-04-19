@@ -789,21 +789,6 @@ export function Setblock(player) {
   });
 }
 
-export function Setmaxplayers(player) {
-  let formSetmaxplayers = new ModalFormData();
-
-  formSetmaxplayers.title("Set Max Players [/setmaxplayers]");
-  formSetmaxplayers.textField("Max Player Amount", "Amount");
-
-  formSetmaxplayers.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-
-    let [amount] = respond.formValues;
-    let cmd = player.runCommand(`setmaxplayers ${amount}`);
-    Print(cmd.statusMessage, "normal", player.name);
-  });
-}
-
 export function Setworldspawn(player) {
   let formSetworldspawn = new ModalFormData();
 
