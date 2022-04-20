@@ -49,9 +49,9 @@ export function CameraShake(player) {
     if (respond.isCanceled) return;
     let [play, target, intensity, duration, type, syntax] = respond.formValues;
 
-    let shakeType = "Positional";
+    let shakeType = "positional";
     if (type) {
-      shakeType = "Rotational";
+      shakeType = "rotational";
     }
 
     let command = `camerashake add ${target} ${intensity} ${duration} ${shakeType}`;
