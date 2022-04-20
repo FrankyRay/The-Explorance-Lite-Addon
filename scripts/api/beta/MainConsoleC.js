@@ -829,6 +829,23 @@ export function Spawnpoint(player) {
   });
 }
 
+export function Spreadplayers(player) {
+  let formSpreadplayers = new ModalFormData();
+
+  formSpreadplayers.title("Spread Players [/spreadplayers]");
+  formSpreadplayers.textField("Position §g[XZ][~^]", "XZ Position");
+  formSpreadplayers.textField("Min. Spread Distance §g[Float]", "Min Range");
+  formSpreadplayers.textField("Max. Spread Distance §g[Float]", "Max Range");
+  formSpreadplayers.textField("Target §g[Entity]", "Target Selector");
+
+  formSpreadplayers.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [pos, min, max, target] = respond.formValues;
+    player.runCommand(`spreadplayers ${pos} ${min} ${max} ${target}`);
+  });
+}
+
 export function Summon(player) {
   let formSummon = new ModalFormData();
 
