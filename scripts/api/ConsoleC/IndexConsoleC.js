@@ -20,7 +20,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Difficulty"); // Done
   indexForm.button("Effect"); // Done
   indexForm.button("Enchant"); // Done
-  indexForm.button("Event");
+  indexForm.button("Event"); // Done
   indexForm.button("Execute");
   indexForm.button("Fill"); // Done
   indexForm.button("Fog"); // Done
@@ -32,7 +32,6 @@ export function ConsoleCommands(player) {
   indexForm.button("Help");
   indexForm.button("Kick"); // Done
   indexForm.button("Kill"); // Done
-  indexForm.button("List");
   indexForm.button("Locate"); // Done
   indexForm.button("Loot"); // Done
   indexForm.button("Mobevent"); // Done
@@ -89,6 +88,9 @@ export function ConsoleCommands(player) {
       case 8:
         ConsC.Enchant(player);
         break;
+      case 9:
+        ConsC.Event(player);
+        break;
       case 11:
         ConsC.Fill(player);
         break;
@@ -113,55 +115,55 @@ export function ConsoleCommands(player) {
       case 20:
         ConsC.Kill(player);
         break;
-      case 22:
+      case 21:
         ConsC.Locate(player);
         break;
-      case 23:
+      case 22:
         ConsC.Loot(player);
         break;
-      case 24:
+      case 23:
         ConsC.Mobevent(player);
         break;
-      case 25:
+      case 24:
         ConsC.Music(player);
         break;
-      case 26:
+      case 25:
         ConsC.Particle(player);
         break;
-      case 27:
+      case 26:
         ConsC.Playanimation(player);
         break;
-      case 29:
+      case 28:
         ConsC.Replaceitem(player);
         break;
-      case 32:
+      case 31:
         ConsC.Scoreboard(player);
         break;
-      case 33:
+      case 32:
         ConsC.Setblock(player);
         break;
-      case 34:
+      case 33:
         ConsC.Setworldspawn(player);
         break;
-      case 35:
+      case 34:
         ConsC.Spawnpoint(player);
         break;
-      case 36:
+      case 35:
         ConsC.Spreadplayers(player);
         break;
-      case 39:
+      case 38:
         ConsC.Summon(player);
         break;
-      case 40:
+      case 39:
         ConsC.Tag(player);
         break;
-      case 45:
+      case 44:
         ConsC.Time(player);
         break;
-      case 47:
+      case 46:
         ConsC.Weather(player);
         break;
-      case 48:
+      case 47:
         ConsC.XP(player);
         break;
       default:

@@ -25,6 +25,11 @@ export function Print(message, type = "normal", target = "@a") {
         `tellraw ${target} {"rawtext": [{"text": "§c[WARN] §r${message}"}]}`
       );
       break;
+    case "consc":
+      Overworld.runCommand(
+        `tellraw ${target} {"rawtext": [{"text": "§9[Command Syntax] §g${message}"}]}`
+      );
+      break;
   }
 }
 

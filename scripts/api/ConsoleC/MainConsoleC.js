@@ -1,8 +1,10 @@
+//@ts-check
 import { world } from "mojang-minecraft";
 import {
   ActionFormData,
   MessageFormData,
   ModalFormData,
+  // @ts-ignore
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
 import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
@@ -16,12 +18,16 @@ export function Ability(player) {
   formAbility.title("Ability [/ability]");
   formAbility.dropdown("Ability Type", typeAbility, 0);
   formAbility.toggle("Value", true);
+  formAbility.toggle("§9Show Command Syntax", false);
 
   formAbility.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, bool, syntax] = respond.formValues;
 
-    let [type, bool] = respond.formValues;
-    player.runCommand(`ability ${typeAbility[type]} ${bool}`);
+    let command = `ability ${typeAbility[type]} ${bool}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -37,24 +43,24 @@ export function CameraShake(player) {
   formCameraShake.slider("Intensity Shake", 0, 4, 1, 1);
   formCameraShake.textField("Duration §g[Seconds]", "Duration");
   formCameraShake.toggle("Shake Type §8[§cPositional§8/§aRotational§8]");
+  formCameraShake.toggle("§9Show Command Syntax", false);
 
   formCameraShake.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [play, target, intensity, duration, type, syntax] = respond.formValues;
 
-    let [play, target, intensity, duration, type] = respond.formValues;
-    if (!play) {
-      player.runCommand(`camerashake stop ${target}`);
-      return;
-    }
+    let shakeType = "Positional";
     if (type) {
-      type = "Rotational";
-    } else {
-      type = "Positional";
+      shakeType = "Rotational";
     }
 
-    player.runCommand(
-      `camerashake add ${target} ${intensity} ${duration} ${type}`
-    );
+    let command = `camerashake add ${target} ${intensity} ${duration} ${shakeType}`;
+    if (!play) {
+      command = `camerashake stop ${target}`;
+    }
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -66,12 +72,16 @@ export function Clear(player) {
   formClear.textField("Item ID §8[Optional]", "Item ID");
   formClear.textField("Item Data §8[Optional]", "Data Value [Int]");
   formClear.textField("Amount §9[Max]§8[Optional]", "Amount");
+  formClear.toggle("§9Show Command Syntax", false);
 
   formClear.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, item, data, amount, syntax] = respond.formValues;
 
-    let [target, item, data, amount] = respond.formValues;
-    player.runCommand(`clear ${target} ${item} ${data} ${amount}`);
+    let command = `clear ${target} ${item} ${data} ${amount}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -88,20 +98,20 @@ export function Clone(player) {
   formClone.dropdown("Clone Mode §9[Replace/Masked Mode]", modeCloneType);
   formClone.textField("Block Name §9[Filtered Mode]", "Block");
   formClone.textField("Data Value §9[Filtered Mode]", "Aux or BlockState");
+  formClone.toggle("§9Show Command Syntax", false);
 
   formClone.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [pos1, pos2, pos3, mode, type, block, data, syntax] =
+      respond.formValues;
 
-    let [pos1, pos2, pos3, mode, type, block, data] = respond.formValues;
+    let command = `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${modeCloneType[type]}`;
     if (mode == 2) {
-      player.runCommand(
-        `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${block} ${data}`
-      );
-      return;
+      command = `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${block} ${data}`;
     }
-    player.runCommand(
-      `clone ${pos1} ${pos2} ${pos3} ${modeCloneMask[mode]} ${modeCloneType[type]}`
-    );
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -153,17 +163,20 @@ export function Damage(player) {
     "Damager §g[1 Entity]§9[c=1]§8[Optional]",
     "Target Selector"
   );
+  formDamage.toggle("§9Show Command Syntax", false);
 
   formDamage.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, amount, type, damager, syntax] = respond.formValues;
 
-    let [target, amount, type, damager] = respond.formValues;
-    player.runCommand(
-      `damage ${target} ${amount} ${typeDamage[type]} ${damager}`
-    );
+    let command = `damage ${target} ${amount} ${typeDamage[type]} ${damager}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
+// Difficulty: Syntax Can't Use
 export function Difficulty(player) {
   let formDifficulty = new ActionFormData();
 
@@ -225,21 +238,23 @@ export function Effect(player) {
   formEffect.textField("Duration §g[Second]§8[Optional]", "Duration", "30");
   formEffect.slider("Amplifier §8[Optional]§r", 0, 255, 1, 0);
   formEffect.toggle("Hide Particle §8[Optional]", false);
+  formEffect.toggle("§9Show Command Syntax", false);
 
   formEffect.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, effect, duration, amplifier, particle, syntax] =
+      respond.formValues;
 
-    let [target, effect, duration, amplifier, particle] = respond.formValues;
+    let command = `effect ${target} ${typeEffect[effect]
+      .replace(" ", "_")
+      .toLowerCase()} ${duration} ${amplifier} ${particle}`;
     if (effect == 3) {
-      player.runCommand(`effect ${target} clear`);
+      command = `effect ${target} clear`;
       return;
     }
-    player.runCommand(
-      `effect ${target} ${typeEffect[effect].replace(
-        " ",
-        "_"
-      )} ${duration} ${amplifier} ${particle}`
-    );
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -289,14 +304,37 @@ export function Enchant(player) {
   formEnchant.textField("Target §g[Player]", "Target Selection", "@s");
   formEnchant.dropdown("Enchantment Type", typeEnchant);
   formEnchant.slider("Enchantment Level §8[Optional]§r", 1, 5, 1, 1);
+  formEnchant.toggle("§9Show Command Syntax", false);
 
   formEnchant.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, type, level, syntax] = respond.formValues;
 
-    let [target, type, level] = respond.formValues;
-    player.runCommand(
-      `enchant ${target} ${typeEnchant[type].replace(" ", "_")} ${level}`
-    );
+    let command = `enchant ${target} ${typeEnchant[type]
+      .replace(" ", "_")
+      .toLowerCase()} ${level}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
+export function Event(player) {
+  let formEvent = new ModalFormData();
+
+  formEvent.title("Event [/event]");
+  formEvent.textField("Target §g[Entity]", "Target Selector");
+  formEvent.textField("Entity Event", "Event");
+  formEvent.toggle("§9Show Command Syntax", false);
+
+  formEvent.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [target, event, syntax] = respond.formValues;
+
+    let command = `event entity ${target} ${event}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -315,23 +353,20 @@ export function Fill(player) {
     "Data Value §9[Replace Mode]§8[Optional]",
     "Aux or BlockState"
   );
+  formFill.toggle("§9Show Command Syntax", false);
 
   formFill.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [pos1, pos2, block, data, mode, rblock, rdata, syntax] =
+      respond.formValues;
 
-    let [pos1, pos2, block, data, mode, rblock, rdata] = respond.formValues;
-    if (mode == 0 && rblock == "") {
-      player.runCommand(`setblock ${pos1} ${pos2} ${block} ${data}`);
-      return;
-    } else if (mode == 0 && rblock != "") {
-      player.runCommand(
-        `setblock ${pos1} ${pos2} ${block} ${data} replace ${rblock} ${rdata}`
-      );
-      return;
+    let command = `setblock ${pos1} ${pos2} ${block} ${data} ${typeFillMode[mode]}`;
+    if (mode == 0) {
+      command = `setblock ${pos1} ${pos2} ${block} ${data} replace ${rblock} ${rdata}`;
     }
-    player.runCommand(
-      `setblock ${pos1} ${pos2} ${block} ${data} ${typeFillMode[mode]}`
-    );
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -347,16 +382,19 @@ export function Fog(player) {
   );
   formFog.textField("Fog ID §9[For 'push' mode]", "Fog ID (minecraft:<fog>)");
   formFog.textField("Fog Name", "User Provided ID");
+  formFog.toggle("§9Show Command Syntax", false);
 
   formFog.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, mode, type, name, syntax] = respond.formValues;
 
-    let [target, mode, type, name] = respond.formValues;
+    let command = `fog ${target} ${typeFogMode[mode]} ${name}`;
     if (mode == 0) {
-      player.runCommand(`fog ${target} push ${type} ${name}`);
-      return;
+      command = `fog ${target} push ${type} ${name}`;
     }
-    player.runCommand(`fog ${target} ${typeFogMode[mode]} ${name}`);
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -368,15 +406,20 @@ export function Function(player) {
     'Function File Path §9[Addon]\n§8Start from inside "functions" folder',
     "File Path"
   );
+  formFunction.toggle("§9Show Command Syntax", false);
 
   formFunction.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [path, syntax] = respond.formValues;
 
-    let [path] = respond.formValues;
-    player.runCommand(`function ${path}`);
+    let command = `function ${path}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
+// Gamemode: Syntax Can't Use
 export function Gamemode(player) {
   let formGamemode = new ActionFormData();
 
@@ -447,32 +490,36 @@ export function Gamerule(player) {
     "For some gamerule only"
   );
   formGamerule.toggle("Value §g[Boolean]", false);
+  formGamerule.toggle("§9Show Command Syntax", false);
 
   formGamerule.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, int, bool, syntax] = respond.formValues;
 
-    let [type, int, bool] = respond.formValues;
-    Print(`Type: ${typeGamerule[type]}\nInt: ${int}\nBool: ${bool}`);
+    let command;
     switch (type) {
       case 15:
-        player.runCommand(`gamerule functionCommandLimit ${int}`);
+        command = `gamerule functionCommandLimit ${int}`;
         break;
       case 17:
-        player.runCommand(`gamerule maxCommandChainLenght ${int}`);
+        command = `gamerule maxCommandChainLenght ${int}`;
         break;
       case 21:
         if (Number(int) > 10) {
-          gameruleWarnHighRTS(player, int);
+          command = gameruleWarnHighRTS(player, int);
           break;
         }
-        player.runCommand(`gamerule randomTickSpeed ${int}`);
+        command = `gamerule randomTickSpeed ${int}`;
         break;
       case 26:
-        player.runCommand(`gamerule spawnRadius ${int}`);
+        command = `gamerule spawnRadius ${int}`;
         break;
       default:
-        player.runCommand(`gamerule ${typeGamerule[type]} ${bool}`);
+        command = `gamerule ${typeGamerule[type].toLowerCase()} ${bool}`;
     }
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -488,12 +535,16 @@ export function Give(player) {
     "Item Component/Tag §8[Optional][Manual]",
     "JSON Component"
   );
+  formGive.toggle("§9Show Command Syntax", false);
 
   formGive.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, item, amount, data, component, syntax] = respond.formValues;
 
-    let [target, item, amount, data, component] = respond.formValues;
-    player.runCommand(`give ${target} ${item} ${amount} ${data} ${component}`);
+    let command = `give ${target} ${item} ${amount} ${data} ${component}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -503,12 +554,16 @@ export function Kick(player) {
   formKick.title("Kick [/kick]");
   formKick.textField("Target §g[Entity]", "Target Selector");
   formKick.textField("Kick Reason §8[Optional]", "Reason");
+  formKick.toggle("§9Show Command Syntax", false);
 
   formKick.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, reason, syntax] = respond.formValues;
 
-    let [target, reason] = respond.formValues;
-    player.runCommand(`kick ${target} ${reason}`);
+    let command = `kick ${target} ${reason}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -517,12 +572,16 @@ export function Kill(player) {
 
   formKill.title("Kill [/kill]");
   formKill.textField("Target §g[Entity]§8[Optional]", "Target Selector");
+  formKill.toggle("§9Show Command Syntax", false);
 
   formKill.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, syntax] = respond.formValues;
 
-    let [target] = respond.formValues;
-    player.runCommand(`kill ${target}`);
+    let command = `kill ${target}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -549,15 +608,19 @@ export function Locate(player) {
   formLocate.title("Locate [/locate]");
   formLocate.dropdown("Structure Type", typeLocate);
   formLocate.toggle("New Chunk Search", false);
+  formLocate.toggle("§9Show Command Syntax", false);
 
   formLocate.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [structure, chunk, syntax] = respond.formValues;
 
-    let [structure, chunk] = respond.formValues;
-    let message = player.runCommand(
-      `locate ${typeLocate[structure].replace(" ", "")} ${chunk}`
-    );
+    let command = `locate ${typeLocate[structure]
+      .replace(" ", "")
+      .toLowerCase()} ${chunk}`;
+    let message = player.runCommand(command);
     Print(message.statusMessage, "normal", player.name);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -574,24 +637,26 @@ export function Loot(player) {
   );
   formLoot.toggle("Loot Mode\n§8[§cLoot§8/§aKill§8]", false);
   formLoot.toggle("Tool §8[Optional]\n[§cOffhand§8/§aMainhand§8]", true);
+  formLoot.toggle("§9Show Command Syntax", false);
 
   formLoot.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, target, path, kill, hand, syntax] = respond.formValues;
 
-    let [type, target, path, kill, hand] = respond.formValues;
     let killType = "loot";
-    let handType = "offhand";
     if (kill) {
       killType = "kill";
     }
 
+    let handType = "offhand";
     if (hand) {
       handType = "mainhand";
     }
 
-    player.runCommand(
-      `loot ${typeLoot[type]} ${target} ${killType} "${path}" ${handType}`
-    );
+    let command = `loot ${typeLoot[type]} ${target} ${killType} "${path}" ${handType}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -606,12 +671,16 @@ export function Mobevent(player) {
   formMobevent.title("Mobevent [/mobevent]");
   formMobevent.dropdown("Mob Event Type", typeMobevent);
   formMobevent.toggle("Value §g[Boolean]", true);
+  formMobevent.toggle("§9Show Command Syntax", false);
 
   formMobevent.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, value, syntax] = respond.formValues;
 
-    let [type, value] = respond.formValues;
-    player.runCommand(`mobevent ${typeMobevent[type]} ${value}`);
+    let command = `mobevent ${typeMobevent[type]} ${value}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -628,26 +697,26 @@ export function Music(player) {
   formMusic.textField("Volume §9[Float]§8[Optional]", "Volume", "1.0");
   formMusic.slider("Fade In/Out §9[Second]§8[Optional]§r", 1, 10, 1, 1);
   formMusic.toggle("Repeat Mode\n§8[§cPlay Once§8/§aLoop§8]", false);
+  formMusic.toggle("§9Show Command Syntax", false);
 
   formMusic.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
-    let [mode, name, volume, fade, repeat] = respond.formValues;
-    if (mode == 2) {
-      player.runCommand(`music stop ${fade}`);
-      return;
-    } else if (mode == 3) {
-      player.runCommand(`music volume ${volume}`);
-      return;
-    }
+    let [mode, name, volume, fade, repeat, syntax] = respond.formValues;
 
     let repeatMode = "play_once";
     if (repeat) {
       repeatMode = "loop";
     }
-    player.runCommand(
-      `music ${typeMusic[mode]} ${name} ${volume} ${fade} ${repeatMode}`
-    );
+
+    let command = `music ${typeMusic[mode]} ${name} ${volume} ${fade} ${repeatMode}`;
+    if (mode == 2) {
+      command = `music stop ${fade}`;
+    } else if (mode == 3) {
+      command = `music volume ${volume}`;
+    }
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -657,12 +726,16 @@ export function Particle(player) {
   formParticle.title("Particle [/particle]");
   formParticle.textField("Particle ID", "Particle");
   formParticle.textField("1st Position §g[XYZ][~^]", "XYZ Position");
+  formParticle.toggle("§9Show Command Syntax", false);
 
   formParticle.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [particle, pos, syntax] = respond.formValues;
 
-    let [particle, pos] = respond.formValues;
-    player.runCommand(`particle ${particle} ${pos}`);
+    let command = `particle ${particle} ${pos}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -679,15 +752,17 @@ export function Playanimation(player) {
   );
   formPlayanimation.textField("Stop Expression §8[Optional]", "Animation");
   formPlayanimation.textField("Controller §8[Optional]", "Animation");
+  formPlayanimation.toggle("§9Show Command Syntax", false);
 
   formPlayanimation.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
-    let [target, animation, state, blend, stop, controller] =
+    let [target, animation, state, blend, stop, controller, syntax] =
       respond.formValues;
-    player.runCommand(
-      `playanimation ${target} ${animation} ${state} ${blend} ${stop} ${controller}`
-    );
+
+    let command = `playanimation ${target} ${animation} ${state} ${blend} ${stop} ${controller}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -725,12 +800,13 @@ export function Replaceitem(player) {
     "Item Component/Tag §8[Optional][Manual]",
     "JSON Component"
   );
+  formReplaceitem.toggle("§9Show Command Syntax", false);
 
   formReplaceitem.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
-    let [be, postgt, container, id, mode, item, amount, data, tag] =
+    let [be, postgt, container, id, mode, item, amount, data, tag, syntax] =
       respond.formValues;
+
     let target = "block";
     if (be) {
       target = "entity";
@@ -741,12 +817,14 @@ export function Replaceitem(player) {
       replaceMode = "destroy";
     }
 
-    player.runCommand(
-      `replaceitem ${target} ${postgt} ${typeReplaceitem[container]} ${id} ${replaceMode} ${item} ${amount} ${data} ${tag}`
-    );
+    let command = `replaceitem ${target} ${postgt} ${typeReplaceitem[container]} ${id} ${replaceMode} ${item} ${amount} ${data} ${tag}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
+// Scoreboard: Unavailable Yet
 export function Scoreboard(player) {
   let formScoreboard = new MessageFormData();
 
@@ -778,14 +856,16 @@ export function Setblock(player) {
   formSetblock.textField("Block Name", "Block");
   formSetblock.textField("Data Value", "Aux or BlockState", "0");
   formSetblock.dropdown("Setblock Mode", typeSetblockMode, 0);
+  formSetblock.toggle("§9Show Command Syntax", false);
 
   formSetblock.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [pos, block, data, mode, syntax] = respond.formValues;
 
-    let [pos, block, data, mode] = respond.formValues;
-    player.runCommand(
-      `setblock ${pos} ${block} ${data} ${typeSetblockMode[mode]}`
-    );
+    let command = `setblock ${pos} ${block} ${data} ${typeSetblockMode[mode]}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -797,12 +877,16 @@ export function Setworldspawn(player) {
     "Spawn Position §g[XYZ][~^]§8[Optional]",
     "XYZ Position"
   );
+  formSetworldspawn.toggle("§9Show Command Syntax", false);
 
   formSetworldspawn.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [pos, syntax] = respond.formValues;
 
-    let [pos] = respond.formValues;
-    player.runCommand(`setworldspawn ${pos}`);
+    let command = `setworldspawn ${pos}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -816,16 +900,19 @@ export function Spawnpoint(player) {
     "Spawn Position §g[XYZ][~^]\n§9[Add Mode]§8[Optional]",
     "XYZ Position"
   );
+  formSpawnpoint.toggle("§9Show Command Syntax", false);
 
   formSpawnpoint.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [mode, target, pos, syntax] = respond.formValues;
 
-    let [mode, target, pos] = respond.formValues;
-    if (mode) {
-      player.runCommand(`spawnpoint ${target} ${pos}`);
-      return;
+    let command = `spawnpoint ${target} ${pos}`;
+    if (!mode) {
+      command = `clearspawnpoint ${target}`;
     }
-    player.runCommand(`clearspawnpoint ${target}`);
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -837,12 +924,16 @@ export function Spreadplayers(player) {
   formSpreadplayers.textField("Min. Spread Distance §g[Float]", "Min Range");
   formSpreadplayers.textField("Max. Spread Distance §g[Float]", "Max Range");
   formSpreadplayers.textField("Target §g[Entity]", "Target Selector");
+  formSpreadplayers.toggle("§9Show Command Syntax", false);
 
   formSpreadplayers.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [pos, min, max, target, syntax] = respond.formValues;
 
-    let [pos, min, max, target] = respond.formValues;
-    player.runCommand(`spreadplayers ${pos} ${min} ${max} ${target}`);
+    let command = `spreadplayers ${pos} ${min} ${max} ${target}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -857,16 +948,19 @@ export function Summon(player) {
     "Name"
   );
   formSummon.textField("Entity Event §8[Optional]", "Event");
+  formSummon.toggle("§9Show Command Syntax", false);
 
   formSummon.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, pos, name, event, syntax] = respond.formValues;
 
-    let [type, pos, name, event] = respond.formValues;
+    let command = `summon ${type} ${pos} ${event} ${name}`;
     if (event == "" && name != "") {
-      player.runCommand(`summon ${type} ${name} ${pos}`);
-      return;
+      command = `summon ${type} ${name} ${pos}`;
     }
-    player.runCommand(`summon ${type} ${pos} ${event} ${name}`);
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -878,19 +972,23 @@ export function Tag(player) {
   formTag.textField("Target §g[Entity]", "Target Selector");
   formTag.dropdown("Tag Type", typeTag);
   formTag.textField("Tag Name", "Name of the tag");
+  formTag.toggle("§9Show Command Syntax", false);
 
   formTag.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, type, name, syntax] = respond.formValues;
 
-    let [target, type, name] = respond.formValues;
+    let command = `tag ${target} ${typeTag[type]} ${name}`;
     if (type == 2) {
-      player.runCommand(`tag ${target} list`);
-      return;
+      command = `tag ${target} list`;
     }
-    player.runCommand(`tag ${target} ${typeTag[type]} ${name}`);
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
+//Time: Need Changes
 export function Time(player) {
   let formTime = new ActionFormData();
 
@@ -929,12 +1027,16 @@ export function Weather(player) {
   formWeather.title("Weather [/weather]");
   formWeather.dropdown("Weather Type", typeWeather);
   formWeather.textField("Duration §g[Second]§8[Optional]", "Duration");
+  formWeather.toggle("§9Show Command Syntax", false);
 
   formWeather.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, duration, syntax] = respond.formValues;
 
-    let [type, duration] = respond.formValues;
-    player.runCommand(`weather ${typeWeather[type]} ${duration}`);
+    let command = `weather ${typeWeather[type]} ${duration}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -945,16 +1047,19 @@ export function XP(player) {
   formXP.textField("XP Amount", "Amount");
   formXP.toggle("Amount Type\n§8[§cPoints§8/§aLevels§8]", false);
   formXP.textField("Target §g[Player]§8[Optional]", "Target Selector");
+  formXP.toggle("§9Show Command Syntax", false);
 
   formXP.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [amount, level, target, syntax] = respond.formValues;
 
-    let [amount, level, target] = respond.formValues;
+    let command = `xp ${amount} ${target}`;
     if (level) {
-      player.runCommand(`xp ${amount}L ${target}`);
-    } else {
-      player.runCommand(`xp ${amount} ${target}`);
+      command = `xp ${amount}L ${target}`;
     }
+    player.runCommand();
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
@@ -969,13 +1074,11 @@ function gameruleWarnHighRTS(player, ticks) {
   warnForm.button2("Cancel");
 
   warnForm.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-
     let select = respond.selection;
-    if (select == 0) {
+    if (respond.isCanceled || select == 0) {
       Print("You canceled the changes", "normal", player.name);
       return;
     }
-    player.runCommand(`gamerule randomtickspeed ${ticks}`);
   });
+  return `gamerule randomtickspeed ${ticks}`;
 }

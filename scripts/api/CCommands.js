@@ -25,9 +25,7 @@ export function CustomCommands(prefix, commands, args, player) {
       console.warn("You call the console warning");
       break;
     case "consc":
-      Overworld.runCommand(
-        `loot give ${player.name} loot "custom/console_command"`
-      );
+      player.runCommand(`loot spawn ~ ~ ~ loot "custom/console_command"`);
       break;
     case "gmc":
       Overworld.runCommand(`gamemode creative "${player.name}"`);
