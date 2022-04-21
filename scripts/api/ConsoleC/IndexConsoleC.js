@@ -38,16 +38,15 @@ export function ConsoleCommands(player) {
   indexForm.button("Music"); // Done
   indexForm.button("Particle"); // Done
   indexForm.button("Playanimation"); // Done
-  indexForm.button("Playsound");
   indexForm.button("Replaceitem"); // Done
   indexForm.button("Ride");
   indexForm.button("Schedules");
   indexForm.button("Scoreboard"); // Done
   indexForm.button("Setblock"); // Done
   indexForm.button("Setworldspawn"); // Done
-  indexForm.button("Spawnpoint"); // Done
+  indexForm.button("Sound"); // Done
+  indexForm.button("Spawnpoint");
   indexForm.button("Spreadplayers"); // Done
-  indexForm.button("Stopsound");
   indexForm.button("Structure");
   indexForm.button("Summon"); // Done
   indexForm.button("Tag"); // Done
@@ -133,17 +132,20 @@ export function ConsoleCommands(player) {
       case 26:
         ConsC.Playanimation(player);
         break;
-      case 28:
+      case 27:
         ConsC.Replaceitem(player);
         break;
-      case 31:
+      case 30:
         ConsC.Scoreboard(player);
         break;
-      case 32:
+      case 31:
         ConsC.Setblock(player);
         break;
-      case 33:
+      case 32:
         ConsC.Setworldspawn(player);
+        break;
+      case 33:
+        ConsC.Spawnpoint(player);
         break;
       case 34:
         ConsC.Spawnpoint(player);
@@ -151,25 +153,25 @@ export function ConsoleCommands(player) {
       case 35:
         ConsC.Spreadplayers(player);
         break;
-      case 38:
+      case 37:
         ConsC.Summon(player);
         break;
-      case 39:
+      case 38:
         ConsC.Tag(player);
         break;
-      case 40:
+      case 39:
         ConsC.Teleport(player);
         break;
-      case 42:
+      case 41:
         ConsC.Testfor(player);
         break;
-      case 44:
+      case 43:
         ConsC.Time(player);
         break;
-      case 46:
+      case 45:
         ConsC.Weather(player);
         break;
-      case 47:
+      case 46:
         ConsC.XP(player);
         break;
       default:

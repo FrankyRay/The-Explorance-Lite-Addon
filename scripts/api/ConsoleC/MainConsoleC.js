@@ -37,7 +37,7 @@ export function Camerashake(player) {
 
   formCameraShake.title("Camera Shake [/camerashake]");
   formCameraShake.toggle(
-    "CS Mode [§cRemove§r/§aAdd§r]§8\n{Remove - Use Target Only}",
+    "CS Mode §8[§cRemove§8/§aAdd§8]\n{Remove - Use Target Only}",
     true
   );
   formCameraShake.textField("Target §g[Player]", "Target Selector");
@@ -695,15 +695,16 @@ export function Music(player) {
     typeMusic
   );
   formMusic.textField("Track Name", "Music Name");
-  formMusic.textField("Volume §9[Float]§8[Optional]", "Volume", "1.0");
+  formMusic.slider("Volume §9[Percentage]§8[Optional]", 0, 100, 1, 100);
   formMusic.slider("Fade In/Out §9[Second]§8[Optional]§r", 1, 10, 1, 1);
   formMusic.toggle("Repeat Mode\n§8[§cPlay Once§8/§aLoop§8]", false);
   formMusic.toggle("§9Show Command Syntax", false);
 
   formMusic.show(player).then((respond) => {
     if (respond.isCanceled) return;
-    let [mode, name, volume, fade, repeat, syntax] = respond.formValues;
+    let [mode, name, volumearg, fade, repeat, syntax] = respond.formValues;
 
+    let volume = volumearg / 100;
     let repeatMode = "play_once";
     if (repeat) {
       repeatMode = "loop";
@@ -885,6 +886,40 @@ export function Setworldspawn(player) {
     let [pos, syntax] = respond.formValues;
 
     let command = `setworldspawn ${pos}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
+export function Sound(player) {
+  let formSound = new ModalFormData();
+
+  formSound.title("Sound [/playsound & /stopsound]");
+  formSound.toggle(
+    "Sound Mode §8[§cStop§8/§aPlay§8]\n{Stop - Use Target & Sound}",
+    true
+  );
+  formSound.textField("Sound ID §8[Stop: Optional]", "Sound");
+  formSound.textField("Target §g[Player]§8[Play: Optional]", "Target Selector");
+  formSound.textField("Position §g[XYZ][~^]§8[Optional]", "XYZ Position");
+  formSound.slider("Volume §9[Percentage]§8[Optional]", 0, 100, 1, 100);
+  formSound.slider("Pitch §8[Optional]", 0, 256, 1, 1);
+  formSound.slider("Minimum Volume §9[Percentage]§8[Optional]", 0, 100, 1, 100);
+  formSound.toggle("§9Show Command Syntax", false);
+
+  formSound.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [mode, sound, target, pos, volumearg, pitch, minVolumearg, syntax] =
+      respond.formValues;
+
+    let volume = volumearg / 100;
+    let minVolume = minVolumearg / 100;
+
+    let command = `playsound ${sound} ${target} ${pos} ${volume} ${pitch} ${minVolume}`;
+    if (!mode) {
+      command = `stopsound ${target} ${sound}`;
+    }
     player.runCommand(command);
 
     if (syntax) Print(command, "consc", `"${player.name}"`);
