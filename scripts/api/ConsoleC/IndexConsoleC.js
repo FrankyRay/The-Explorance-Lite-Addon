@@ -51,9 +51,9 @@ export function ConsoleCommands(player) {
   indexForm.button("Structure");
   indexForm.button("Summon"); // Done
   indexForm.button("Tag"); // Done
-  indexForm.button("Teleport");
+  indexForm.button("Teleport"); // Done
   indexForm.button("Tellraw");
-  indexForm.button("Testfor");
+  indexForm.button("Testfor"); // Done
   indexForm.button("Tickingarea");
   indexForm.button("Time"); // Done
   indexForm.button("Titleraw");
@@ -68,7 +68,7 @@ export function ConsoleCommands(player) {
         ConsC.Ability(player);
         break;
       case 1:
-        ConsC.CameraShake(player);
+        ConsC.Camerashake(player);
         break;
       case 2:
         ConsC.Clear(player);
@@ -156,6 +156,12 @@ export function ConsoleCommands(player) {
         break;
       case 39:
         ConsC.Tag(player);
+        break;
+      case 40:
+        ConsC.Teleport(player);
+        break;
+      case 42:
+        ConsC.Testfor(player);
         break;
       case 44:
         ConsC.Time(player);

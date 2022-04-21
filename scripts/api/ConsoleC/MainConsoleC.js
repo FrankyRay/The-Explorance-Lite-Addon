@@ -8,6 +8,7 @@ import {
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
 import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
+import * as TestforConsC from "./TestforConsoleC.js";
 
 const Overworld = world.getDimension("overworld");
 
@@ -31,7 +32,7 @@ export function Ability(player) {
   });
 }
 
-export function CameraShake(player) {
+export function Camerashake(player) {
   let formCameraShake = new ModalFormData();
 
   formCameraShake.title("Camera Shake [/camerashake]");
@@ -988,6 +989,65 @@ export function Tag(player) {
   });
 }
 
+export function Teleport(player) {
+  let formTeleport = new ModalFormData();
+
+  formTeleport.title("Teleport [/teleport]");
+  formTeleport.textField("Victim §g[Entity]§8[Optional]", "Target Selector");
+  formTeleport.textField(
+    "Position §g[XYZ]§r/Target §g[Entity]",
+    "Position/Target"
+  );
+  formTeleport.toggle("Facing Argument §8[Optional]", false);
+  formTeleport.toggle("Check For Block", false);
+  formTeleport.toggle("§9Show Command Syntax", false);
+
+  formTeleport.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [victim, postgt, facing, block, syntax] = respond.formValues;
+
+    let facingArgument;
+    if (facing) {
+      facingArgument = teleportFacing(player);
+    }
+    let command = `tp ${victim} ${postgt} ${facingArgument}${block}`;
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
+export function Testfor(player) {
+  let formTestfor = new ActionFormData();
+
+  formTestfor.title("Testfor Family");
+  formTestfor.body("Select any of these commands");
+  formTestfor.button("Entity [/testfor]");
+  formTestfor.button("Block (Single) [/testforblock]");
+  formTestfor.button("Entity (Area) [/testforblocks]");
+
+  formTestfor.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let selection = respond.selection;
+
+    let command, syntax;
+    switch (selection) {
+      case 0:
+        [command, syntax] = TestforConsC.Testforentity(player);
+        break;
+      case 1:
+        [command, syntax] = TestforConsC.Testforblock(player);
+        break;
+      case 2:
+        [command, syntax] = TestforConsC.Testforblocks(player);
+        break;
+    }
+    player.runCommand(command);
+
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
 //Time: Need Changes
 export function Time(player) {
   let formTime = new ActionFormData();
@@ -1076,9 +1136,35 @@ function gameruleWarnHighRTS(player, ticks) {
   warnForm.show(player).then((respond) => {
     let select = respond.selection;
     if (respond.isCanceled || select == 0) {
-      Print("You canceled the changes", "normal", player.name);
+      Print("Command abort", "normal", player.name);
       return;
     }
   });
   return `gamerule randomtickspeed ${ticks}`;
+}
+
+function teleportFacing(player) {
+  let formFacingTP = new ModalFormData();
+  let facingArgument;
+
+  formFacingTP.title("Teleport Facing");
+  formFacingTP.toggle(
+    "Facing Type §8[§cRotation§8/§aPosition/Target§8]",
+    false
+  );
+  formFacingTP.textField(
+    "Rotation §g[XZ Rot]§r\nPosition §g[XYZ]§r\nTarget §g[Entity]§8[Optional]",
+    "Rotation/Position/Target"
+  );
+
+  formFacingTP.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [type, arg] = respond.formValues;
+
+    facingArgument = `${arg} `;
+    if (type) {
+      facingArgument = `facing ${arg} `;
+    }
+  });
+  return facingArgument;
 }
