@@ -6,228 +6,234 @@ import {
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
 
-// Scoreboard Objectives Functions
+// Scoreboard Objectives Commands
 export function ScoreboardObjectivesIndex(player) {
-  let formSbObjectives = new ActionFormData();
-
-  formSbObjectives.title("SB Objectives [/scoreboard objectives]");
-  formSbObjectives.body("Select an option");
-  formSbObjectives.button("Add/Remove");
-  formSbObjectives.button("List");
-  formSbObjectives.button("Set Display");
+  let formSbObjectives = new ActionFormData()
+    .title("SB Objectives [/scoreboard objectives]")
+    .body("Select an option")
+    .button("Add/Remove")
+    .button("List")
+    .button("Set Display");
 
   formSbObjectives.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
     let button = respond.selection;
+
+    let command, syntax;
     switch (button) {
       case 0:
-        SbObjAdd(player);
+        [command, syntax] = ObjectivesAdd(player);
         break;
       case 1:
-        player.runCommand("scoreboard objectives list");
+        let message = player.runCommand("scoreboard objectives list");
+        Print(message.statusMessage, normal, player.name);
         break;
       case 2:
-        SbObjDisplay(player);
+        [command, syntax] = ObjectivesDisplay(player);
         break;
     }
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
-function SbObjAdd(player) {
-  let formSbObjAdd = new ModalFormData();
+function ObjectivesAdd(player) {
+  let command, syntax;
+  let formObjectivesAdd = new ModalFormData()
+    .title("SB Objectives Add/Remove")
+    .toggle("Add/Remove\n §8[§cRemove§8/§aAdd§8]", true)
+    .textField("Objective Name", "Name")
+    .textField("Objective Display Name §9[Add Mode]", "Display Name")
+    .toggle("§9Show Command Syntax", false);
 
-  formSbObjAdd.title("SB Objectives Add/Remove");
-  formSbObjAdd.toggle("Add/Remove\n§8true - Add\nfalse - Remove", true);
-  formSbObjAdd.textField("Objective Name", "Name");
-  formSbObjAdd.textField(
-    "Objective Display Name\n§8For 'add' argument",
-    "Display Name"
-  );
-
-  formSbObjAdd.show(player).then((respond) => {
+  formObjectivesAdd.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, name, display, syntaxarg] = respond.formValues;
 
-    let [type, name, display] = respond.formValues;
+    command = `scoreboard objectives add ${name} dummy "${display}"`;
     if (!type) {
-      player.runCommand(`scoreboard objectives remove ${name}`);
-      return;
+      command = `scoreboard objectives remove ${name}`;
     }
-    player.runCommand(`scoreboard objectives add ${name} dummy "${display}"`);
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-function SbObjDisplay(player) {
-  let formSbObjDisplay = new ModalFormData();
-  let typeSbObjDisplay = ["list", "sidebar", "belowname"];
+function ObjectivesDisplay(player) {
+  let command, syntax;
+  let typeObjectivesDisplay = ["list", "sidebar", "belowname"];
+  let formObjectivesDisplay = new ModalFormData()
+    .title("SB Objectives SetDisplay")
+    .dropdown("Set Display Type", typeObjectivesDisplay, 1)
+    .textField("Objective Name", "Name")
+    .toggle("Score Sort Order\n§8[§cDescending§8/§aAscending§8]", true)
+    .toggle("§9Show Command Syntax", false);
 
-  formSbObjDisplay.title("SB Objectives SetDisplay");
-  formSbObjDisplay.dropdown("Set Display Type", typeSbObjDisplay, 1);
-  formSbObjDisplay.textField("Objective Name", "Name");
-  formSbObjDisplay.toggle(
-    "Score Sort Order\n§8true - Ascending\nfalse - Descending",
-    true
-  );
-
-  formSbObjDisplay.show(player).then((respond) => {
+  formObjectivesDisplay.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, name, sort, syntaxarg] = respond.formValues;
 
-    let [type, name, sort] = respond.formValues;
     let order = "descending";
     if (sort) {
       order = "ascending";
     }
-    player.runCommand(
-      `scoreboard objectives setdisplay ${typeSbObjDisplay[type]} ${name} ${order}`
-    );
+    command = `scoreboard objectives setdisplay ${typeObjectivesDisplay[type]} ${name} ${order}`;
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-// Scoreboard Players Functions
+// Scoreboard Players Commands
 export function ScoreboardPlayersIndex(player) {
-  let formSbPlayers = new ActionFormData();
-
-  formSbPlayers.title("SB Players [/scoreboard players]");
-  formSbPlayers.body("Select an option");
-  formSbPlayers.button("Add/Remove/Set/Reset");
-  formSbPlayers.button("List");
-  formSbPlayers.button("Operation");
-  formSbPlayers.button("Random");
-  formSbPlayers.button("Test");
+  let formSbPlayers = new ActionFormData()
+    .title("SB Players [/scoreboard players]")
+    .body("Select an option")
+    .button("Add/Remove/Set/Reset")
+    .button("List")
+    .button("Operation")
+    .button("Random")
+    .button("Test");
 
   formSbPlayers.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
     let button = respond.selection;
+
+    let command, syntax;
     switch (button) {
       case 0:
-        SbPlrARSR(player);
+        [command, syntax] = PlayersARSR(player);
         break;
       case 1:
-        SbPlrList(player);
+        [command, syntax] = PlayersList(player);
         break;
       case 2:
-        SbPlrOperation(player);
+        [command, syntax] = PlayersOperation(player);
         break;
       case 3:
-        SbPlrRandom(player);
+        [command, syntax] = PlayersRandom(player);
         break;
-      case 4:
-        SbPlrTest(player);
+      case 4: // Special Case for PlayersTest()
+        PlayersTest(player);
         break;
     }
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 
-function SbPlrARSR(player) {
-  let formSbPlrARSR = new ModalFormData();
-  let typeSbPlrARSR = ["add", "remove", "set", "reset"];
+function PlayersARSR(player) {
+  let command, syntax;
+  let typePlayersARSR = ["add", "remove", "set", "reset"];
+  let formPlayersARSR = new ModalFormData()
+    .title("SB Player ARSR (Add/Remove/Set/Reset)")
+    .dropdown("Score Changer Type", typePlayersARSR)
+    .textField("Target §g[Entity]", "Target Selector", "@s")
+    .textField("Objective Name", "Name")
+    .textField("Score Value", "Value")
+    .toggle("§9Show Command Syntax", false);
 
-  formSbPlrARSR.title("SB Player ARSR (Add/Remove/Set/Reset)");
-  formSbPlrARSR.dropdown("Score Changer Type", typeSbPlrARSR);
-  formSbPlrARSR.textField("Target §8[Entity]", "Target Selector", "@s");
-  formSbPlrARSR.textField("Objective Name", "Name");
-  formSbPlrARSR.textField("Score Value", "Value");
-
-  formSbPlrARSR.show(player).then((respond) => {
+  formPlayersARSR.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [type, target, objective, value, syntaxarg] = respond.formValues;
 
-    let [type, target, objective, value] = respond.formValues;
+    command = `scoreboard players ${typePlayersARSR[type]} ${target} ${objective} ${value}`;
     if (type == 3) {
-      player.runCommand(`scoreboard players reset ${target} ${objective}`);
-      return;
+      command = `scoreboard players reset ${target} ${objective}`;
     }
-    player.runCommand(
-      `scoreboard players ${typeSbPlrARSR[type]} ${target} ${objective} ${value}`
-    );
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-function SbPlrList(player) {
-  let formSbPlrList = new ModalFormData();
+function PlayersList(player) {
+  let command, syntax;
+  let formPlayersList = new ModalFormData()
+    .title("SB Players List")
+    .textField("Target §g[Entity]", "Target Selector")
+    .toggle("§9Show Command Syntax", false);
 
-  formSbPlrList.title("SB Players List");
-  formSbPlrList.textField("Target §8[Entity]", "Target Selector");
-
-  formSbPlrList.show(player).then((respond) => {
+  formPlayersList.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, syntaxarg] = respond.formValues;
 
-    let [target] = respond.formValues;
-    player.runCommand(`scoreboard players list ${target}`);
+    command = `scoreboard players list ${target}`;
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-function SbPlrOperation(player) {
-  let formSbPlrOperation = new ModalFormData();
-  let typeSbPlrOperation = ["=", "+=", "-=", "*=", "/=", "%=", "<", ">", "><"];
+function PlayersOperation(player) {
+  let command, syntax;
+  let typePlayersOperation = [
+    "=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "%=",
+    "<",
+    ">",
+    "><",
+  ];
+  let formPlayersOperation = new ModalFormData()
+    .title("SB Players Operation")
+    .textField("Target §g[Entity]§9[Destination]", "Target Selector")
+    .textField("Objectives Name §9[Destination]", "Name")
+    .dropdown("Score Operation", typePlayersOperation)
+    .textField("Target §g[Entity]§9[Source]", "Target Selector")
+    .textField("Objectives Name §9[Source]", "Name")
+    .toggle("§9Show Command Syntax", false);
 
-  formSbPlrOperation.title("SB Players Operation");
-  formSbPlrOperation.textField("Target §8[Destination]", "Target Selector");
-  formSbPlrOperation.textField("Objectives Name §8[Destination]", "Name");
-  formSbPlrOperation.dropdown("Score Operation", typeSbPlrOperation);
-  formSbPlrOperation.textField("Target §8[Source]", "Target Selector");
-  formSbPlrOperation.textField("Objectives Name §8[Source]", "Name");
-
-  formSbPlrOperation.show(player).then((respond) => {
+  formPlayersOperation.show(player).then((respond) => {
     if (respond.isCanceled) return;
-
-    let [tgtDest, objDest, operation, tgtSource, objSource] =
+    let [tgtDest, objDest, operation, tgtSource, objSource, syntaxarg] =
       respond.formValues;
-    player.runCommand(
-      `scoreboard players operation ${tgtDest} ${objDest} ${typeSbPlrOperation[operation]} ${tgtSource} ${objSource}`
-    );
+
+    command = `scoreboard players operation ${tgtDest} ${objDest} ${typePlayersOperation[operation]} ${tgtSource} ${objSource}`;
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-function SbPlrRandom(player) {
-  let formSbPlrRandom = new ModalFormData();
+function PlayersRandom(player) {
+  let command, syntax;
+  let formPlayersRandom = new ModalFormData()
+    .title("SB Players Random")
+    .textField("Target §g[Entity]", "Target Selector")
+    .textField("Objective Name", "Name")
+    .textField("Min Score Value", "Min Value")
+    .textField("Max Score Value", "Max Value")
+    .toggle("§9Show Command Syntax", false);
 
-  formSbPlrRandom.title("SB Players Random");
-  formSbPlrRandom.textField("Target §8[Entity]", "Target Selector");
-  formSbPlrRandom.textField("Objective Name", "Name");
-  formSbPlrRandom.textField("Min Score Value", "Min Value");
-  formSbPlrRandom.textField("Max Score Value", "Max Value");
-
-  formSbPlrRandom.show(player).then((respond) => {
+  formPlayersRandom.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, objective, min, max, syntaxarg] = respond.formValues;
 
-    let [target, objective, min, max] = respond.formValues;
-    player.runCommand(
-      `scoreboard players random ${target} ${objective} ${min} ${max}`
-    );
+    command = `scoreboard players random ${target} ${objective} ${min} ${max}`;
+    syntax = syntaxarg;
   });
+  return [command, syntax];
 }
 
-function SbPlrReset(player) {
-  let formSbPlrReset = new ModalFormData();
+function PlayersTest(player) {
+  let command, syntax;
+  let formPlayersTest = new ModalFormData()
+    .title("SB Players Random")
+    .textField("Target §g[Entity]", "Target Selector")
+    .textField("Objective Name", "Name")
+    .textField("Min Score Value", "Min Value")
+    .textField("Max Score Value §8[Optional]", "Max Value");
 
-  formSbPlrReset.title("SB Players List");
-  formSbPlrReset.textField("Target §8[Entity]", "Target Selector");
-  formSbPlrReset.textField("Objectives Name §8[Optional]", "Name");
-
-  formSbPlrReset.show(player).then((respond) => {
+  formPlayersTest.show(player).then((respond) => {
     if (respond.isCanceled) return;
+    let [target, objective, min, max, syntaxarg] = respond.formValues;
 
-    let [target, objective] = respond.formValues;
-    player.runCommand(`scoreboard players reset ${target} ${objective}`);
+    command = `scoreboard players random ${target} ${objective} ${min} ${max}`;
+    let message = player.runCommand(command);
+    Print(message.statusMessage, "normal", player.name);
+
+    syntax = syntaxarg;
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
-}
-
-function SbPlrTest(player) {
-  let formSbPlrTest = new ModalFormData();
-
-  formSbPlrTest.title("SB Players Random");
-  formSbPlrTest.textField("Target §8[Entity]", "Target Selector");
-  formSbPlrTest.textField("Objective Name", "Name");
-  formSbPlrTest.textField("Min Score Value", "Min Value");
-  formSbPlrTest.textField("Max Score Value §8[Optional]", "Max Value");
-
-  formSbPlrTest.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-
-    let [target, objective, min, max] = respond.formValues;
-    player.runCommand(
-      `scoreboard players random ${target} ${objective} ${min} ${max}`
-    );
-  });
+  return [command, syntax];
 }

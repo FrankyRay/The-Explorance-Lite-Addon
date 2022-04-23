@@ -12,7 +12,6 @@
 		"body": [
 			"show(player).then(respond => {",
 			"  if (respond.isCanceled) return",
-			"",
 			"  $0",
 			"})"
 		],

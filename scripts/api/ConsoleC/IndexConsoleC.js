@@ -45,9 +45,9 @@ export function ConsoleCommands(player) {
   indexForm.button("Setblock"); // Done
   indexForm.button("Setworldspawn"); // Done
   indexForm.button("Sound"); // Done
-  indexForm.button("Spawnpoint");
+  indexForm.button("Spawnpoint"); // Done
   indexForm.button("Spreadplayers"); // Done
-  indexForm.button("Structure");
+  indexForm.button("Structure"); // Done
   indexForm.button("Summon"); // Done
   indexForm.button("Tag"); // Done
   indexForm.button("Teleport"); // Done
@@ -152,6 +152,9 @@ export function ConsoleCommands(player) {
         break;
       case 35:
         ConsC.Spreadplayers(player);
+        break;
+      case 36:
+        ConsC.Structure(player);
         break;
       case 37:
         ConsC.Summon(player);
