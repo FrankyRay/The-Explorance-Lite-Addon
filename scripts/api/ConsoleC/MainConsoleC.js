@@ -12,6 +12,7 @@ import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
 import * as StructureConsC from "./StructureConsoleC.js";
 import * as TestforConsC from "./TestforConsoleC.js";
 import * as TickingareaConsC from "./TickingareaConsoleC.js";
+import * as VolumeareaConsC from "./VolumeareaConsoleC.js";
 
 const Overworld = world.getDimension("overworld");
 
@@ -1164,6 +1165,35 @@ export function Time(player) {
         player.runCommand(`time set 18000`);
         break;
     }
+  });
+}
+
+export function Volumearea(player) {
+  let formVolumearea = new ActionFormData()
+    .title("Volumearea [/volumearea]")
+    .body("Select volumearea mode")
+    .button("Add")
+    .button("Remove")
+    .button("List");
+
+  formVolumearea.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    let command, syntax;
+    switch (button) {
+      case 0:
+        [command, syntax] = VolumeareaConsC.VolumeareaAdd(player);
+        break;
+      case 1:
+        [command, syntax] = VolumeareaConsC.VolumeareaRemove(player);
+        break;
+      case 2:
+        VolumeareaConsC.VolumeareaList(player);
+        break;
+    }
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 

@@ -16,7 +16,7 @@ export function ConsoleCommands(player) {
   indexForm.title("Console Commands");
   indexForm.body("Command List:");
 
-  indexForm.button("Ability"); // Done
+  indexForm.button("Ability\n§1[Education Edition]"); // Done
   indexForm.button("Camerashake"); // Done
   indexForm.button("Clear"); // Done
   indexForm.button("Clone"); // Done
@@ -29,10 +29,10 @@ export function ConsoleCommands(player) {
   indexForm.button("Execute");
   indexForm.button("Fill"); // Done
   indexForm.button("Fog"); // Done
-  indexForm.button("Function"); // Done
+  indexForm.button("Function\n§2[Addon]"); // Done
   indexForm.button("Gamemode"); // Done
   indexForm.button("Gamerule"); // Done
-  indexForm.button("Gametest");
+  indexForm.button("Gametest\n§2[Addon]");
   indexForm.button("Give"); // Done
   indexForm.button("Help");
   indexForm.button("Kick"); // Done
@@ -61,6 +61,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Tickingarea"); // Done
   indexForm.button("Time"); // Done
   indexForm.button("Titleraw");
+  indexForm.button("Volumearea\n§2[Addon]§1[Upcoming Creator Features]");
   indexForm.button("Weather"); // Done
   indexForm.button("XP"); // Done
 
@@ -186,9 +187,12 @@ export function ConsoleCommands(player) {
         ConsC.Time(player);
         break;
       case 45:
-        ConsC.Weather(player);
+        ConsC.Volumearea(player);
         break;
       case 46:
+        ConsC.Weather(player);
+        break;
+      case 47:
         ConsC.XP(player);
         break;
       default:
