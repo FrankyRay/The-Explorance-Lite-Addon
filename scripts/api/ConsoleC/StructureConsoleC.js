@@ -13,7 +13,7 @@ export function StructureSave(player) {
     .textField("1st Position §g[XYZ][~^]", "XYZ Position")
     .textField("2nd Position §g[XYZ][~^]", "XYZ Position")
     .toggle("Include Entities", true)
-    .toggle("Save Mode §8[§cDisk§8/§aMemory§8]", true)
+    .toggle("Save Mode\n§8[§cDisk§8/§aMemory§8]", true)
     .toggle("Include Blocks", true)
     .toggle("§9Show Command Syntax", false);
 
@@ -35,7 +35,7 @@ export function StructureLoad(player) {
     .textField("Structure Name", "Name")
     .textField("Position §g[XYZ][~^]", "XYZ Position")
     .slider("Rotation", 0, 270, 90, 0)
-    .dropdown("Mirror §g[Axis]", rotation)
+    .dropdown("Mirror §g[Axis]", mirrorAxis)
     .toggle("Include Entities", true)
     .toggle("Include Blocks", true)
     .slider("Integrity", 0, 100, 1, 100)

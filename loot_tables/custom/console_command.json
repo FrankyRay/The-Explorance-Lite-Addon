@@ -13,6 +13,10 @@
                 "§r[Fast Command Form]",
                 "§r§eRight click to open UI"
               ]
+            },
+            {
+              "function": "set_name",
+              "name": "§rConsole Commands UI"
             }
           ]
         }

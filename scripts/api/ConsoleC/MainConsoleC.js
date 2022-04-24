@@ -7,9 +7,11 @@ import {
   // @ts-ignore
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage.js";
+import * as ScheduleConsC from "./ScheduleConsoleC.js";
 import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
 import * as StructureConsC from "./StructureConsoleC.js";
 import * as TestforConsC from "./TestforConsoleC.js";
+import * as TickingareaConsC from "./TickingareaConsoleC.js";
 
 const Overworld = world.getDimension("overworld");
 
@@ -163,6 +165,28 @@ export function Damage(player) {
     let command = `damage ${target} ${amount} ${typeDamage[type]} ${damager}`;
     player.runCommand(command);
 
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
+export function Dialogue(player) {
+  let formDialogue = new ModalFormData()
+    .title("Dialogue [/dialogue]")
+    .toggle("Dialogue Mode\n§8[§cChange§8/§aOpen§8]", true)
+    .textField("Target §g[NPC]", "Target Selector", "@e[type=NPC]")
+    .textField("Scene Name §9[Open: Optional]", "Scene")
+    .textField("Target §g[Player]§9[Change: Optional]", "Target Selector")
+    .toggle("§9Show Command Syntax", false);
+
+  formDialogue.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [mode, npc, scene, target, syntax] = respond.formValues;
+
+    let command = `dialogue open ${npc} ${target} ${scene}`;
+    if (!mode) {
+      command = `dialogue change ${npc} ${scene} ${target}`;
+    }
+    player.runCommand(command);
     if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
@@ -785,6 +809,35 @@ export function Replaceitem(player) {
   });
 }
 
+export function Schedules(player) {
+  let formSchedule = new ActionFormData()
+    .title("Schedule [/schedule]")
+    .body("Select how to create a schedule")
+    .button("Square Area")
+    .button("Circle Area")
+    .button("Ticking Area");
+
+  formSchedule.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    let command, syntax;
+    switch (button) {
+      case 0:
+        [command, syntax] = ScheduleConsC.ScheduleSquare(player);
+        break;
+      case 1:
+        [command, syntax] = ScheduleConsC.ScheduleCircle(player);
+        break;
+      case 2:
+        [command, syntax] = ScheduleConsC.ScheduleTickingarea(player);
+        break;
+    }
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
 export function Scoreboard(player) {
   let formScoreboard = new MessageFormData()
     .title("Scoreboard [/scoreboard]")
@@ -930,7 +983,7 @@ export function Structure(player) {
 
   formStructure.show(player).then((respond) => {
     if (respond.isCanceled) return;
-    let button = respond.formValues;
+    let button = respond.selection;
 
     let command, syntax;
     switch (button) {
@@ -1049,6 +1102,35 @@ export function Testfor(player) {
     }
     player.runCommand(command);
 
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
+export function Tickingarea(player) {
+  let formTickingArea = new ActionFormData()
+    .title("Tickingarea [/tickingarea]")
+    .body("Select tickingarea mode")
+    .button("Add")
+    .button("Remove")
+    .button("List");
+
+  formTickingArea.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    let command, syntax;
+    switch (button) {
+      case 0:
+        [command, syntax] = TickingareaConsC.TickingareaAdd(player);
+        break;
+      case 1:
+        [command, syntax] = TickingareaConsC.TickingareaRemove(player);
+        break;
+      case 2:
+        TickingareaConsC.TickingareaList(player);
+        break;
+    }
+    player.runCommand(command);
     if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }

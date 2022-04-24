@@ -1,5 +1,10 @@
 import { world as World } from "mojang-minecraft";
-import { ActionFormData } from "mojang-minecraft-ui";
+import {
+  ActionFormData,
+  MessageFormData,
+  ModalFormData,
+} from "mojang-minecraft-ui";
+import { Print } from "../PrintMessage.js";
 import * as ConsC from "./MainConsoleC.js";
 
 /**
@@ -16,7 +21,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Clear"); // Done
   indexForm.button("Clone"); // Done
   indexForm.button("Damage"); // Done
-  indexForm.button("Dialogue");
+  indexForm.button("Dialogue"); // Done
   indexForm.button("Difficulty"); // Done
   indexForm.button("Effect"); // Done
   indexForm.button("Enchant"); // Done
@@ -40,7 +45,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Playanimation"); // Done
   indexForm.button("Replaceitem"); // Done
   indexForm.button("Ride");
-  indexForm.button("Schedules");
+  indexForm.button("Schedules"); // Done
   indexForm.button("Scoreboard"); // Done
   indexForm.button("Setblock"); // Done
   indexForm.button("Setworldspawn"); // Done
@@ -53,7 +58,7 @@ export function ConsoleCommands(player) {
   indexForm.button("Teleport"); // Done
   indexForm.button("Tellraw");
   indexForm.button("Testfor"); // Done
-  indexForm.button("Tickingarea");
+  indexForm.button("Tickingarea"); // Done
   indexForm.button("Time"); // Done
   indexForm.button("Titleraw");
   indexForm.button("Weather"); // Done
@@ -77,6 +82,9 @@ export function ConsoleCommands(player) {
         break;
       case 4:
         ConsC.Damage(player);
+        break;
+      case 5:
+        ConsC.Dialogue(player);
         break;
       case 6:
         ConsC.Difficulty(player);
@@ -135,6 +143,9 @@ export function ConsoleCommands(player) {
       case 27:
         ConsC.Replaceitem(player);
         break;
+      case 29:
+        ConsC.Schedules(player);
+        break;
       case 30:
         ConsC.Scoreboard(player);
         break;
@@ -168,6 +179,9 @@ export function ConsoleCommands(player) {
       case 41:
         ConsC.Testfor(player);
         break;
+      case 42:
+        ConsC.Tickingarea(player);
+        break;
       case 43:
         ConsC.Time(player);
         break;
@@ -181,6 +195,32 @@ export function ConsoleCommands(player) {
         player.runCommand(
           `tellraw @a {"rawtext": [{"text": "The command was not available yet. Coming Soon!\n"}, {"text": "[EC/Index/${button}]"}]}`
         );
+    }
+  });
+}
+
+export function SettingConsoleCommands(player) {
+  let formSetting = new MessageFormData();
+
+  formSetting.title("Console Commands Setting");
+  formSetting.body("This is setting UI test");
+  formSetting.button2("This is button 2");
+  formSetting.button1("This is button 1");
+
+  formSetting.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    switch (button) {
+      case 0:
+        Print("Index 0");
+        break;
+      case 1:
+        Print("Index 1");
+        break;
+      case 2:
+        Print("Index 2");
+        break;
     }
   });
 }

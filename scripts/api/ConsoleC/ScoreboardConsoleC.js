@@ -41,7 +41,7 @@ function ObjectivesAdd(player) {
   let command, syntax;
   let formObjectivesAdd = new ModalFormData()
     .title("SB Objectives Add/Remove")
-    .toggle("Add/Remove\n §8[§cRemove§8/§aAdd§8]", true)
+    .toggle("Add/Remove\n§8[§cRemove§8/§aAdd§8]", true)
     .textField("Objective Name", "Name")
     .textField("Objective Display Name §9[Add Mode]", "Display Name")
     .toggle("§9Show Command Syntax", false);
