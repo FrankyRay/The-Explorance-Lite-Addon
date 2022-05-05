@@ -1,5 +1,10 @@
 import { world as World } from "mojang-minecraft";
-import { ActionFormData } from "mojang-minecraft-ui";
+import {
+  ActionFormData,
+  MessageFormData,
+  ModalFormData,
+} from "mojang-minecraft-ui";
+import { Print } from "../PrintMessage.js";
 import * as ConsC from "./MainConsoleC.js";
 
 /**
@@ -11,53 +16,52 @@ export function ConsoleCommands(player) {
   indexForm.title("Console Commands");
   indexForm.body("Command List:");
 
-  indexForm.button("Ability"); // Done
+  indexForm.button("Ability\n§1[Education Edition]"); // Done
   indexForm.button("Camerashake"); // Done
   indexForm.button("Clear"); // Done
   indexForm.button("Clone"); // Done
   indexForm.button("Damage"); // Done
-  indexForm.button("Dialogue");
+  indexForm.button("Dialogue"); // Done
   indexForm.button("Difficulty"); // Done
   indexForm.button("Effect"); // Done
   indexForm.button("Enchant"); // Done
-  indexForm.button("Event");
+  indexForm.button("Event"); // Done
   indexForm.button("Execute");
   indexForm.button("Fill"); // Done
   indexForm.button("Fog"); // Done
-  indexForm.button("Function"); // Done
+  indexForm.button("Function\n§2[Addon]"); // Done
   indexForm.button("Gamemode"); // Done
   indexForm.button("Gamerule"); // Done
-  indexForm.button("Gametest");
+  indexForm.button("Gametest\n§2[Addon]");
   indexForm.button("Give"); // Done
   indexForm.button("Help");
   indexForm.button("Kick"); // Done
   indexForm.button("Kill"); // Done
-  indexForm.button("List");
   indexForm.button("Locate"); // Done
   indexForm.button("Loot"); // Done
   indexForm.button("Mobevent"); // Done
   indexForm.button("Music"); // Done
   indexForm.button("Particle"); // Done
   indexForm.button("Playanimation"); // Done
-  indexForm.button("Playsound");
   indexForm.button("Replaceitem"); // Done
   indexForm.button("Ride");
-  indexForm.button("Schedules");
+  indexForm.button("Schedules"); // Done
   indexForm.button("Scoreboard"); // Done
   indexForm.button("Setblock"); // Done
   indexForm.button("Setworldspawn"); // Done
+  indexForm.button("Sound"); // Done
   indexForm.button("Spawnpoint"); // Done
   indexForm.button("Spreadplayers"); // Done
-  indexForm.button("Stopsound");
-  indexForm.button("Structure");
+  indexForm.button("Structure"); // Done
   indexForm.button("Summon"); // Done
   indexForm.button("Tag"); // Done
-  indexForm.button("Teleport");
-  indexForm.button("Tellraw");
-  indexForm.button("Testfor");
-  indexForm.button("Tickingarea");
+  indexForm.button("Teleport"); // Done
+  indexForm.button("Tell");
+  indexForm.button("Testfor"); // Done
+  indexForm.button("Tickingarea"); // Done
   indexForm.button("Time"); // Done
-  indexForm.button("Titleraw");
+  indexForm.button("Title");
+  indexForm.button("Volumearea\n§2[Addon]§1[Upcoming Creator Features]"); // Done
   indexForm.button("Weather"); // Done
   indexForm.button("XP"); // Done
 
@@ -69,7 +73,7 @@ export function ConsoleCommands(player) {
         ConsC.Ability(player);
         break;
       case 1:
-        ConsC.CameraShake(player);
+        ConsC.Camerashake(player);
         break;
       case 2:
         ConsC.Clear(player);
@@ -80,6 +84,9 @@ export function ConsoleCommands(player) {
       case 4:
         ConsC.Damage(player);
         break;
+      case 5:
+        ConsC.Dialogue(player);
+        break;
       case 6:
         ConsC.Difficulty(player);
         break;
@@ -88,6 +95,9 @@ export function ConsoleCommands(player) {
         break;
       case 8:
         ConsC.Enchant(player);
+        break;
+      case 9:
+        ConsC.Event(player);
         break;
       case 11:
         ConsC.Fill(player);
@@ -113,61 +123,110 @@ export function ConsoleCommands(player) {
       case 20:
         ConsC.Kill(player);
         break;
-      case 22:
+      case 21:
         ConsC.Locate(player);
         break;
-      case 23:
+      case 22:
         ConsC.Loot(player);
         break;
-      case 24:
+      case 23:
         ConsC.Mobevent(player);
         break;
-      case 25:
+      case 24:
         ConsC.Music(player);
         break;
-      case 26:
+      case 25:
         ConsC.Particle(player);
         break;
-      case 27:
+      case 26:
         ConsC.Playanimation(player);
         break;
-      case 29:
+      case 27:
         ConsC.Replaceitem(player);
         break;
-      case 32:
+      case 29:
+        ConsC.Schedules(player);
+        break;
+      case 30:
         ConsC.Scoreboard(player);
         break;
-      case 33:
+      case 31:
         ConsC.Setblock(player);
         break;
-      case 34:
+      case 32:
         ConsC.Setworldspawn(player);
         break;
-      case 35:
+      case 33:
         ConsC.Spawnpoint(player);
         break;
-      case 36:
+      case 34:
+        ConsC.Spawnpoint(player);
+        break;
+      case 35:
         ConsC.Spreadplayers(player);
         break;
-      case 39:
+      case 36:
+        ConsC.Structure(player);
+        break;
+      case 37:
         ConsC.Summon(player);
         break;
-      case 40:
+      case 38:
         ConsC.Tag(player);
         break;
-      case 45:
+      case 39:
+        ConsC.Teleport(player);
+        break;
+      case 40:
+        ConsC.Tell(player);
+        break;
+      case 41:
+        ConsC.Testfor(player);
+        break;
+      case 42:
+        ConsC.Tickingarea(player);
+        break;
+      case 43:
         ConsC.Time(player);
         break;
-      case 47:
+      case 44:
+        ConsC.Title(player);
+        break;
+      case 45:
+        ConsC.Volumearea(player);
+        break;
+      case 46:
         ConsC.Weather(player);
         break;
-      case 48:
+      case 47:
         ConsC.XP(player);
         break;
       default:
         player.runCommand(
           `tellraw @a {"rawtext": [{"text": "The command was not available yet. Coming Soon!\n"}, {"text": "[EC/Index/${button}]"}]}`
         );
+    }
+  });
+}
+
+export function SettingConsoleCommands(player) {
+  let formSetting = new ActionFormData()
+    .title("Console Commands Setting")
+    .body("This is setting UI test")
+    .button("This is button 1", "textures/items/apple")
+    .button("This is button 2", "textures/assets/target.png");
+
+  formSetting.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    switch (button) {
+      case 0:
+        Print("Index 0");
+        break;
+      case 1:
+        Print("Index 1");
+        break;
     }
   });
 }
