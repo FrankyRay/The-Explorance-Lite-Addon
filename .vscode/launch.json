@@ -8,6 +8,12 @@
       "mode": "listen",
       "localRoot": "${workspaceFolder}/",
       "port": 19144
+    },
+    {
+      "type": "node-terminal",
+      "name": "JavaScript Debug Terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

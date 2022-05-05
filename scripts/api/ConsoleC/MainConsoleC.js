@@ -12,7 +12,10 @@ import * as ScoreboardConsC from "./ScoreboardConsoleC.js";
 import * as StructureConsC from "./StructureConsoleC.js";
 import * as TestforConsC from "./TestforConsoleC.js";
 import * as TickingareaConsC from "./TickingareaConsoleC.js";
+import * as TitleConsC from "./TitleConsoleC.js";
 import * as VolumeareaConsC from "./VolumeareaConsoleC.js";
+// Rawtext - Message Form
+import { MessageRawtext } from "./MessageForConsoleC.js";
 
 const Overworld = world.getDimension("overworld");
 
@@ -1077,6 +1080,24 @@ export function Teleport(player) {
   });
 }
 
+// ERROR: Need fix
+export function Tell(player) {
+  let formTell = new ModalFormData()
+    .title("Tell [/tell]")
+    .textField("Target §g[Player]", "Target Selection")
+    .textField("Message Text", "Message")
+    .toggle("§9Show Command Syntax", false);
+
+  formTell.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let [target, msg, syntax] = respond.formValues;
+
+    let command = `tellraw ${target} ${msg}`;
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
+  });
+}
+
 export function Testfor(player) {
   let formTestfor = new ActionFormData()
     .title("Testfor Family")
@@ -1165,6 +1186,35 @@ export function Time(player) {
         player.runCommand(`time set 18000`);
         break;
     }
+  });
+}
+
+export function Title(player) {
+  let formTitle = new ActionFormData()
+    .title("Title [/title]")
+    .body("Select title type")
+    .button("Display\n[Title, Subtitle, Actionbar]")
+    .button("Clear/Reset")
+    .button("Times");
+
+  formTitle.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+    let button = respond.selection;
+
+    let command, syntax;
+    switch (button) {
+      case 0:
+        [command, syntax] = TitleConsC.TitleDisplay(player);
+        break;
+      case 1:
+        [command, syntax] = TitleConsC.TitleClearReset(player);
+        break;
+      case 2:
+        [command, syntax] = TitleConsC.TitleTimes(player);
+        break;
+    }
+    player.runCommand(command);
+    if (syntax) Print(command, "consc", `"${player.name}"`);
   });
 }
 

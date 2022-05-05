@@ -56,12 +56,12 @@ export function ConsoleCommands(player) {
   indexForm.button("Summon"); // Done
   indexForm.button("Tag"); // Done
   indexForm.button("Teleport"); // Done
-  indexForm.button("Tellraw");
+  indexForm.button("Tell");
   indexForm.button("Testfor"); // Done
   indexForm.button("Tickingarea"); // Done
   indexForm.button("Time"); // Done
-  indexForm.button("Titleraw");
-  indexForm.button("Volumearea\n§2[Addon]§1[Upcoming Creator Features]");
+  indexForm.button("Title");
+  indexForm.button("Volumearea\n§2[Addon]§1[Upcoming Creator Features]"); // Done
   indexForm.button("Weather"); // Done
   indexForm.button("XP"); // Done
 
@@ -177,6 +177,9 @@ export function ConsoleCommands(player) {
       case 39:
         ConsC.Teleport(player);
         break;
+      case 40:
+        ConsC.Tell(player);
+        break;
       case 41:
         ConsC.Testfor(player);
         break;
@@ -185,6 +188,9 @@ export function ConsoleCommands(player) {
         break;
       case 43:
         ConsC.Time(player);
+        break;
+      case 44:
+        ConsC.Title(player);
         break;
       case 45:
         ConsC.Volumearea(player);
@@ -204,12 +210,11 @@ export function ConsoleCommands(player) {
 }
 
 export function SettingConsoleCommands(player) {
-  let formSetting = new MessageFormData();
-
-  formSetting.title("Console Commands Setting");
-  formSetting.body("This is setting UI test");
-  formSetting.button2("This is button 2");
-  formSetting.button1("This is button 1");
+  let formSetting = new ActionFormData()
+    .title("Console Commands Setting")
+    .body("This is setting UI test")
+    .button("This is button 1", "textures/items/apple")
+    .button("This is button 2", "textures/assets/target.png");
 
   formSetting.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -221,9 +226,6 @@ export function SettingConsoleCommands(player) {
         break;
       case 1:
         Print("Index 1");
-        break;
-      case 2:
-        Print("Index 2");
         break;
     }
   });
