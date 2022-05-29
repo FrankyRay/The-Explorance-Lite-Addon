@@ -32,5 +32,16 @@
 			"form${2:command}.title(\"$3\")"
 		],
 		"description": "Modal Form Data"
+	},
+	"Function Event": {
+		"scope": "javascript, typescript",
+		"prefix": "eventFunction",
+		"body": [
+			"export function event${1:event}() {",
+			"  Event.${2:event}.subscribe(${3:event}Event => {",
+			"    $0",
+			"  })",
+			"}"
+		]
 	}
 }

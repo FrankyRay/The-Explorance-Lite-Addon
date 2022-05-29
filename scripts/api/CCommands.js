@@ -1,8 +1,9 @@
 //@ts-check
-import { Items, ItemStack, ItemType, world } from "mojang-minecraft";
+import { world, MinecraftItemTypes } from "mojang-minecraft";
 import * as MinecraftMath from "./MathOperations.js";
 import { Print, PrintAction } from "./PrintMessage.js";
 import { CommandsComponent } from "./CommandsComp.js";
+import { WorldEditBE } from "./WorldEdit.js";
 
 const Overworld = world.getDimension("overworld");
 // Saved Variable
@@ -15,62 +16,60 @@ let pos2 = "";
  * @param {string} commands
  * @param {string} args
  * @param {import("mojang-minecraft").Player} player
- * @param {boolean} admin
  */
-export function CustomCommands(prefix, commands, args, player, admin) {
+export function CustomCommands(prefix, commands, args, player) {
   let HelpCommand = "This is help commands";
   switch (commands) {
-    case "help":
+    case "help" /* Help Command. Not useful yet :v */:
       Print(HelpCommand, "normal", player.name);
       break;
-    case "cmdcomp":
-      const Component = CommandsComponent(args);
-      Print(Component, "normal", player.name);
+
+    case "cmdcomp" /* Checking Command Component */:
+      Print(CommandsComponent(args), "normal", player.name);
       break;
-    case "consolewarn":
+
+    case "consolewarn" /* Just calling the console warn to make sure it works */:
       console.warn("You call the console warning");
       break;
-    case "componentItem":
-      let item = player
-        .getComponent("minecraft:inventory")
-        // @ts-ignore
-        .container.getItem(player.selectedSlot);
-      if (item != undefined && item.hasComponent("minecraft:durability")) {
-        let durability = item.getComponent("minecraft:durability");
-        let maximumDurability = durability.maxDurability;
-        let currentDurability = durability.damage;
-        Print(
-          `Durability: ${currentDurability}/${maximumDurability}`,
-          "normal",
-          player.name
-        );
-      } else if (item != undefined && item.hasComponent("minecraft:food")) {
-        let food = item.getComponent("minecraft:food");
-        let foodNutrition = food.nutrition;
-        let foodAlwaysEat = food.canAlwaysEat;
-        Print(
-          `Nutrition: ${foodNutrition} - Always Eat?: ${foodAlwaysEat}`,
-          "normal",
-          player.name
-        );
-      } else {
-        Print(
-          `The item doesn't have any detectable component with Gametest\nItem ID: ${item.id}`,
-          "normal",
-          player.name
-        );
-      }
-      break;
-    case "consc":
+
+    case "consc" /* FIXME: Give the Console Commands Book */:
       player.runCommand(`loot give @s loot "custom/console_command"`);
       break;
-    case "gmc":
+
+    case "gmc" /* Set gamemode to Creative*/:
       Overworld.runCommand(`gamemode creative "${player.name}"`);
       break;
-    case "gms":
+
+    case "gms" /* Set gamemode to Survival*/:
       Overworld.runCommand(`gamemode survival "${player.name}"`);
       break;
-    case "worldedit":
+
+    case "playercomp" /* Take player's components */:
+      let {
+        dimension: { id: dimensionID },
+        headLocation: { x: xhead, y: yhead, z: zhead },
+        id,
+        isSneaking,
+        location: { x: xloc, y: yloc, z: zloc },
+        name,
+        nameTag,
+        //@ts-ignore
+        rotation: { x: xrot, y: yrot },
+        viewVector: { x: xvec, y: yvec, z: zvec },
+      } = player;
+      Print(
+        `Player Class [${name}]:\nDimension: ${dimensionID}\nHead Location:\n  X: ${xhead}\n  Y: ${yhead}\n  Z: ${zhead}\nID: ${id}\nSneaking: ${isSneaking}\nLocation:\n  X: ${xloc}\n  Y: ${yloc}\n  Z: ${zloc}\nName Tag: ${nameTag}\nRotation:\n  X: ${xrot}\n  Y: ${yrot}\nView Vector:\n  X: ${xvec}\n  Y: ${xvec}\n  Z: ${xvec}`,
+        "normal",
+        player.name
+      );
+      break;
+
+    case "test" /* Testing some feature with my custom command */:
+      Print("There's no test yet!");
+      break;
+
+    case "worldedit" /* [TODO: Create own file] My own world edit */:
+      // WorldEditBE(player, args, prefix);
       if (args.split(" ")[0] == "set1") {
         let x = Math.floor(player.location.x);
         let y = Math.floor(player.location.y);
@@ -100,16 +99,8 @@ export function CustomCommands(prefix, commands, args, player, admin) {
         PrintAction(`Successfully undo the fill commands`, player.name);
       }
       break;
-    case "test":
-      let inv = player.getComponent("minecraft:inventory").container;
-      let itemArmor = inv.getItem(100);
-      if (itemArmor != undefined) {
-        Print(`Item detectable: ${itemArmor.id}`, "normal", player.name);
-      } else {
-        Print("Not detectable", "normal", player.name);
-      }
-      break;
-    default:
+
+    default: /* Send error message when there's no command */
       Print(
         `Command "${commands}" is not found. Run ${prefix}help to check custom commands`,
         "info",

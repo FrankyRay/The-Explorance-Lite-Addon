@@ -16,7 +16,8 @@
     },
     {
       "description": "Gametest",
-      "type": "javascript",
+	    "language": "javascript",
+      "type": "script",
       "entry": "scripts/Index.js",
       "uuid": "c49a5ef5-49c8-460e-9f08-bace8f09c9ad",
       "version": [1, 0, 0]

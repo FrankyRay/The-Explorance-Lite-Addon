@@ -4,12 +4,10 @@ export function CommandsComponent(command) {
   const Overworld = World.getDimension("overworld");
 
   let cmd = Overworld.runCommand(command);
-  let comp = JSON.stringify(cmd)
-    .replace(/"/g, "'")
-    .replace(/:/g, ": §9")
-    .replace(/,/g, "\n§8: §a")
-    .replace("}", "§r")
-    .replace("{", "\n§8: §a");
+  let comp = "";
+  Object.keys(cmd).forEach((key) => {
+    comp += `\n| ${key} §8${typeof cmd[key]}: §9${cmd[key]}§r`;
+  });
 
   return `Command: '§g${command}§r'\nComponents: {${comp}\n}`;
 }

@@ -52,17 +52,17 @@ export function RolesPrint(message, roles, playerName, target = "@a") {
       break;
     case "yellow_team":
       Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§e[RED TEAM] ${playerName}§r: ${message}"}]}`
+        `tellraw ${target} {"rawtext": [{"text": "§e[YELLOW TEAM] ${playerName}§r: ${message}"}]}`
       );
       break;
     case "green_team":
       Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§a[RED TEAM] ${playerName}§r: ${message}"}]}`
+        `tellraw ${target} {"rawtext": [{"text": "§a[GREEN TEAM] ${playerName}§r: ${message}"}]}`
       );
       break;
     case "blue_team":
       Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§b[RED TEAM] ${playerName}§r: ${message}"}]}`
+        `tellraw ${target} {"rawtext": [{"text": "§b[BLUE TEAM] ${playerName}§r: ${message}"}]}`
       );
       break;
   }
