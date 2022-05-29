@@ -1,9 +1,3 @@
-/**
- * Return the lowest coordinate from 2 points
- * @param {string} pos1
- * @param {string} pos2
- * @returns string
- */
 export function MinCoord(pos1, pos2) {
   let ListPos1 = pos1.split(" ").map(Number);
   let ListPos2 = pos2.split(" ").map(Number);
@@ -19,12 +13,6 @@ export function MinCoord(pos1, pos2) {
   return `${x} ${y} ${z}`;
 }
 
-/**
- * Return how many blocks in that area
- * @param {string} pos1
- * @param {string} pos2
- * @returns number
- */
 export function HowMuchBlocks(pos1, pos2) {
   let ListPos1 = pos1.split(" ").map(Number);
   let ListPos2 = pos2.split(" ").map(Number);
