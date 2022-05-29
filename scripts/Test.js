@@ -1,51 +1,40 @@
 //@ts-check
-import * as Minecraft from "mojang-minecraft";
-import { PrintAction } from "./api/PrintMessage.js";
 
-function welcome(player) {
-  console.warn("Start");
-  try {
-    if (player.hasTag("been") == true) {
-      player.runCommand(
-        `titleraw @s title {"rawtext":[{"text":"Welcome back to "},{"text":"§oNAME"}]}`
-      );
-      player.runCommand(
-        `titleraw @s subtitle {"rawtext":[{"text":"${player.nameTag}"}]}`
-      );
-    } else if (player.hasTag("old") == true) {
-      player.runCommand(
-        `titleraw @s title {"rawtext":[{"text":"Welcome"},{"text":"§oHome"}]}`
-      );
-      player.runCommand(
-        `titleraw @s subtitle {"rawtext":[{"text":"${player.nameTag}"}]}`
-      );
-    } else {
-      player.runCommand(
-        `titleraw @s title {"rawtext":[{"text":"Welcome to "},{"text":"§oNAME"}]}`
-      );
-      player.runCommand(
-        `titleraw @s subtitle {"rawtext":[{"text":"${player.nameTag}"}]}`
-      );
-    }
-  } catch (e) {
-    console.warn(e);
+let data = {
+  theString: "This is string",
+  theInteger: 1,
+  theBoolean: true,
+  theFunction: function Block() {},
+  theUndefined: undefined,
+  theArray: {
+    something: true,
+    love: 99.99,
+  },
+  theList: ["never", "gonna", "give", "you", "up"],
+};
+let output = "{";
+
+Object.keys(data).forEach((key) => {
+  if (Array.isArray(data[key])) {
+    output += `\n  ${key} (array): [\n    ${data[key]}\n  ]`;
+    return;
   }
-}
+  output += `\n  ${key} (${typeof data[key]}): ${data[key]}`;
+});
 
-//Joining event control
-export function Test() {
-  Minecraft.world.events.playerJoin.subscribe((eventData) => {
-    let { player } = eventData;
-    let event = Minecraft.world.events.tick.subscribe(() => {
-      if (!player) {
-        Minecraft.world.events.tick.unsubscribe(event);
-        return;
-      }
-      try {
-        player.runCommand("testfor @s");
-        welcome(player);
-        player = null;
-      } catch {}
-    });
-  });
-}
+output += "\n}";
+console.log(output);
+
+// let data = {
+//   theArray: {
+//     something: true,
+//     love: 99.99,
+//   },
+//   theList: ["never", "gonna", "give", "you", "up"],
+// };
+
+// Object.keys(data).forEach((key) => {
+//   if (typeof data[key] == "object" && !Array.isArray(data[key])) {
+//     console.log(`Array found on data.${key}`);
+//   }
+// });
