@@ -27,8 +27,11 @@ export function WorldEditBE(player, arg, prefix) {
     default:
       Print(
         `Subcommand "${subcommand}" on "${prefix}worldedit" is not found. Run "${prefix}help worldedit" to check custom commands`,
+        player.name,
         "info",
-        player.name
+        "info",
+        "yellow",
+        "reset"
       );
   }
 }

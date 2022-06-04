@@ -63,6 +63,6 @@ export function VolumeareaList(player) {
       command = `volumearea list all-dimensions`;
     }
     let message = player.runCommand(command);
-    Print(message.statusMessage, "normal", player.name);
+    Print(message.statusMessage, player.name, "normal");
   });
 }

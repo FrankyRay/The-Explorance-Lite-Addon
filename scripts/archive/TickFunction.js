@@ -1,6 +1,6 @@
 //@ts-check
 import { BlockRaycastOptions, world as World } from "mojang-minecraft";
-import { Print, PrintAction } from "./PrintMessage.js";
+import { Print, PrintAction } from "../api/PrintMessage.js";
 
 export function TickFunction() {
   World.events.tick.subscribe((tickEvent) => {

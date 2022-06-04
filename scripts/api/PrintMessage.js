@@ -1,28 +1,28 @@
 import { world } from "mojang-minecraft";
+import { Color } from "./Database.js";
 
 const Overworld = world.getDimension("overworld");
 
 // Tellraw Message
-export function Print(message, type = "normal", target = "@a") {
+export function Print(
+  message,
+  target = "@a",
+  type = "normal",
+  field = "info",
+  primary = "yellow",
+  secondary = "reset"
+) {
   switch (type) {
     case "normal":
       Overworld.runCommand(
         `tellraw ${target} {"rawtext": [{"text": "${message}"}]}`
       );
       break;
-    case "tips":
-      Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§a[TIPS] §r${message}"}]}`
-      );
-      break;
     case "info":
       Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§e[INFO] §r${message}"}]}`
-      );
-      break;
-    case "warn":
-      Overworld.runCommand(
-        `tellraw ${target} {"rawtext": [{"text": "§c[WARN] §r${message}"}]}`
+        `tellraw ${target} {"rawtext": [{"text": "${
+          Color[primary]
+        }[${field.toUpperCase()}] ${Color[secondary]}${message}"}]}`
       );
       break;
     case "consc":

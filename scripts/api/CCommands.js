@@ -1,5 +1,5 @@
 //@ts-check
-import { world, MinecraftItemTypes } from "mojang-minecraft";
+import { world, ItemStack, MinecraftItemTypes } from "mojang-minecraft";
 import * as MinecraftMath from "./MathOperations.js";
 import { Print, PrintAction } from "./PrintMessage.js";
 import { CommandsComponent } from "./CommandsComp.js";
@@ -21,19 +21,36 @@ export function CustomCommands(prefix, commands, args, player) {
   let HelpCommand = "This is help commands";
   switch (commands) {
     case "help" /* Help Command. Not useful yet :v */:
-      Print(HelpCommand, "normal", player.name);
+      Print(HelpCommand, player.name);
       break;
 
     case "cmdcomp" /* Checking Command Component */:
-      Print(CommandsComponent(args), "normal", player.name);
+      Print(CommandsComponent(args), player.name);
       break;
 
     case "consolewarn" /* Just calling the console warn to make sure it works */:
       console.warn("You call the console warning");
       break;
 
-    case "consc" /* FIXME: Give the Console Commands Book */:
-      player.runCommand(`loot give @s loot "custom/console_command"`);
+    case "compmc" /* Give the Component UI Stick */:
+      let compstick = new ItemStack(MinecraftItemTypes.stick);
+      compstick.setLore([
+        "§r[MC Component Form]",
+        "§r§bRight click to open UI",
+      ]);
+
+      player
+        .getComponent("inventory")
+        .container.setItem(player.selectedSlot, compstick);
+      break;
+
+    case "consc" /* Give the Console Commands Book */:
+      let consc = new ItemStack(MinecraftItemTypes.book);
+      consc.setLore(["§r[Console Command Form]", "§r§bRight click to open UI"]);
+
+      player
+        .getComponent("inventory")
+        .container.setItem(player.selectedSlot, consc);
       break;
 
     case "gmc" /* Set gamemode to Creative*/:
@@ -44,22 +61,16 @@ export function CustomCommands(prefix, commands, args, player) {
       Overworld.runCommand(`gamemode survival "${player.name}"`);
       break;
 
-    case "playercomp" /* Take player's components */:
-      let {
-        dimension: { id: dimensionID },
-        headLocation: { x: xhead, y: yhead, z: zhead },
-        id,
-        isSneaking,
-        location: { x: xloc, y: yloc, z: zloc },
-        name,
-        nameTag,
-        //@ts-ignore
-        rotation: { x: xrot, y: yrot },
-        viewVector: { x: xvec, y: yvec, z: zvec },
-      } = player;
+    case "itemcomp" /* Take item's components */:
+      let item = player
+        .getComponent("inventory")
+        .container.getItem(player.selectedSlot);
+      let { amount, data, id: itemid } = item;
+      // let component = item.getComponents();
+      // let itemname = item.nameTag;
+      // let lore = item.getLore();
       Print(
-        `Player Class [${name}]:\nDimension: ${dimensionID}\nHead Location:\n  X: ${xhead}\n  Y: ${yhead}\n  Z: ${zhead}\nID: ${id}\nSneaking: ${isSneaking}\nLocation:\n  X: ${xloc}\n  Y: ${yloc}\n  Z: ${zloc}\nName Tag: ${nameTag}\nRotation:\n  X: ${xrot}\n  Y: ${yrot}\nView Vector:\n  X: ${xvec}\n  Y: ${xvec}\n  Z: ${xvec}`,
-        "normal",
+        `Item Class [${itemid}]:\nAmount: ${amount}\nData: ${data}` /* + `\nComponent: ${component}\nName: ${itemname}\nLore: ${lore}` */,
         player.name
       );
       break;
@@ -103,8 +114,10 @@ export function CustomCommands(prefix, commands, args, player) {
     default: /* Send error message when there's no command */
       Print(
         `Command "${commands}" is not found. Run ${prefix}help to check custom commands`,
+        player.name,
         "info",
-        player.name
+        "info",
+        "yellow"
       );
   }
 }

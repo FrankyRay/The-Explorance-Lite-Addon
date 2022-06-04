@@ -244,10 +244,9 @@ function eventEntityHurt() {
   Event.entityHurt.subscribe((hurtEvent) => {
     let cause = hurtEvent.cause;
     let damage = hurtEvent.damage;
-    let source = hurtEvent.damagingEntity.id;
+    let source = hurtEvent.damagingEntity?.id;
     let target = hurtEvent.hurtEntity.id;
-    let projectile;
-    if (hurtEvent.projectile != undefined) projectile = hurtEvent.projectile.id;
+    let projectile = hurtEvent.projectile?.id;
     console.warn(
       `Entity Hurt Event Detected\nDamage Cause: ${cause}\nDamage: ${damage}\nSource: ${source}\nTarget: ${target}\nProjectile: ${projectile}`
     );
@@ -376,6 +375,22 @@ function eventWeatherChange() {
   });
 }
 
+function csteventEntityKilled() {
+  Event.entityHurt.subscribe((killedEvent) => {
+    let target = killedEvent.hurtEntity;
+    if (target.getComponent("health").current <= 0) {
+      let cause = hurtEvent.cause;
+      let damage = hurtEvent.damage;
+      let source = hurtEvent.damagingEntity?.id;
+      let projectile = hurtEvent.projectile?.id;
+
+      console.log(
+        `Custom Event: Entity Killed Detected [EntityHurt]\nDamage Cause: ${cause}\nDamage: ${damage}\nSource: ${source}\nTarget: ${target}\nProjectile: ${projectile}`
+      );
+    }
+  });
+}
+
 // World Initialize Event
 
 /* Event Test */
@@ -395,8 +410,8 @@ eventItemUseOn();
 
 // -+- Test -+-
 // eventBlockExplode();
-// eventDataDrivenEntity();
-// eventEntityHurt();
+eventDataDrivenEntity();
+eventEntityHurt();
 // eventItemCompleteCharge();
 // eventItemReleaseCharge();
 // eventItemStartCharge();
@@ -406,6 +421,6 @@ eventItemUseOn();
 // eventLeverActivate();
 // eventProjectileHit();
 
-// eventItemUseOnOnce();
+csteventEntityKilled();
 
 // -+- Fail -+-

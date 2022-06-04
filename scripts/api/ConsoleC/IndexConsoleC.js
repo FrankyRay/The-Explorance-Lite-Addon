@@ -208,25 +208,3 @@ export function ConsoleCommands(player) {
     }
   });
 }
-
-export function SettingConsoleCommands(player) {
-  let formSetting = new ActionFormData()
-    .title("Console Commands Setting")
-    .body("This is setting UI test")
-    .button("This is button 1", "textures/items/apple")
-    .button("This is button 2", "textures/assets/target.png");
-
-  formSetting.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-    let button = respond.selection;
-
-    switch (button) {
-      case 0:
-        Print("Index 0");
-        break;
-      case 1:
-        Print("Index 1");
-        break;
-    }
-  });
-}

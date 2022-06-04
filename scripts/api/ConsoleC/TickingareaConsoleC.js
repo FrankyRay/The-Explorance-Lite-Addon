@@ -72,6 +72,6 @@ export function TickingareaList(player) {
       command = `tickingarea list all-dimensions`;
     }
     let message = player.runCommand(command);
-    Print(message.statusMessage, "normal", player.name);
+    Print(message.statusMessage, player.name, "normal");
   });
 }
