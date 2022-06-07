@@ -10,6 +10,7 @@ export function ComponentsUI(player) {
     .body("Select component to view more")
     .button("Player")
     .button("Item")
+    .button("Block")
     .button("Entity");
 
   formComp.show(player).then((respond) => {
@@ -19,12 +20,6 @@ export function ComponentsUI(player) {
       case 0:
         PlayerCompUI(player);
         break;
-      // case 1:
-      //   ItemComp(player);
-      //   break;
-      // case 2:
-      //   Entity(player);
-      //   break;
       default:
         Print("The component is WIP!");
     }

@@ -1,6 +1,10 @@
 //@ts-check
 import { world } from "mojang-minecraft";
-import { ActionFormData, MessageFormData } from "mojang-minecraft-ui";
+import {
+  ActionFormData,
+  MessageFormData,
+  ModalFormData,
+} from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage";
 
 /**
@@ -10,7 +14,6 @@ export function PlayerCompUI(player) {
   let formPlayerComp = new ActionFormData()
     .title("Player Components")
     .body("Select one to see more")
-    .button("Show General Info")
     .button("Show Component Info");
 
   formPlayerComp.show(player).then((respond) => {
@@ -18,63 +21,10 @@ export function PlayerCompUI(player) {
 
     switch (respond.selection) {
       case 0:
-        GeneralInfo(player);
-        break;
-      case 1:
-        ComponentInfoUI(player);
+        ComponentInfo(player);
         break;
       default:
-        return;
-    }
-  });
-}
-
-function GeneralInfo(player) {
-  let {
-    dimension: { id: dimensionID },
-    headLocation: { x: xhead, y: yhead, z: zhead },
-    id,
-    isSneaking,
-    location: { x: xloc, y: yloc, z: zloc },
-    name,
-    nameTag,
-    //@ts-ignore
-    rotation: { x: xrot, y: yrot },
-    viewVector: { x: xvec, y: yvec, z: zvec },
-  } = player;
-
-  let component = {
-    Dimension: dimensionID,
-    Head_Location: [xhead, yhead, zhead].map((val) => val.toFixed(2)).join(" "),
-    ID: id,
-    Is_Sneaking: isSneaking,
-    Location: [xloc, yloc, zloc].map((val) => val.toFixed(2)).join(" "),
-    Name_Tag: nameTag,
-    Rotation: [xrot, yrot].join(" "),
-    View_Vector: [xvec, yvec, zvec].map((val) => val.toFixed(2)).join(" "),
-  };
-
-  let message = `General Player Component [Name: ${name}]`;
-  for (let key in component) {
-    message += `\n§g${key.replace("_", " ")}§r: ${component[key]}`;
-  }
-
-  let formPrint = new MessageFormData()
-    .title("Show Type")
-    .body("Select where you want to print the code")
-    .button1("Content Log [console.warn()]")
-    .button2("Chat Display [Print()]");
-
-  formPrint.show(player).then((respond) => {
-    if (respond.isCanceled) return;
-
-    switch (respond.selection) {
-      case 1:
-        console.warn(message);
-        break;
-      case 0:
-        Print(message);
-        break;
+        Print("Not available yet!");
     }
   });
 }
@@ -82,4 +32,90 @@ function GeneralInfo(player) {
 /**
  * @param {import("mojang-minecraft").Player} player
  */
-function ComponentInfoUI(player) {}
+function ComponentInfo(player) {
+  let playerComps = ["General", "Health", "Inventory"];
+
+  let formPlrComp = new ModalFormData()
+    .title("Player Components")
+    .dropdown("Components", playerComps)
+    // .toggle("Show Option\n§8[§cShow Once§8/§aShow Always§8]", false)
+    .toggle("Show Option\n§8[§cContent Log§8/§aChat Display§8]", false);
+
+  formPlrComp.show(player).then((respond) => {
+    if (respond.isCanceled) return;
+
+    let [comp, opt] = respond.formValues;
+    let message = `Player Component Info [Name: ${player.name}]`;
+    let componentID = "";
+    let componentProperty = {};
+    switch (playerComps[comp]) {
+      case "General":
+        let {
+          dimension: { id: dimensionID },
+          headLocation: { x: xhead, y: yhead, z: zhead },
+          id: idPlayer,
+          isSneaking,
+          location: { x: xloc, y: yloc, z: zloc },
+          name,
+          nameTag,
+          //@ts-ignore
+          rotation: { x: xrot, y: yrot },
+          viewVector: { x: xvec, y: yvec, z: zvec },
+        } = player;
+        componentID = "General";
+        componentProperty = {
+          Dimension: dimensionID,
+          "Head Location": [xhead, yhead, zhead]
+            .map((val) => val.toFixed(2))
+            .join(" "),
+          ID: idPlayer,
+          "Is Sneaking": isSneaking,
+          Location: [xloc, yloc, zloc].map((val) => val.toFixed(2)).join(" "),
+          "Name Tag": nameTag,
+          Rotation: [xrot, yrot].map((val) => val.toFixed(2)).join(" "),
+          "View Vector": [xvec, yvec, zvec]
+            .map((val) => val.toFixed(2))
+            .join(" "),
+        };
+        break;
+      case "Health":
+        let { current, id: idHealth, value } = player.getComponent("health");
+        componentID = idHealth;
+        componentProperty = {
+          Current: current,
+          Value: value,
+        };
+        break;
+      case "Inventory":
+        let {
+          additionalSlotsPerStrength,
+          canBeSiphonedFrom,
+          container: { emptySlotsCount, size },
+          containerType,
+          id: idInv,
+          inventorySize,
+          restrictToOwner,
+        } = player.getComponent("inventory");
+        componentID = idInv;
+        componentProperty = {
+          "Additional Slots Per Strength": additionalSlotsPerStrength,
+          "Can Be Siphoned From": canBeSiphonedFrom,
+          "Container - Empty_Slots_Count": emptySlotsCount,
+          "Container - Size": size,
+          "Container Type": containerType,
+          "Inventory Size": inventorySize,
+          "Restrict To Owner": restrictToOwner,
+        };
+        break;
+      default:
+        Print(`Component not available yet`);
+    }
+
+    message += `\n§cType Component§r: ${componentID}`;
+    for (let comp in componentProperty) {
+      message += `\n§g${comp}§r: ${componentProperty[comp]}`;
+    }
+    if (opt) Print(message);
+    else console.warn(message);
+  });
+}

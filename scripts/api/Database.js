@@ -76,3 +76,7 @@ export const MCEnchantments = {
   thorns: MinecraftEnchantmentTypes.thorns,
   unbreaking: MinecraftEnchantmentTypes.unbreaking,
 };
+
+export const DurabilityItem = {
+  "minecraft:netherite_sword": 2032,
+};
