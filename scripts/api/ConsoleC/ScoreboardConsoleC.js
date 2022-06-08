@@ -26,14 +26,14 @@ export function ScoreboardObjectivesIndex(player) {
         break;
       case 1:
         let message = player.runCommand("scoreboard objectives list");
-        Print(message.statusMessage, normal, player.name);
+        Print(message.statusMessage, player.name, "normal");
         break;
       case 2:
         [command, syntax] = ObjectivesDisplay(player);
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -117,7 +117,7 @@ export function ScoreboardPlayersIndex(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -230,10 +230,10 @@ function PlayersTest(player) {
 
     command = `scoreboard players random ${target} ${objective} ${min} ${max}`;
     let message = player.runCommand(command);
-    Print(message.statusMessage, "normal", player.name);
+    Print(message.statusMessage, player.name, "normal");
 
     syntax = syntaxarg;
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
   return [command, syntax];
 }

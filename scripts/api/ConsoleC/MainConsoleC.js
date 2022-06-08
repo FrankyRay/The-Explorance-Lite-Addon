@@ -34,7 +34,7 @@ export function Ability(player) {
     let command = `ability ${typeAbility[type]} ${bool}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -63,7 +63,7 @@ export function Camerashake(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -83,7 +83,7 @@ export function Clear(player) {
     let command = `clear ${target} ${item} ${data} ${amount}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -112,7 +112,7 @@ export function Clone(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -169,7 +169,7 @@ export function Damage(player) {
     let command = `damage ${target} ${amount} ${typeDamage[type]} ${damager}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -191,7 +191,7 @@ export function Dialogue(player) {
       command = `dialogue change ${npc} ${scene} ${target}`;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -271,7 +271,7 @@ export function Effect(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -331,7 +331,7 @@ export function Enchant(player) {
       .toLowerCase()} ${level}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -349,7 +349,7 @@ export function Event(player) {
     let command = `event entity ${target} ${event}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -377,7 +377,7 @@ export function Fill(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -404,7 +404,7 @@ export function Fog(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -424,7 +424,7 @@ export function Function(player) {
     let command = `function ${path}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -526,7 +526,7 @@ export function Gamerule(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -547,7 +547,7 @@ export function Give(player) {
     let command = `give ${target} ${item} ${amount} ${data} ${component}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -565,7 +565,7 @@ export function Kick(player) {
     let command = `kick ${target} ${reason}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -582,7 +582,7 @@ export function Kill(player) {
     let command = `kill ${target}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -618,9 +618,9 @@ export function Locate(player) {
       .replace(" ", "")
       .toLowerCase()} ${chunk}`;
     let message = player.runCommand(command);
-    Print(message.statusMessage, "normal", player.name);
+    Print(message.statusMessage, player.name, "normal");
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -655,7 +655,7 @@ export function Loot(player) {
     let command = `loot ${typeLoot[type]} ${target} ${killType} "${path}" ${handType}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -678,7 +678,7 @@ export function Mobevent(player) {
     let command = `mobevent ${typeMobevent[type]} ${value}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -714,7 +714,7 @@ export function Music(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -732,7 +732,7 @@ export function Particle(player) {
     let command = `particle ${particle} ${pos}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -755,7 +755,7 @@ export function Playanimation(player) {
     let command = `playanimation ${target} ${animation} ${state} ${blend} ${stop} ${controller}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -809,7 +809,7 @@ export function Replaceitem(player) {
     let command = `replaceitem ${target} ${postgt} ${typeReplaceitem[container]} ${id} ${replaceMode} ${item} ${amount} ${data} ${tag}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -838,7 +838,7 @@ export function Schedules(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -878,7 +878,7 @@ export function Setblock(player) {
     let command = `setblock ${pos} ${block} ${data} ${typeSetblockMode[mode]}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -895,7 +895,7 @@ export function Setworldspawn(player) {
     let command = `setworldspawn ${pos}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -928,7 +928,7 @@ export function Sound(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -953,7 +953,7 @@ export function Spawnpoint(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -973,7 +973,7 @@ export function Spreadplayers(player) {
     let command = `spreadplayers ${pos} ${min} ${max} ${target}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1003,7 +1003,7 @@ export function Structure(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1029,7 +1029,7 @@ export function Summon(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1052,7 +1052,7 @@ export function Tag(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1076,7 +1076,7 @@ export function Teleport(player) {
     let command = `tp ${victim} ${postgt} ${facingArgument}${block}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1094,7 +1094,7 @@ export function Tell(player) {
 
     let command = `tellraw ${target} ${msg}`;
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1124,7 +1124,7 @@ export function Testfor(player) {
     }
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1153,7 +1153,7 @@ export function Tickingarea(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1214,7 +1214,7 @@ export function Title(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1243,7 +1243,7 @@ export function Volumearea(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1262,7 +1262,7 @@ export function Weather(player) {
     let command = `weather ${typeWeather[type]} ${duration}`;
     player.runCommand(command);
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1284,7 +1284,7 @@ export function XP(player) {
     }
     player.runCommand();
 
-    if (syntax) Print(command, "consc", `"${player.name}"`);
+    if (syntax) Print(command, `"${player.name}"`, "consc");
   });
 }
 
@@ -1300,7 +1300,7 @@ function gameruleWarnHighRTS(player, ticks) {
   warnForm.show(player).then((respond) => {
     let select = respond.selection;
     if (respond.isCanceled || select == 0) {
-      Print("Command abort", "normal", player.name);
+      Print("Command abort", player.name, "normal");
       return;
     }
   });

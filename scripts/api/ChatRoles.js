@@ -14,6 +14,13 @@ export function Chats(message, player) {
   } else if (player.hasTag("BlueTeam")) {
     RolesPrint(message, "blue_team", player.name);
   } else if (player.hasTag("Mute")) {
-    Print("You has been muted by Admin/Operator", "info", player.name);
+    Print(
+      "You has been muted by Admin/Operator",
+      player.name,
+      "info",
+      "error",
+      "red",
+      "yellow"
+    );
   }
 }
