@@ -109,6 +109,7 @@ function ComponentInfo(player) {
         break;
       default:
         Print(`Component not available yet`);
+        return;
     }
 
     message += `\n§cType Component§r: ${componentID}`;
