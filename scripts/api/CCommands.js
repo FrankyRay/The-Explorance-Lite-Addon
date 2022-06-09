@@ -32,18 +32,6 @@ export function CustomCommands(prefix, commands, args, player) {
       console.warn("You call the console warning");
       break;
 
-    case "compmc" /* Give the Component UI Stick */:
-      let compstick = new ItemStack(MinecraftItemTypes.stick);
-      compstick.setLore([
-        "§r[MC Component Form]",
-        "§r§bRight click to open UI",
-      ]);
-
-      player
-        .getComponent("inventory")
-        .container.setItem(player.selectedSlot, compstick);
-      break;
-
     case "consc" /* Give the Console Commands Book */:
       let consc = new ItemStack(MinecraftItemTypes.book);
       consc.setLore(["§r[Console Command Form]", "§r§bRight click to open UI"]);
@@ -59,6 +47,18 @@ export function CustomCommands(prefix, commands, args, player) {
 
     case "gms" /* Set gamemode to Survival*/:
       Overworld.runCommand(`gamemode survival "${player.name}"`);
+      break;
+
+    case "gtpanel" /* Give the Component UI Stick */:
+      let compstick = new ItemStack(MinecraftItemTypes.stick);
+      compstick.setLore([
+        "§r[MC Component Form]",
+        "§r§bRight click to open UI",
+      ]);
+
+      player
+        .getComponent("inventory")
+        .container.setItem(player.selectedSlot, compstick);
       break;
 
     case "itemcomp" /* Take item's components */:
