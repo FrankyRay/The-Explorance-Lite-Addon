@@ -1,12 +1,12 @@
-//@ts-check
-import { world } from "mojang-minecraft";
+// @ts-check
+import { world, Enchantment } from "mojang-minecraft";
 import {
   ActionFormData,
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage";
-import { DurabilityItem } from "../Database.js";
+import { MCEnchantments, MCEnchantmentsList } from "../Database.js";
 
 /**
  * @param {import("mojang-minecraft").Player} player
@@ -16,7 +16,7 @@ export function ItemCompUI(player) {
     .title("Item Components")
     .body("Select one to see more")
     .button("Show Component Info")
-    .button("Durability Info [Check Comp]");
+    .button("Check Illegal Item");
 
   formItemComp.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -25,9 +25,58 @@ export function ItemCompUI(player) {
       case 0:
         ComponentInfoUI(player);
         break;
-      // case 1:
-      //   DurabilityInfo(player);
-      //   break;
+      case 1:
+        try {
+          let messageIllegal = [];
+          for (let i = 0; i < 36; i++) {
+            // @ts-ignore
+            let item = player.getComponent("inventory").container.getItem(i);
+            if (!item) continue;
+
+            let eComp = item.getComponent("enchantments").enchantments;
+            for (let enc in MCEnchantmentsList) {
+              let itemEnc = eComp.getEnchantment(MCEnchantmentsList[enc]);
+              if (!itemEnc) continue;
+
+              // Get enchantment data
+              let {
+                level,
+                type: { id, maxLevel },
+              } = itemEnc;
+
+              // Check if the enchantment is cannot be applied to the item
+              console.warn(
+                `\${item.id} - \${MCEnchantmentsList[enc].id} - \${eComp.canAddEnchantment(new Enchantment(MCEnchantmentsList[enc], 1))}\n${
+                  item.id
+                } - ${MCEnchantmentsList[enc].id} - ${eComp.canAddEnchantment(
+                  new Enchantment(MCEnchantmentsList[enc], 1)
+                )}`
+              );
+              if (
+                !eComp.canAddEnchantment(
+                  new Enchantment(MCEnchantmentsList[enc])
+                )
+              ) {
+                messageIllegal.push([
+                  `§a${item.id}§r should not have enchantment §c${MCEnchantmentsList[enc].id}`,
+                ]);
+              }
+
+              // Check if the enchantment has higher level than the max level
+              if (level > maxLevel) {
+                messageIllegal.push([
+                  `§a${item.id}§r has enchantment §e${id}§r with illegal level §c(${level} > ${maxLevel})`,
+                ]);
+              }
+            }
+          }
+          for (let msg of messageIllegal) {
+            Print(msg);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        break;
       default:
         Print("Not available yet!");
     }
@@ -50,6 +99,7 @@ function ComponentInfoUI(player) {
     if (respond.isCanceled) return;
 
     let [comp, slot, opt] = respond.formValues;
+    // @ts-ignore
     let item = player.getComponent("inventory").container.getItem(slot - 1);
     if (!item) {
       Print(`Slot ${slot} has no item`);
@@ -73,6 +123,20 @@ function ComponentInfoUI(player) {
           Name: nameTag,
         };
         break;
+      case "Enchantment":
+        for (let enc of Object.values(MCEnchantments)) {
+          let itemEnc = item
+            .getComponent("enchantments")
+            .enchantments.getEnchantment(MCEnchantments[enc]);
+          if (!itemEnc) continue;
+
+          let {
+            level,
+            type: { id, maxLevel },
+          } = itemEnc;
+          // @ts-ignore
+          componentID[id] = `${level}/${maxLevel}`;
+        }
       default:
         Print(`Component not available yet`);
         return;
@@ -86,14 +150,3 @@ function ComponentInfoUI(player) {
     else console.warn(message);
   });
 }
-
-// /**
-//  * @param {import("mojang-minecraft").Player} player
-//  */
-// function DurabilityInfo(player) {
-//   let item = player
-//     .getComponent("inventory")
-//     .container.getItem(player.selectedSlot);
-
-//   let durability = item.hasComponent("minecraft:durability");
-// }

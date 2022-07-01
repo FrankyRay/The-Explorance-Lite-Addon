@@ -6,6 +6,7 @@ import { Print } from "../PrintMessage.js";
 import { PlayerCompUI } from "./PlayerComp.js";
 import { ItemCompUI } from "./ItemComp.js";
 import { ExplosionMethod } from "./CreateMethod.js";
+import { ConsoleCommands } from "../ConsoleC/IndexConsoleC.js";
 
 const VIEW = "\n§7Click To View More";
 const BETA = "\n§6Beta Version";
@@ -22,8 +23,8 @@ export function GametestPanel(player) {
     .body("Select one to view more")
     .button("Components View" + VIEW)
     .button("Gametest Create Method" + VIEW)
-    .button("Component Show Tick" + VIEW)
-    .button("Console Test" + VIEW);
+    .button("Console Test" + VIEW)
+    .button("Console Commands" + VIEW);
 
   panelGametest.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -35,10 +36,13 @@ export function GametestPanel(player) {
       case 1:
         CreateMethodUI(player);
         break;
-      case 3:
+      case 2:
         console.log("Console Log | console.log()");
         console.warn("Console Warn | console.warn()");
         console.error("Console Error | console.error()");
+        break;
+      case 3:
+        ConsoleCommands(player);
         break;
       default:
         Print("The action is not available yet!");

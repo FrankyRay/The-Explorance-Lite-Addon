@@ -1,5 +1,5 @@
 //@ts-check
-import { Location } from "mojang-minecraft";
+import { Location, BlockLocation } from "mojang-minecraft";
 
 /**
  * Return the lowest coordinate from 2 points
@@ -28,7 +28,7 @@ export function MinCoord(pos1, pos2) {
  * @param {string} pos2
  * @returns number
  */
-export function HowMuchBlocks(pos1, pos2) {
+export function BlocksCounter(pos1, pos2) {
   let ListPos1 = pos1.split(" ").map(Number);
   let ListPos2 = pos2.split(" ").map(Number);
 
@@ -40,11 +40,21 @@ export function HowMuchBlocks(pos1, pos2) {
 }
 
 /**
- * Return string location into Location() class
+ * Return string location into `Location()` class
  * @param {string} location String consist 3 set of coordinate number
  * @returns {import("mojang-minecraft").Location}
  */
 export function StringToLocation(location) {
   let locList = location.split(" ").map((val) => parseInt(val));
   return new Location(locList[0], locList[1], locList[2]);
+}
+
+/**
+ * Return string location into `BlockLocation()` class
+ * @param {string} location String consist 3 set of coordinate number
+ * @returns {import("mojang-minecraft").BlockLocation}
+ */
+export function StringToBlockLocation(location) {
+  let locList = location.split(" ").map((val) => parseInt(val));
+  return new BlockLocation(locList[0], locList[1], locList[2]);
 }

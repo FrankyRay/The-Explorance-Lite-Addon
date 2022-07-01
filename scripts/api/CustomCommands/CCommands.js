@@ -1,9 +1,17 @@
 //@ts-check
-import { world, ItemStack, MinecraftItemTypes } from "mojang-minecraft";
-import * as MinecraftMath from "./MathOperations.js";
-import { Print, PrintAction } from "./PrintMessage.js";
+import {
+  world,
+  ItemStack,
+  MinecraftItemTypes,
+  MinecraftEnchantmentTypes,
+  Enchantment,
+} from "mojang-minecraft";
+import * as MinecraftMath from "../MathOperations.js";
+import { Print, PrintAction } from "../PrintMessage.js";
+// Custom Command Extend
 import { CommandsComponent } from "./CommandsComp.js";
 import { WorldEditBE } from "./WorldEdit.js";
+import { Warp } from "./Warp.js";
 
 const Overworld = world.getDimension("overworld");
 // Saved Variable
@@ -38,6 +46,7 @@ export function CustomCommands(prefix, commands, args, player) {
 
       player
         .getComponent("inventory")
+        // @ts-ignore
         .container.setItem(player.selectedSlot, consc);
       break;
 
@@ -58,12 +67,14 @@ export function CustomCommands(prefix, commands, args, player) {
 
       player
         .getComponent("inventory")
+        // @ts-ignore
         .container.setItem(player.selectedSlot, compstick);
       break;
 
     case "itemcomp" /* Take item's components */:
       let item = player
         .getComponent("inventory")
+        // @ts-ignore
         .container.getItem(player.selectedSlot);
       let { amount, data, id: itemid } = item;
       // let component = item.getComponents();
@@ -76,7 +87,20 @@ export function CustomCommands(prefix, commands, args, player) {
       break;
 
     case "test" /* Testing some feature with my custom command */:
-      Print("There's no test yet!");
+      // @ts-ignore
+      let item2 = player.getComponent("inventory").container.getItem(0);
+      console.warn(item2.id);
+      console.warn(
+        item2
+          .getComponent("enchantments")
+          .enchantments.canAddEnchantment(
+            new Enchantment(MinecraftEnchantmentTypes.unbreaking)
+          )
+      );
+      break;
+
+    case "warp" /* Warp to a location */:
+      Warp(args, player);
       break;
 
     case "worldedit" /* [TODO: Create own file] My own world edit */:
@@ -95,7 +119,7 @@ export function CustomCommands(prefix, commands, args, player) {
         PrintAction(`Set 1st position: ${pos1}`, player.name);
       } else if (args.split(" ")[0] == "fill") {
         let blockType = args.substring(args.indexOf(" ") + 1);
-        let blocks = MinecraftMath.HowMuchBlocks(pos1, pos2);
+        let blocks = MinecraftMath.BlocksCounter(pos1, pos2);
         Overworld.runCommand(`fill ${pos1} ${pos2} ${blockType}`);
         Overworld.runCommand(
           `structure save we:beforefill ${pos1} ${pos2} memory`

@@ -3,6 +3,7 @@ import {
   MinecraftEffectTypes,
   MinecraftEnchantmentTypes,
 } from "mojang-minecraft";
+export { MinecraftDimensionTypes, MinecraftEnchantmentTypes };
 
 export const Color = {
   black: "§0",
@@ -75,8 +76,51 @@ export const MCEnchantments = {
   swift_sneak: MinecraftEnchantmentTypes.swiftSneak /* Beta/Preview only */,
   thorns: MinecraftEnchantmentTypes.thorns,
   unbreaking: MinecraftEnchantmentTypes.unbreaking,
+  [Symbol.iterator]: function* () {
+    let properties = Object.keys(this);
+    for (let i of properties) {
+      yield [i, this[i]];
+    }
+  },
 };
 
-export const DurabilityItem = {
-  "minecraft:netherite_sword": 2032,
-};
+export const MCEnchantmentsList = [
+  MinecraftEnchantmentTypes.aquaAffinity,
+  MinecraftEnchantmentTypes.baneOfArthropods,
+  MinecraftEnchantmentTypes.blastProtection,
+  MinecraftEnchantmentTypes.channeling,
+  MinecraftEnchantmentTypes.binding,
+  MinecraftEnchantmentTypes.vanishing,
+  MinecraftEnchantmentTypes.depthStrider,
+  MinecraftEnchantmentTypes.efficiency,
+  MinecraftEnchantmentTypes.featherFalling,
+  MinecraftEnchantmentTypes.fireAspect,
+  MinecraftEnchantmentTypes.fireProtection,
+  MinecraftEnchantmentTypes.flame,
+  MinecraftEnchantmentTypes.fortune,
+  MinecraftEnchantmentTypes.frostWalker,
+  MinecraftEnchantmentTypes.impaling,
+  MinecraftEnchantmentTypes.infinity,
+  MinecraftEnchantmentTypes.knockback,
+  MinecraftEnchantmentTypes.looting,
+  MinecraftEnchantmentTypes.loyalty,
+  MinecraftEnchantmentTypes.luckOfTheSea,
+  MinecraftEnchantmentTypes.lure,
+  MinecraftEnchantmentTypes.mending,
+  MinecraftEnchantmentTypes.multishot,
+  MinecraftEnchantmentTypes.piercing,
+  MinecraftEnchantmentTypes.power,
+  MinecraftEnchantmentTypes.projectileProtection,
+  MinecraftEnchantmentTypes.protection,
+  MinecraftEnchantmentTypes.punch,
+  MinecraftEnchantmentTypes.quickCharge,
+  MinecraftEnchantmentTypes.respiration,
+  MinecraftEnchantmentTypes.riptide,
+  MinecraftEnchantmentTypes.sharpness,
+  MinecraftEnchantmentTypes.silkTouch,
+  MinecraftEnchantmentTypes.smite,
+  MinecraftEnchantmentTypes.soulSpeed,
+  // MinecraftEnchantmentTypes.swiftSneak /* Beta/Preview only */,
+  MinecraftEnchantmentTypes.thorns,
+  MinecraftEnchantmentTypes.unbreaking,
+];
