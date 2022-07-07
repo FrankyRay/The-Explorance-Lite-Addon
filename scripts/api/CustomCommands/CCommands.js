@@ -1,17 +1,23 @@
 //@ts-check
 import {
   world,
+  Items,
   ItemStack,
   MinecraftItemTypes,
   MinecraftEnchantmentTypes,
   Enchantment,
+  BlockLocation,
+  BlockRaycastOptions,
+  StringBlockProperty,
 } from "mojang-minecraft";
-import * as MinecraftMath from "../MathOperations.js";
+import * as MinecraftOperation from "../MinecraftOperation.js";
 import { Print, PrintAction } from "../PrintMessage.js";
+import { MCEnchantments } from "../MinecraftData.js";
 // Custom Command Extend
 import { CommandsComponent } from "./CommandsComp.js";
 import { WorldEditBE } from "./WorldEdit.js";
 import { Warp } from "./Warp.js";
+import { ItemGive } from "./ItemGive.js";
 
 const Overworld = world.getDimension("overworld");
 // Saved Variable
@@ -32,6 +38,41 @@ export function CustomCommands(prefix, commands, args, player) {
       Print(HelpCommand, player.name);
       break;
 
+    case "blockcomp" /* Show block's blockstate */:
+      const raycastB = new BlockRaycastOptions();
+      raycastB.includeLiquidBlocks = false;
+      raycastB.includePassableBlocks = false;
+      raycastB.maxDistance = 10;
+
+      let blockTest = player.getBlockFromViewVector(raycastB);
+      let blockProperties = blockTest.permutation.getAllProperties();
+
+      let message = `Block Property [Block: ${blockTest.id}]`;
+      for (let property in blockProperties) {
+        // @ts-ignore
+        let { name, validValues, value } = blockProperties[property];
+        let values = [];
+        for (let i = 0; i < validValues.length; i++) {
+          if (validValues[i] === value) {
+            values.push(
+              typeof validValues[i] === "string"
+                ? `§c'${validValues[i]}'§r`
+                : `§c${validValues[i]}§r`
+            );
+          } else {
+            values.push(
+              typeof validValues[i] === "string"
+                ? `'${validValues[i]}'`
+                : `${validValues[i]}`
+            );
+          }
+        }
+        message += `\n§g${name}§r: [${values.join(", ")}]`;
+      }
+
+      Print(message);
+      break;
+
     case "cmdcomp" /* Checking Command Component */:
       Print(CommandsComponent(args), player.name);
       break;
@@ -46,7 +87,6 @@ export function CustomCommands(prefix, commands, args, player) {
 
       player
         .getComponent("inventory")
-        // @ts-ignore
         .container.setItem(player.selectedSlot, consc);
       break;
 
@@ -86,17 +126,21 @@ export function CustomCommands(prefix, commands, args, player) {
       );
       break;
 
+    case "itemgive" /* Give the item with additional function */:
+      ItemGive(player, args);
+      break;
+
     case "test" /* Testing some feature with my custom command */:
-      // @ts-ignore
-      let item2 = player.getComponent("inventory").container.getItem(0);
-      console.warn(item2.id);
-      console.warn(
-        item2
-          .getComponent("enchantments")
-          .enchantments.canAddEnchantment(
-            new Enchantment(MinecraftEnchantmentTypes.unbreaking)
-          )
-      );
+      player.runCommand("give @s netherite_sword 1");
+      let itemTest = player
+        .getComponent("inventory")
+        .container.getItem(player.selectedSlot);
+
+      itemTest.nameTag = "Pear";
+
+      player
+        .getComponent("inventory")
+        .container.setItem(player.selectedSlot, itemTest);
       break;
 
     case "warp" /* Warp to a location */:
@@ -119,7 +163,7 @@ export function CustomCommands(prefix, commands, args, player) {
         PrintAction(`Set 1st position: ${pos1}`, player.name);
       } else if (args.split(" ")[0] == "fill") {
         let blockType = args.substring(args.indexOf(" ") + 1);
-        let blocks = MinecraftMath.BlocksCounter(pos1, pos2);
+        let blocks = MinecraftOperation.BlocksCounter(pos1, pos2);
         Overworld.runCommand(`fill ${pos1} ${pos2} ${blockType}`);
         Overworld.runCommand(
           `structure save we:beforefill ${pos1} ${pos2} memory`
@@ -129,7 +173,7 @@ export function CustomCommands(prefix, commands, args, player) {
           player.name
         );
       } else if (args.split(" ")[0] == "undo") {
-        let newPos = MinecraftMath.MinCoord(pos1, pos2);
+        let newPos = MinecraftOperation.MinCoord(pos1, pos2);
         Overworld.runCommand(`structure load we:beforefill ${newPos}`);
         PrintAction(`Successfully undo the fill commands`, player.name);
       }

@@ -1,5 +1,11 @@
 //@ts-check
-import { Location, BlockLocation } from "mojang-minecraft";
+import {
+  world,
+  Location,
+  BlockLocation,
+  Enchantment,
+  MinecraftEnchantmentTypes,
+} from "mojang-minecraft";
 
 /**
  * Return the lowest coordinate from 2 points
@@ -57,4 +63,44 @@ export function StringToLocation(location) {
 export function StringToBlockLocation(location) {
   let locList = location.split(" ").map((val) => parseInt(val));
   return new BlockLocation(locList[0], locList[1], locList[2]);
+}
+
+/**
+ * Get score from scoreboard
+ * @param {import("mojang-minecraft").Entity|import("mojang-minecraft").Player|string} target Scoreboard target/player
+ * @param {string} objective Scoreboard objective
+ * @param {boolean} failsave Return 0 [true]/Throw Error [false] if the entity was not there
+ * @return {number} Score of the entity
+ */
+export function GetScore(target, objective, failsave = true) {
+  let scoreboardObjective = world.scoreboard.getObjective(objective);
+  try {
+    if (typeof target == "string") {
+      return scoreboardObjective.getScore(
+        // @ts-ignore
+        scoreboardObjective
+          .getParticipants()
+          .find((v) => v.displayName == target)
+      );
+    }
+    return scoreboardObjective.getScore(target.scoreboard);
+  } catch {
+    if (failsave) return 0;
+    throw Error(`Target has no score on objective "${objective}"`);
+  }
+}
+
+/**
+ * Add enchantment to the item
+ * @param {import("mojang-minecraft").ItemStack} item The Item Class
+ * @param {string} enchantID Enchantment ID. For example `"unbreaking"` or `"mending"`
+ * @param {number} enchantLevel Enchantment Level. The level can't be exceed the normal enchantment value
+ */
+export function AddEnchantment(item, enchantID, enchantLevel = 1) {
+  let itemEnchant = item.getComponent("enchantments").enchantments;
+  itemEnchant.addEnchantment(
+    new Enchantment(MinecraftEnchantmentTypes[enchantID], enchantLevel)
+  );
+  // Set new EnchantmentList to item
+  item.getComponent("enchantments").enchantments = itemEnchant;
 }

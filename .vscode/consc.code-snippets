@@ -43,5 +43,15 @@
 			"  })",
 			"}"
 		]
+	},
+	"Get Item Inventory": {
+		"scope": "javascript, typescript",
+		"prefix": ".invItem",
+		"body": ".getComponent(\"inventory\").container.getItem($1)$0"
+	},
+	"Color Formatting Code": {
+		"scope": "javascript, typescript",
+		"prefix": "&color",
+		"body": "§"
 	}
 }

@@ -6,7 +6,7 @@ import {
   ModalFormData,
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage";
-import { MCEnchantments, MCEnchantmentsList } from "../Database.js";
+import { MCEnchantments, MCEnchantmentsList } from "../MinecraftData.js";
 
 /**
  * @param {import("mojang-minecraft").Player} player

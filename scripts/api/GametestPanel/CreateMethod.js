@@ -6,7 +6,7 @@ import {
   ModalFormData,
 } from "mojang-minecraft-ui";
 import { Print } from "../PrintMessage";
-import { StringToLocation } from "../MathOperations.js";
+import { StringToLocation } from "../MinecraftOperation.js";
 
 /**
  * @param {import("mojang-minecraft").Player} player

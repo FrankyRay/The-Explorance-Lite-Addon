@@ -1,5 +1,5 @@
 import { world } from "mojang-minecraft";
-import { Color } from "./Database.js";
+import { Color } from "./MinecraftData.js";
 
 const Overworld = world.getDimension("overworld");
 

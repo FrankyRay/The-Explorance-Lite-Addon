@@ -1,6 +1,6 @@
 //@ts-check
 import { world } from "mojang-minecraft";
-import * as MinecraftMath from "../MathOperations.js";
+import * as MinecraftMath from "../MinecraftOperation.js";
 import { Print, PrintAction } from "../PrintMessage.js";
 
 let pos1 = "";
