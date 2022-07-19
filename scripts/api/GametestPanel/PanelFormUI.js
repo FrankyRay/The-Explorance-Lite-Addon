@@ -1,7 +1,13 @@
 //@ts-check
-import { Entity, EntityQueryOptions, world } from "mojang-minecraft";
+import { Test } from "mojang-gametest";
+import {
+  BlockLocation,
+  Entity,
+  EntityQueryOptions,
+  world,
+} from "mojang-minecraft";
 import { ActionFormData, MessageFormData } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 // UI Files
 import { PlayerCompUI } from "./PlayerComp.js";
 import { ItemCompUI } from "./ItemComp.js";
@@ -24,7 +30,8 @@ export function GametestPanel(player) {
     .button("Components View" + VIEW)
     .button("Gametest Create Method" + VIEW)
     .button("Console Test" + VIEW)
-    .button("Console Commands" + VIEW);
+    .button("Console Commands" + VIEW)
+    .button("Summon Simulation Player" + VIEW);
 
   panelGametest.show(player).then((respond) => {
     if (respond.isCanceled) return;
@@ -43,6 +50,16 @@ export function GametestPanel(player) {
         break;
       case 3:
         ConsoleCommands(player);
+        break;
+      case 4:
+        // @ts-ignore
+        Test.spawnSimulatedPlayer(
+          new BlockLocation(
+            player.location.x,
+            player.location.y,
+            player.location.z
+          )
+        );
         break;
       default:
         Print("The action is not available yet!");

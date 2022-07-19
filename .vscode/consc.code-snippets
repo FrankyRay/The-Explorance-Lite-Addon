@@ -52,6 +52,6 @@
 	"Color Formatting Code": {
 		"scope": "javascript, typescript",
 		"prefix": "&color",
-		"body": "§"
+		"body": "§${1:r}$0"
 	}
 }

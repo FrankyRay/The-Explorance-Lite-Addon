@@ -9,15 +9,18 @@ import {
   BlockLocation,
   BlockRaycastOptions,
   StringBlockProperty,
+  MinecraftEffectTypes,
 } from "mojang-minecraft";
-import * as MinecraftOperation from "../MinecraftOperation.js";
-import { Print, PrintAction } from "../PrintMessage.js";
-import { MCEnchantments } from "../MinecraftData.js";
+import * as MinecraftFunctions from "../lib/MinecraftFunctions.js";
+import { Print, PrintAction } from "../lib/MinecraftFunctions.js";
+import { MCEnchantments } from "../lib/MinecraftData.js";
 // Custom Command Extend
 import { CommandsComponent } from "./CommandsComp.js";
 import { WorldEditBE } from "./WorldEdit.js";
 import { Warp } from "./Warp.js";
 import { ItemGive } from "./ItemGive.js";
+import { setTimeout } from "../lib/Timers.js";
+import { InitDebugScreen } from "../CustomSelections/IndexSelection.js";
 
 const Overworld = world.getDimension("overworld");
 // Saved Variable
@@ -74,7 +77,7 @@ export function CustomCommands(prefix, commands, args, player) {
       break;
 
     case "cmdcomp" /* Checking Command Component */:
-      Print(CommandsComponent(args), player.name);
+      console.warn(CommandsComponent(args, player));
       break;
 
     case "consolewarn" /* Just calling the console warn to make sure it works */:
@@ -88,6 +91,10 @@ export function CustomCommands(prefix, commands, args, player) {
       player
         .getComponent("inventory")
         .container.setItem(player.selectedSlot, consc);
+      break;
+
+    case "debug" /* Show custom F3 debug screen */:
+      InitDebugScreen(player);
       break;
 
     case "gmc" /* Set gamemode to Creative*/:
@@ -131,16 +138,8 @@ export function CustomCommands(prefix, commands, args, player) {
       break;
 
     case "test" /* Testing some feature with my custom command */:
-      player.runCommand("give @s netherite_sword 1");
-      let itemTest = player
-        .getComponent("inventory")
-        .container.getItem(player.selectedSlot);
-
-      itemTest.nameTag = "Pear";
-
-      player
-        .getComponent("inventory")
-        .container.setItem(player.selectedSlot, itemTest);
+      let effect = player.getEffect(MinecraftEffectTypes.healthBoost);
+      console.warn(JSON.stringify(effect));
       break;
 
     case "warp" /* Warp to a location */:
@@ -163,7 +162,7 @@ export function CustomCommands(prefix, commands, args, player) {
         PrintAction(`Set 1st position: ${pos1}`, player.name);
       } else if (args.split(" ")[0] == "fill") {
         let blockType = args.substring(args.indexOf(" ") + 1);
-        let blocks = MinecraftOperation.BlocksCounter(pos1, pos2);
+        let blocks = MinecraftFunctions.BlocksCounter(pos1, pos2);
         Overworld.runCommand(`fill ${pos1} ${pos2} ${blockType}`);
         Overworld.runCommand(
           `structure save we:beforefill ${pos1} ${pos2} memory`
@@ -173,7 +172,7 @@ export function CustomCommands(prefix, commands, args, player) {
           player.name
         );
       } else if (args.split(" ")[0] == "undo") {
-        let newPos = MinecraftOperation.MinCoord(pos1, pos2);
+        let newPos = MinecraftFunctions.MinCoord(pos1, pos2);
         Overworld.runCommand(`structure load we:beforefill ${newPos}`);
         PrintAction(`Successfully undo the fill commands`, player.name);
       }
@@ -183,9 +182,7 @@ export function CustomCommands(prefix, commands, args, player) {
       Print(
         `Command "${commands}" is not found. Run ${prefix}help to check custom commands`,
         player.name,
-        "info",
-        "info",
-        "yellow"
+        "INFO"
       );
   }
 }

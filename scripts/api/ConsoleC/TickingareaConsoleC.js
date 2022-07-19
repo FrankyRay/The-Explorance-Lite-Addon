@@ -4,7 +4,7 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 
 export function TickingareaAdd(player) {
   let command, syntax;
@@ -72,6 +72,6 @@ export function TickingareaList(player) {
       command = `tickingarea list all-dimensions`;
     }
     let message = player.runCommand(command);
-    Print(message.statusMessage, player.name, "normal");
+    Print(message.statusMessage, player.name);
   });
 }

@@ -1,6 +1,6 @@
 // @ts-check
 import { world } from "mojang-minecraft";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 
 const WORLD = world.getDimension("overworld");
 // @ts-ignore

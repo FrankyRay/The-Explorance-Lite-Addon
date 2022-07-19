@@ -4,7 +4,7 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 
 export function TitleDisplay(player) {
   let command, syntax;

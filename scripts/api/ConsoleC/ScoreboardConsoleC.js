@@ -4,7 +4,7 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 
 // Scoreboard Objectives Commands
 export function ScoreboardObjectivesIndex(player) {
@@ -26,14 +26,14 @@ export function ScoreboardObjectivesIndex(player) {
         break;
       case 1:
         let message = player.runCommand("scoreboard objectives list");
-        Print(message.statusMessage, player.name, "normal");
+        Print(message.statusMessage, player.name);
         break;
       case 2:
         [command, syntax] = ObjectivesDisplay(player);
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, `"${player.name}"`, "consc");
+    if (syntax) Print(command, `"${player.name}"`, "Command Syntax");
   });
 }
 
@@ -117,7 +117,7 @@ export function ScoreboardPlayersIndex(player) {
         break;
     }
     player.runCommand(command);
-    if (syntax) Print(command, `"${player.name}"`, "consc");
+    if (syntax) Print(command, `"${player.name}"`, "Command Syntax");
   });
 }
 
@@ -230,10 +230,10 @@ function PlayersTest(player) {
 
     command = `scoreboard players random ${target} ${objective} ${min} ${max}`;
     let message = player.runCommand(command);
-    Print(message.statusMessage, player.name, "normal");
+    Print(message.statusMessage, player.name);
 
     syntax = syntaxarg;
-    if (syntax) Print(command, `"${player.name}"`, "consc");
+    if (syntax) Print(command, `"${player.name}"`, "Command Syntax");
   });
   return [command, syntax];
 }

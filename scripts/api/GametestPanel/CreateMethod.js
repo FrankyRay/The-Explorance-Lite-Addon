@@ -5,8 +5,8 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage";
-import { StringToLocation } from "../MinecraftOperation.js";
+import { Print } from "../lib/MinecraftFunctions";
+import { StringToLocation } from "../lib/MinecraftFunctions.js";
 
 /**
  * @param {import("mojang-minecraft").Player} player

@@ -1,6 +1,7 @@
 // @ts-check
 import { world, ItemStack, Items } from "mojang-minecraft";
-import { Print } from "../PrintMessage";
+import { Print } from "../lib/MinecraftFunctions";
+import { AddEnchantment } from "../lib/MinecraftFunctions";
 
 const ExampleComponentLib = {
   Data: 0,
@@ -37,19 +38,23 @@ export function ItemGive(player, args) {
   let argumentList = args.split(" ");
   let name = argumentList[0];
   let amount = argumentList[1] ?? 1;
-  let dataValue = argumentList[2] ?? 0;
   let rawComponents = args.match(/(\{(.*)\})/g)?.toString() ?? "{}";
   let itemComponents = JSON.parse(rawComponents);
+  let dataValue = "Data" in itemComponents ? itemComponents["Data"] : 0;
 
   // Set player inventory variable
   let inventory = player.getComponent("inventory").container;
 
-  let emptySlot = 0;
+  let emptySlot = -1;
   for (let i = 0; i < 36; i++) {
     if (!inventory.getItem(i)) {
       emptySlot = i;
       break;
     }
+  }
+
+  if (emptySlot == -1) {
+    return Print("[ERROR] You doesn't have empty slot");
   }
 
   // Set list of default NBT Component
@@ -62,15 +67,15 @@ export function ItemGive(player, args) {
   ) {
     let blockList = [];
     // Push block list on "minecraft:can_place_on"
-    blockList.push(
-      "minecraft:can_place_on" in itemComponents
-        ? itemComponents["minecraft:can_place_on"]["blocks"]
-        : []
-    );
+    if ("minecraft:can_place_on" in itemComponents) {
+      blockList = blockList.concat(
+        itemComponents["minecraft:can_place_on"]["blocks"]
+      );
+    }
     // Push block list on "CanPlaceOn"
-    blockList.push(
-      "CanPlaceOn" in itemComponents ? itemComponents["CanPlaceOn"] : []
-    );
+    if ("CanPlaceOn" in itemComponents) {
+      blockList = blockList.concat(itemComponents["CanPlaceOn"]);
+    }
 
     NBTComponent.push(
       `"minecraft:can_place_on": {"blocks": ${JSON.stringify(blockList)}}`
@@ -84,15 +89,16 @@ export function ItemGive(player, args) {
   ) {
     let blockList = [];
     // Push block list on "minecraft:can_destroy"
-    blockList.push(
-      "minecraft:can_destroy" in itemComponents
-        ? itemComponents["minecraft:can_destroy"]["blocks"]
-        : []
-    );
+    if ("minecraft:can_destroy" in itemComponents) {
+      blockList = blockList.concat(
+        itemComponents["minecraft:can_destroy"]["blocks"]
+      );
+    }
+
     // Push block list on "CanDestroy"
-    blockList.push(
-      "CanDestroy" in itemComponents ? itemComponents["CanDestroy"] : []
-    );
+    if ("CanDestroy" in itemComponents) {
+      blockList = blockList.concat(itemComponents["CanDestroy"]);
+    }
 
     NBTComponent.push(
       `"minecraft:can_destroy": {"blocks": ${JSON.stringify(blockList)}}`
@@ -134,33 +140,46 @@ export function ItemGive(player, args) {
     NBTComponent.push('"minecraft:keep_on_death": {}');
 
   // Send the item into player's inventory
-  if (NBTComponent !== []) {
-    player.runCommand(
-      `give @s ${name} ${amount} ${dataValue} {${NBTComponent.join(", ")}}`
-    );
-  } else {
+  if (NBTComponent.length === 0) {
     let newItem = new ItemStack(
       Items.get(name),
       parseInt(amount),
       parseInt(dataValue)
     );
     inventory.setItem(emptySlot, newItem);
+  } else {
+    player.runCommand(
+      `give @s ${name} ${amount} ${dataValue} {${NBTComponent.join(", ")}}`
+    );
   }
 
   // Take the item again
-  let newItem = player.getComponent("inventory").container.getItem(emptySlot);
+  let theItem = player.getComponent("inventory").container.getItem(emptySlot);
 
-  // Set item's name
-  if ("name" in itemComponents) newItem.nameTag = itemComponents["name"];
+  // Set item's name and lore if "Display" component exist
+  if ("Display" in itemComponents) {
+    let compDisplay = itemComponents["Display"];
+    // Set item's name
+    if ("Name" in compDisplay) theItem.nameTag = compDisplay["Name"];
 
-  // Set item's lore
-  if ("lore" in itemComponents) newItem.setLore(itemComponents["lore"]);
+    // Set item's lore
+    if ("Lore" in compDisplay) theItem.setLore(compDisplay["Lore"]);
+  }
 
   // Set item's enchantments (Not working yet)
-  // if ("Enchantments" in itemComponents) {
-  //   for (let [keys, items] of Object.entries(itemComponents["enchantments"])) {
-  //   }
-  // }
+  if ("Enchantments" in itemComponents) {
+    for (let enchant in itemComponents["Enchantments"]) {
+      let enchantData = itemComponents["Enchantments"][enchant];
+      AddEnchantment(
+        theItem,
+        enchantData["id"],
+        "lvl" in enchantData ? enchantData["lvl"] : 1
+      );
+    }
+  }
+
+  // Add the item back
+  inventory.setItem(emptySlot, theItem);
 
   Print(`Successfully give '${player.name}' ${name} (${amount})`);
 }

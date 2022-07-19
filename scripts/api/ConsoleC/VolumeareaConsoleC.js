@@ -4,7 +4,7 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage.js";
+import { Print } from "../lib/MinecraftFunctions.js";
 
 export function VolumeareaAdd(player) {
   let command, syntax;
@@ -63,6 +63,6 @@ export function VolumeareaList(player) {
       command = `volumearea list all-dimensions`;
     }
     let message = player.runCommand(command);
-    Print(message.statusMessage, player.name, "normal");
+    Print(message.statusMessage, player.name);
   });
 }

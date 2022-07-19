@@ -4,7 +4,7 @@ import {
   MessageFormData,
   ModalFormData,
 } from "mojang-minecraft-ui";
-import { Print } from "../PrintMessage";
+import { Print } from "../lib/MinecraftFunctions";
 
 /**
  * @param {import("mojang-minecraft").Player} player
@@ -20,7 +20,7 @@ export function PlayerCompUI(player) {
 
     switch (respond.selection) {
       case 0:
-        ComponentInfo(player);
+        ComponentInfoUI(player);
         break;
       default:
         Print("Not available yet!");
@@ -31,7 +31,7 @@ export function PlayerCompUI(player) {
 /**
  * @param {import("mojang-minecraft").Player} player
  */
-function ComponentInfo(player) {
+function ComponentInfoUI(player) {
   let playerComps = ["General", "Health", "Inventory"];
 
   let formPlrComp = new ModalFormData()

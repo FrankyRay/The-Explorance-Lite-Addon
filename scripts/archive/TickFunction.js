@@ -1,6 +1,6 @@
 //@ts-check
 import { BlockRaycastOptions, world as World } from "mojang-minecraft";
-import { Print, PrintAction } from "../api/PrintMessage.js";
+import { Print, PrintAction } from "../api/lib/MinecraftFunctions.js";
 
 export function TickFunction() {
   World.events.tick.subscribe((tickEvent) => {
@@ -30,7 +30,7 @@ export function TickFunction() {
 
           let Block = target.getBlockFromViewVector(raycast);
           if (Block.id == "minecraft:netherite_block") {
-            Print("Found netherite block", "normal", target.name);
+            Print("Found netherite block", target.name);
             target.removeTag("F:RayCast");
           }
         }

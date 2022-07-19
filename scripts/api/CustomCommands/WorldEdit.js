@@ -1,7 +1,7 @@
 //@ts-check
 import { world } from "mojang-minecraft";
-import * as MinecraftMath from "../MinecraftOperation.js";
-import { Print, PrintAction } from "../PrintMessage.js";
+import * as MinecraftMath from "../lib/MinecraftFunctions.js";
+import { Print, PrintAction } from "../lib/MinecraftFunctions.js";
 
 let pos1 = "";
 let pos2 = "";
@@ -65,10 +65,7 @@ export function WorldEditBE(player, arg, prefix) {
       Print(
         `Subcommand "${subcommand}" on "${prefix}worldedit" is not found. Run "${prefix}help worldedit" to check custom commands`,
         player.name,
-        "info",
-        "info",
-        "yellow",
-        "reset"
+        "INFO"
       );
   }
 }

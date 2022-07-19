@@ -1,16 +1,18 @@
-import * as Gametest from "mojang-gametest"; // UUID: 6f4b6893-1bb6-42fd-b458-7fa3d0c89616
+import * as GameTest from "mojang-gametest"; // UUID: 6f4b6893-1bb6-42fd-b458-7fa3d0c89616
 import {
+  BlockLocation,
   DynamicPropertiesDefinition,
   MinecraftEntityTypes,
   world as World,
 } from "mojang-minecraft"; // UUID: b26a4d4c-afdf-4690-88f8-931846312678
 // import * as MinecraftUI from 'mojang-minecraft-ui';  // UUID: 2BD50A27-AB5F-4F40-A596-3641627C635E
+import { Print, PrintAction } from "./api/lib/MinecraftFunctions.js";
 import { CustomCommands } from "./api/CustomCommands/CCommands.js";
 import { Chats } from "./api/ChatRoles.js";
 import { GametestPanel } from "./api/GametestPanel/PanelFormUI.js";
-import { ConsoleCommands } from "./api/ConsoleC/IndexConsoleC.js";
-import "./api/EventTest.js";
-import { Print, PrintAction } from "./api/PrintMessage.js";
+import { ConsoleCommands } from "./api/console_command_ui/IndexConsoleC.js";
+import "./api/CustomSelections/IndexSelection.js";
+import "./api/lib/EventTest.js";
 
 const Prefix = "!";
 const Overworld = World.getDimension("overworld");
@@ -156,6 +158,18 @@ function DynamicPropertyRegister() {
     console.warn("World Initialize Event Detected");
   });
 }
+
+GameTest.register("SimulatedPlayerTests", "spawn_forever", (test) => {
+  const spawnLoc = new BlockLocation(1, 5, 1);
+  const landLoc = new BlockLocation(1, 2, 1);
+  const playerName = "Test Player";
+  const player = test.spawnSimulatedPlayer(spawnLoc, playerName);
+  test.assertEntityPresent("player", spawnLoc);
+  test.assert(player.nameTag === playerName, "Unexpected name tag");
+})
+  .maxTicks(72000)
+  .structureName("ComponentTests:platform")
+  .tag(GameTest.Tags.suiteDefault);
 
 TickComponent();
 DynamicPropertyRegister();
