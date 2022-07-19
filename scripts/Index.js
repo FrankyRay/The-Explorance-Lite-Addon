@@ -10,7 +10,7 @@ import { Print, PrintAction } from "./api/lib/MinecraftFunctions.js";
 import { CustomCommands } from "./api/CustomCommands/CCommands.js";
 import { Chats } from "./api/ChatRoles.js";
 import { GametestPanel } from "./api/GametestPanel/PanelFormUI.js";
-import { ConsoleCommands } from "./api/console_command_ui/IndexConsoleC.js";
+import { ConsoleCommands } from "./api/ConsoleC/IndexConsoleC.js.js";
 import "./api/CustomSelections/IndexSelection.js";
 import "./api/lib/EventTest.js";
 
