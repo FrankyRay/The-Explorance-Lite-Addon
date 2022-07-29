@@ -138,3 +138,103 @@ function ComponentInfoUI(player) {
       console.error(err);
     });
 }
+
+export function TickComponent() {
+  world.events.tick.subscribe((tick) => {
+    for (let player of world.getPlayers()) {
+      let hasComponent = false;
+      let message = `Player Component Info [Name: ${player.name}]`;
+      let componentID = "";
+      let componentProperty = {};
+      if (player.getDynamicProperty("playerCST")) {
+        hasComponent = true;
+      } else if (player.getDynamicProperty("playerCST") === "None") {
+        hasComponent = false;
+      }
+
+      if (hasComponent) {
+        switch (player.getDynamicProperty("playerCST")) {
+          case "General":
+            let {
+              dimension: { id: dimensionID },
+              headLocation: { x: xhead, y: yhead, z: zhead },
+              id: idPlayer,
+              isSneaking,
+              location: { x: xloc, y: yloc, z: zloc },
+              name,
+              nameTag,
+              //@ts-ignore
+              rotation: { x: xrot, y: yrot },
+              viewVector: { x: xvec, y: yvec, z: zvec },
+            } = player;
+            componentID = "General";
+            componentProperty = {
+              Dimension: dimensionID,
+              "Head Location": [xhead, yhead, zhead]
+                .map((val) => val.toFixed(2))
+                .join(" "),
+              ID: idPlayer,
+              "Is Sneaking": isSneaking,
+              Location: [xloc, yloc, zloc]
+                .map((val) => val.toFixed(2))
+                .join(" "),
+              "Name Tag": nameTag,
+              Rotation: [xrot, yrot].map((val) => val.toFixed(2)).join(" "),
+              "View Vector": [xvec, yvec, zvec]
+                .map((val) => val.toFixed(2))
+                .join(" "),
+            };
+            break;
+          case "Health":
+            let {
+              current,
+              id: idHealth,
+              value,
+            } = player.getComponent("health");
+            componentID = idHealth;
+            componentProperty = {
+              Current: current,
+              Value: value,
+            };
+            break;
+          case "Inventory":
+            let {
+              additionalSlotsPerStrength,
+              canBeSiphonedFrom,
+              container: { emptySlotsCount, size },
+              containerType,
+              id: idInv,
+              inventorySize,
+              restrictToOwner,
+            } = player.getComponent("inventory");
+            let itemID = player
+              .getComponent("inventory")
+              .container.getItem(player.selectedSlot)?.id;
+            componentID = idInv;
+            componentProperty = {
+              "Additional Slots Per Strength": additionalSlotsPerStrength,
+              "Can Be Siphoned From": canBeSiphonedFrom,
+              "Container - Empty_Slots_Count": emptySlotsCount,
+              "Container - Size": size,
+              "Container Type": containerType,
+              "Inventory Size": inventorySize,
+              Mainhand: itemID ? itemID : "Empty",
+              "Restrict To Owner": restrictToOwner,
+            };
+            break;
+          default:
+            return;
+        }
+      }
+
+      message += `\n§cType Component§r: ${componentID}`;
+      for (let comp in componentProperty) {
+        message += `\n§g${comp}§r: ${componentProperty[comp]}`;
+      }
+
+      player.runCommand(
+        `titleraw @s actionbar {"rawtext": [{"text": "${message}"}]}`
+      );
+    }
+  });
+}

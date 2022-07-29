@@ -3,6 +3,7 @@ import {
   BlockLocation,
   DynamicPropertiesDefinition,
   MinecraftEntityTypes,
+  world,
   world as World,
 } from "mojang-minecraft"; // UUID: b26a4d4c-afdf-4690-88f8-931846312678
 // import * as MinecraftUI from 'mojang-minecraft-ui';  // UUID: 2BD50A27-AB5F-4F40-A596-3641627C635E
@@ -10,9 +11,11 @@ import { Print, PrintAction } from "./api/lib/MinecraftFunctions.js";
 import { CustomCommands } from "./api/CustomCommands/CCommands.js";
 import { Chats } from "./api/ChatRoles.js";
 import { GametestPanel } from "./api/GametestPanel/PanelFormUI.js";
-import { ConsoleCommands } from "./api/ConsoleC/IndexConsoleC.js.js";
+import { ConsoleCommands } from "./api/ConsoleC/IndexConsoleC.js";
+import { TickComponent } from "./api/GametestPanel/PlayerComp.js";
 import "./api/CustomSelections/IndexSelection.js";
 import "./api/lib/EventTest.js";
+import { BlockRaycastOptions } from "mojang-minecraft";
 
 const Prefix = "!";
 const Overworld = World.getDimension("overworld");
@@ -46,106 +49,6 @@ function FormOpen() {
   });
 }
 
-function TickComponent() {
-  World.events.tick.subscribe((tick) => {
-    for (let player of World.getPlayers()) {
-      let hasComponent = false;
-      let message = `Player Component Info [Name: ${player.name}]`;
-      let componentID = "";
-      let componentProperty = {};
-      if (player.getDynamicProperty("playerCST")) {
-        hasComponent = true;
-      } else if (player.getDynamicProperty("playerCST") === "None") {
-        hasComponent = false;
-      }
-
-      if (hasComponent) {
-        switch (player.getDynamicProperty("playerCST")) {
-          case "General":
-            let {
-              dimension: { id: dimensionID },
-              headLocation: { x: xhead, y: yhead, z: zhead },
-              id: idPlayer,
-              isSneaking,
-              location: { x: xloc, y: yloc, z: zloc },
-              name,
-              nameTag,
-              //@ts-ignore
-              rotation: { x: xrot, y: yrot },
-              viewVector: { x: xvec, y: yvec, z: zvec },
-            } = player;
-            componentID = "General";
-            componentProperty = {
-              Dimension: dimensionID,
-              "Head Location": [xhead, yhead, zhead]
-                .map((val) => val.toFixed(2))
-                .join(" "),
-              ID: idPlayer,
-              "Is Sneaking": isSneaking,
-              Location: [xloc, yloc, zloc]
-                .map((val) => val.toFixed(2))
-                .join(" "),
-              "Name Tag": nameTag,
-              Rotation: [xrot, yrot].map((val) => val.toFixed(2)).join(" "),
-              "View Vector": [xvec, yvec, zvec]
-                .map((val) => val.toFixed(2))
-                .join(" "),
-            };
-            break;
-          case "Health":
-            let {
-              current,
-              id: idHealth,
-              value,
-            } = player.getComponent("health");
-            componentID = idHealth;
-            componentProperty = {
-              Current: current,
-              Value: value,
-            };
-            break;
-          case "Inventory":
-            let {
-              additionalSlotsPerStrength,
-              canBeSiphonedFrom,
-              container: { emptySlotsCount, size },
-              containerType,
-              id: idInv,
-              inventorySize,
-              restrictToOwner,
-            } = player.getComponent("inventory");
-            let itemID = player
-              .getComponent("inventory")
-              .container.getItem(player.selectedSlot)?.id;
-            componentID = idInv;
-            componentProperty = {
-              "Additional Slots Per Strength": additionalSlotsPerStrength,
-              "Can Be Siphoned From": canBeSiphonedFrom,
-              "Container - Empty_Slots_Count": emptySlotsCount,
-              "Container - Size": size,
-              "Container Type": containerType,
-              "Inventory Size": inventorySize,
-              Mainhand: itemID ? itemID : "Empty",
-              "Restrict To Owner": restrictToOwner,
-            };
-            break;
-          default:
-            return;
-        }
-      }
-
-      message += `\n§cType Component§r: ${componentID}`;
-      for (let comp in componentProperty) {
-        message += `\n§g${comp}§r: ${componentProperty[comp]}`;
-      }
-
-      player.runCommand(
-        `titleraw @s actionbar {"rawtext": [{"text": "${message}"}]}`
-      );
-    }
-  });
-}
-
 function DynamicPropertyRegister() {
   World.events.worldInitialize.subscribe((eventData) => {
     let playerCompShowTick = new DynamicPropertiesDefinition();
@@ -171,7 +74,80 @@ GameTest.register("SimulatedPlayerTests", "spawn_forever", (test) => {
   .structureName("ComponentTests:platform")
   .tag(GameTest.Tags.suiteDefault);
 
-TickComponent();
+function BlockStateTick() {
+  world.events.tick.subscribe((tick) => {
+    for (let player of world.getPlayers()) {
+      if (!player.hasTag("Tick:BlockState")) continue;
+
+      let blockOpt = new BlockRaycastOptions();
+      blockOpt.includeLiquidBlocks = true;
+      blockOpt.includePassableBlocks = true;
+      blockOpt.maxDistance = 8;
+
+      let block = player.getBlockFromViewVector(blockOpt);
+      if (!block) {
+        PrintAction(`§gBlock Properties §3(minecraft:air)`, player.name);
+        continue;
+      }
+      let properties = block.permutation.getAllProperties();
+
+      let outputMsg = `§gBlock Properties §3(${block.id})`;
+      for (let property of properties) {
+        let { name, validValues, value } = property;
+
+        switch (typeof value) {
+          case "string":
+            let valuesType = [];
+            let valuesMsg = "";
+            let charCount = 0;
+            for (let i = 0; i < validValues.length; i++) {
+              charCount += validValues[i].length;
+              valuesType.push(
+                validValues[i] == value
+                  ? `§c'${validValues[i]}'§r`
+                  : `'${validValues[i]}'`
+              );
+            }
+            if (charCount > 85) {
+              let valueIndex = validValues.indexOf(value);
+              if (valueIndex == 0)
+                valuesMsg = `${valuesType[valueIndex]}, ${
+                  valuesType[valueIndex + 1]
+                }, ${valuesType[valueIndex + 2]} ...`;
+              else if (valueIndex == validValues.length)
+                valuesMsg = `... ${valuesType[valueIndex - 2]}, ${
+                  valuesType[valueIndex - 1]
+                }, ${valuesType[valueIndex]}`;
+              else
+                valuesMsg = `... ${valuesType[valueIndex - 1]}, ${
+                  valuesType[valueIndex]
+                }, ${valuesType[valueIndex + 1]} ...`;
+            } else valuesMsg = valuesType.join(", ");
+            outputMsg += `\n§e${name} §7(${typeof value}) [${
+              validValues.length
+            }] [${charCount}]\n§r[ ${valuesMsg} ]`;
+            break;
+
+          case "number":
+            outputMsg += `\n§e${name} §7(${typeof value})\n§c${value}§r [0 - ${
+              validValues.length - 1
+            }]`;
+            break;
+
+          case "boolean":
+            let valueF = value === true ? "§atrue§r" : "§cfalse§r";
+            outputMsg += `\n§e${name} §7(${typeof value})\n${valueF}`;
+            break;
+        }
+      }
+
+      PrintAction(outputMsg, player.name);
+    }
+  });
+}
+
+BlockStateTick();
+// TickComponent();
 DynamicPropertyRegister();
 FormOpen();
 CommandsChat();

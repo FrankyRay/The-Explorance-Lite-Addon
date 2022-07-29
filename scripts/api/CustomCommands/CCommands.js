@@ -43,8 +43,8 @@ export function CustomCommands(prefix, commands, args, player) {
 
     case "blockcomp" /* Show block's blockstate */:
       const raycastB = new BlockRaycastOptions();
-      raycastB.includeLiquidBlocks = false;
-      raycastB.includePassableBlocks = false;
+      raycastB.includeLiquidBlocks = true;
+      raycastB.includePassableBlocks = true;
       raycastB.maxDistance = 10;
 
       let blockTest = player.getBlockFromViewVector(raycastB);
